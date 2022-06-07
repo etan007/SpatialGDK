@@ -1,0 +1,10 @@
+// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+package unreal;
+
+import "unreal/gdk/core_types.schema";
+import "unreal/gdk/rpc_payload.schema";
+
+component UnrealServerToServerCommandEndpoint {
+    id = 9973;
+    command Void server_to_server_rpc_command(UnrealRPCPayload);
+}
