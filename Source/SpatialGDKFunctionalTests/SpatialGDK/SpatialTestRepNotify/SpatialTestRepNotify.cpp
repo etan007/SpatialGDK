@@ -220,11 +220,9 @@ void ASpatialTestRepNotify::PrepareTest()
 	// We consciously differ from native UE here
 	// Also, the native behaviour changed when going from 4.25 to 4.26.
 	// On older versions, we expect the old array to have 2 elements, but on Spatial and on native starting from 4.26, we expect 3 elements.
-#if ENGINE_MINOR_VERSION >= 26
+ 
 			bool bOldArrayShouldHaveThreeElements = true;
-#else
-			bool bOldArrayShouldHaveThreeElements = false;
-#endif
+ 
 			bOldArrayShouldHaveThreeElements = bOldArrayShouldHaveThreeElements || GetNetDriver()->IsA(USpatialNetDriver::StaticClass());
 			if (bOldArrayShouldHaveThreeElements)
 			{

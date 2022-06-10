@@ -371,11 +371,9 @@ TArray<FWorkerComponentData> EntityFactory::CreateTombstoneEntityComponents(AAct
 
 	// No path in SpatialOS should contain a PIE prefix.
 	FString TempPath = Actor->GetFName().ToString();
-#if ENGINE_MINOR_VERSION >= 26
+ 
 	GEngine->NetworkRemapPath(NetDriver->GetSpatialOSNetConnection(), TempPath, false /*bIsReading*/);
-#else
-	GEngine->NetworkRemapPath(NetDriver, TempPath, false /*bIsReading*/);
-#endif
+ 
 	const TSchemaOption<FUnrealObjectRef> StablyNamedObjectRef = FUnrealObjectRef(0, 0, TempPath, OuterObjectRef, true);
 
 	TArray<FWorkerComponentData> Components;

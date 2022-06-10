@@ -848,7 +848,7 @@ bool USpatialActorChannel::ReplicateSubobject(UObject* Object, const FReplicatio
 
 	FRepChangelistState* ChangelistState = Replicator.ChangelistMgr->GetRepChangelistState();
 
-#if ENGINE_MINOR_VERSION >= 26
+ 
 	const ERepLayoutResult UpdateResult =
 		Replicator.RepLayout->UpdateChangelistMgr(Replicator.RepState->GetSendingRepState(), *Replicator.ChangelistMgr, Object,
 												  Replicator.Connection->Driver->ReplicationFrame, RepFlags, bForceCompareProperties);
@@ -863,10 +863,7 @@ bool USpatialActorChannel::ReplicateSubobject(UObject* Object, const FReplicatio
 		// Connection->SetPendingCloseDueToReplicationFailure();
 		return false;
 	}
-#else
-	Replicator.RepLayout->UpdateChangelistMgr(Replicator.RepState->GetSendingRepState(), *Replicator.ChangelistMgr, Object,
-											  Replicator.Connection->Driver->ReplicationFrame, RepFlags, bForceCompareProperties);
-#endif
+ 
 
 	FSendingRepState* SendingRepState = Replicator.RepState->GetSendingRepState();
 

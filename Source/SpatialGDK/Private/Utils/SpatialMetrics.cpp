@@ -609,16 +609,13 @@ void USpatialMetrics::SpatialExecServerCmd_Internal(const FString& ServerName, c
 
 bool USpatialMetrics::StartInsightsCapture(const FString& Args)
 {
-#if ENGINE_MINOR_VERSION < 26
-	UE_LOG(LogSpatialMetrics, Warning,
-		TEXT("SpatialExecServerCmd: Failed to execute server StartInsights command. Command only available post 4.26."));
-#elif !UE_TRACE_ENABLED
+#if !UE_TRACE_ENABLED
 	UE_LOG(LogSpatialMetrics, Warning,
 		TEXT("SpatialExecServerCmd: Failed to execute server StartInsights command. UE_TRACE_ENABLE not defined."));
 #else
 	GCycleStatsShouldEmitNamedEvents++;
 
-	return FTraceAuxiliary::StartTraceCapture(*Args);
+	//return FTraceAuxiliary::StartTraceCapture(*Args);
 #endif
 	return false;
 }
