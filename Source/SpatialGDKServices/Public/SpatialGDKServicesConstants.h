@@ -27,7 +27,7 @@ static const FString CreateExePath(FString Path, FString ExecutableName)
 }
 
 const FString GDKProgramPath =
-	FSpatialGDKServicesModule::GetSpatialGDKPluginDirectory(TEXT("SpatialGDK/Binaries/ThirdParty/Improbable/Programs"));
+	FSpatialGDKServicesModule::GetSpatialGDKPluginDirectory(TEXT("Binaries/ThirdParty/Improbable/Programs"));
 const FString SpatialExe = CreateExePath(SpatialPath, TEXT("spatial"));
 const FString SchemaCompilerExe = CreateExePath(GDKProgramPath, TEXT("schema_compiler"));
 const FString SpatialOSDirectory = FPaths::ConvertRelativePathToFull(FPaths::Combine(FPaths::ProjectDir(), TEXT("/../spatial/")));

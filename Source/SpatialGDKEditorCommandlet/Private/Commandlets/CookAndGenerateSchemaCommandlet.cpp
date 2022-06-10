@@ -158,6 +158,7 @@ int32 UCookAndGenerateSchemaCommandlet::Main(const FString& CmdLineParams)
 	// Needs to happen before RunSchemaCompiler
 	WriteComponentSetFiles(SchemaDatabase);
 
+	
 	FString SchemaJsonOutput;
 	if (!RunSchemaCompiler(SchemaJsonOutput))
 	{
@@ -176,7 +177,7 @@ int32 UCookAndGenerateSchemaCommandlet::Main(const FString& CmdLineParams)
 	{
 		UE_LOG(LogCookAndGenerateSchemaCommandlet, Error, TEXT("Failed to save schema database."));
 		return 0;
-	}
+	} 
 
 	return CookResult;
 }

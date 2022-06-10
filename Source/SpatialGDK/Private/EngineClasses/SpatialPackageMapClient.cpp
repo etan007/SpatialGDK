@@ -696,11 +696,9 @@ void FSpatialNetGUIDCache::NetworkRemapObjectRefPaths(FUnrealObjectRef& ObjectRe
 		if (Iterator->Path.IsSet())
 		{
 			FString TempPath(*Iterator->Path);
-#if ENGINE_MINOR_VERSION >= 26
+ 
 			GEngine->NetworkRemapPath(Cast<USpatialNetDriver>(Driver)->GetSpatialOSNetConnection(), TempPath, bReading);
-#else
-			GEngine->NetworkRemapPath(Driver, TempPath, bReading);
-#endif
+ 
 			Iterator->Path = TempPath;
 		}
 		if (!Iterator->Outer.IsSet())

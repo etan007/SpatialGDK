@@ -28,11 +28,9 @@ USpatialNetConnection::USpatialNetConnection(const FObjectInitializer& ObjectIni
 	, bReliableSpatialConnection(false)
 	, ConnectionClientWorkerSystemEntityId(SpatialConstants::INVALID_ENTITY_ID)
 {
-#if ENGINE_MINOR_VERSION <= 24
-	InternalAck = 1;
-#else
+ 
 	SetInternalAck(true);
-#endif
+ 
 }
 
 void USpatialNetConnection::CleanUp()

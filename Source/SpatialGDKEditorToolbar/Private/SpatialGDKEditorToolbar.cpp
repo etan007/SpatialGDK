@@ -111,15 +111,7 @@ void FSpatialGDKEditorToolbarModule::StartupModule()
 
 	// This code block starts a local deployment when loading maps for automation testing
 	// However, it is no longer required in 4.25 and beyond, due to the editor flow refactors.
-#if ENGINE_MINOR_VERSION < 25
-	FEditorDelegates::PreBeginPIE.AddLambda([this](bool bIsSimulatingInEditor) {
-		if (GetDefault<USpatialGDKEditorSettings>()->bAutoStartLocalDeployment && GIsAutomationTesting
-			&& GetDefault<UGeneralProjectSettings>()->UsesSpatialNetworking())
-		{
-			VerifyAndStartDeployment(GetDefault<ULevelEditorPlaySettings>()->GetSnapshotOverride());
-		}
-	});
-#endif
+ 
 
 	// We try to stop a local deployment either when the appropriate setting is selected, or when running with automation tests
 	FEditorDelegates::EndPIE.AddLambda([this](bool bIsSimulatingInEditor) {

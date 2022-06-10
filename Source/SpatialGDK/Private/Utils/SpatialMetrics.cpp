@@ -7,9 +7,9 @@
 #include "EngineGlobals.h"
 #include "TimerManager.h"
 
-#if ENGINE_MINOR_VERSION >= 26
+ 
 #include "ProfilingDebugging/TraceAuxiliary.h"
-#endif
+ 
 
 #include "Interop/Connection/SpatialWorkerConnection.h"
 #include "Schema/ServerWorker.h"
@@ -625,16 +625,13 @@ bool USpatialMetrics::StartInsightsCapture(const FString& Args)
 
 bool USpatialMetrics::StopInsightsCapture()
 {
-#if ENGINE_MINOR_VERSION < 26
-	UE_LOG(LogSpatialMetrics, Warning,
-		TEXT("SpatialExecServerCmd: Failed to execute server StopInsights command. Command only available post 4.26."));
-#elif !UE_TRACE_ENABLED
+ 
+#if !UE_TRACE_ENABLED
 	UE_LOG(LogSpatialMetrics, Warning,
 		TEXT("SpatialExecServerCmd: Failed to execute server StopInsights command. UE_TRACE_ENABLE not defined."));
 #else
 	GCycleStatsShouldEmitNamedEvents = FMath::Max(0, GCycleStatsShouldEmitNamedEvents - 1);
-
-	return FTraceAuxiliary::StopTraceCapture();
+	//return FTraceAuxiliary::StopTraceCapture();
 #endif
 	return false;
 }

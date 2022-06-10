@@ -614,7 +614,7 @@ int64 USpatialActorChannel::ReplicateActor()
 	// Update the replicated property change list.
 	FRepChangelistState* ChangelistState = ActorReplicator->ChangelistMgr->GetRepChangelistState();
 
-#if ENGINE_MINOR_VERSION >= 26
+ 
 	const ERepLayoutResult UpdateResult =
 		ActorReplicator->RepLayout->UpdateChangelistMgr(ActorReplicator->RepState->GetSendingRepState(), *ActorReplicator->ChangelistMgr,
 														Actor, Connection->Driver->ReplicationFrame, RepFlags, bForceCompareProperties);
@@ -629,10 +629,7 @@ int64 USpatialActorChannel::ReplicateActor()
 		// Connection->SetPendingCloseDueToReplicationFailure();
 		return 0;
 	}
-#else
-	ActorReplicator->RepLayout->UpdateChangelistMgr(ActorReplicator->RepState->GetSendingRepState(), *ActorReplicator->ChangelistMgr, Actor,
-													Connection->Driver->ReplicationFrame, RepFlags, bForceCompareProperties);
-#endif
+ 
 	FSendingRepState* SendingRepState = ActorReplicator->RepState->GetSendingRepState();
 
 	const int32 PossibleNewHistoryIndex = SendingRepState->HistoryEnd % MaxSendingChangeHistory;

@@ -42,11 +42,9 @@
 #include "Utils/RepLayoutUtils.h"
 #include "Utils/SchemaDatabase.h"
 
-#if ENGINE_MINOR_VERSION >= 26
+ 
 #define GDK_CREATE_PACKAGE(PackagePath) CreatePackage((PackagePath));
-#else
-#define GDK_CREATE_PACKAGE(PackagePath) CreatePackage(nullptr, (PackagePath));
-#endif
+ 
 
 // clang-format off
 #define SAFE_TRYGET(Value, Type, OutParam)                                                                                                 \
@@ -1077,8 +1075,8 @@ void CopyWellKnownSchemaFiles(const FString& GDKSchemaCopyDir, const FString& Co
 {
 	FString PluginDir = FSpatialGDKServicesModule::GetSpatialGDKPluginDirectory();
 
-	FString GDKSchemaDir = FPaths::Combine(PluginDir, TEXT("SpatialGDK/Extras/schema"));
-	FString CoreSDKSchemaDir = FPaths::Combine(PluginDir, TEXT("SpatialGDK/Binaries/ThirdParty/Improbable/Programs/schema"));
+	FString GDKSchemaDir = FPaths::Combine(PluginDir, TEXT("Extras/schema"));
+	FString CoreSDKSchemaDir = FPaths::Combine(PluginDir, TEXT("Binaries/ThirdParty/Improbable/Programs/schema"));
 
 	IPlatformFile& PlatformFile = FPlatformFileManager::Get().GetPlatformFile();
 
@@ -1325,11 +1323,11 @@ bool RunSchemaCompiler(FString& SchemaBundleJsonOutput, FString SchemaInputDir, 
 	FString PluginDir = FSpatialGDKServicesModule::GetSpatialGDKPluginDirectory();
 
 	// Get the schema_compiler path and arguments
-	FString SchemaCompilerExe = FPaths::Combine(PluginDir, TEXT("SpatialGDK/Binaries/ThirdParty/Improbable/Programs/schema_compiler.exe"));
+	FString SchemaCompilerExe = FPaths::Combine(PluginDir, TEXT("Binaries/ThirdParty/Improbable/Programs/schema_compiler.exe"));
 
 	if (SchemaInputDir == "")
 	{
-		SchemaInputDir = FPaths::Combine(SpatialGDKServicesConstants::SpatialOSDirectory, TEXT("schema"));
+		SchemaInputDir = FPaths::Combine(SpatialGDKServicesConstants::SpatialOSDirectory, TEXT("schema2"));
 	}
 
 	if (BuildDir == "")
@@ -1548,7 +1546,8 @@ bool ExtractInformationFromSchemaJson(const FString& SchemaJsonPath, TMap<uint32
 				ComponentIdToDataDefinitionName.Add(ComponentId, DataDefinition);
 			}
 		}
-
+		// TODO:SKYCELL-BEGIN ÔÝÊ±ÆÁ±Îcompontsets
+		/*
 		const TArray<TSharedPtr<FJsonValue>>* ComponentSets;
 		SAFE_TRYGETFIELD((*FileObject), Array, "componentSets", ComponentSets);
 
@@ -1580,7 +1579,8 @@ bool ExtractInformationFromSchemaJson(const FString& SchemaJsonPath, TMap<uint32
 			}
 
 			ComponentRefSetMap.Add(ComponentSetId, MoveTemp(Components));
-		}
+		}*/
+		// SKYCELL-END
 	}
 
 	TMap<uint32, FComponentIDs> FinalMap;

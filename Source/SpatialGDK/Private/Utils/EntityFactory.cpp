@@ -211,11 +211,9 @@ void EntityFactory::WriteUnrealComponents(TArray<FWorkerComponentData>& Componen
 			   TEXT("Entity being constructed from an actor did not have the UnrealMetadata component. This is forbidden."));
 		UnrealMetadata Metadata(*UnrealMetadataPtr);
 		FString TempPath = Actor->GetFName().ToString();
-#if ENGINE_MINOR_VERSION >= 26
+ 
 		GEngine->NetworkRemapPath(NetDriver->GetSpatialOSNetConnection(), TempPath, false /*bIsReading*/);
-#else
-		GEngine->NetworkRemapPath(NetDriver, TempPath, false /*bIsReading*/);
-#endif // !UE_BUILD_SHIPPING
+        // !UE_BUILD_SHIPPING
 		FUnrealObjectRef Remapped = FUnrealObjectRef(0, 0, TempPath, OuterObjectRef, true);
 		if (!Metadata.StablyNamedRef.IsSet() || *Metadata.StablyNamedRef != Remapped)
 		{

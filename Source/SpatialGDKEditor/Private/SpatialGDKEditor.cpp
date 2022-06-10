@@ -169,7 +169,7 @@ void FSpatialGDKEditor::GenerateSchema(ESchemaGenerationMethod Method, TFunction
 
 		FString ProjectPath = FPaths::ConvertRelativePathToFull(FPaths::GetProjectFilePath());
 		FString UATCommandLine = FString::Printf(TEXT("-ScriptsForProject=\"%s\" CookAndGenerateSchema -nocompile -nocompileeditor -server "
-													  "-noclient %s -nop4 -project=\"%s\" -cook -skipstage -ue4exe=\"%s\" %s -utf8output"),
+													  "-noclient %s -nop4 -project=\"%s\" -cook -skipstage -unrealexe=\"%s\" %s -utf8output"),
 												 *ProjectPath, FApp::IsEngineInstalled() ? TEXT(" -installed") : TEXT(""), *ProjectPath,
 												 *FUnrealEdMisc::Get().GetExecutableForCommandlets(), *OptionalParams);
 

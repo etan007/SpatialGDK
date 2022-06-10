@@ -63,6 +63,10 @@ bool SpatialCommandUtils::AttemptSpatialAuth(bool bIsRunningInChina)
 
 bool SpatialCommandUtils::BuildWorkerConfig(bool bIsRunningInChina, const FString& DirectoryToRun, FString& OutResult, int32& OutExitCode)
 {
+	// SKYCELL-BEGIN
+	return true;
+	// SKYCEL-END
+	
 	FString Command = TEXT("worker build build-config");
 
 	if (bIsRunningInChina)

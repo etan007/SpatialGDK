@@ -10,9 +10,9 @@ using ILauncherRef = TSharedRef<class ILauncher>;
 using ILauncherWorkerPtr = TSharedPtr<class ILauncherWorker>;
 using ILauncherProfileRef = TSharedRef<class ILauncherProfile>;
 
-#if ENGINE_MINOR_VERSION >= 24
+ 
 #define ENABLE_LAUNCHER_DELEGATE
-#endif
+ 
 
 DECLARE_LOG_CATEGORY_EXTERN(LogSpatialGDKEditorCommandLineArgsManager, Log, All);
 

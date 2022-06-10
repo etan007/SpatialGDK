@@ -116,6 +116,7 @@ bool FSpatialGDKServicesModule::ParseJson(const FString& RawJsonString, TSharedP
 void FSpatialGDKServicesModule::ExecuteAndReadOutput(const FString& Executable, const FString& Arguments, const FString& DirectoryToRun,
 													 FString& OutResult, int32& ExitCode)
 {
+ 
 	UE_LOG(LogSpatialGDKServices, Verbose, TEXT("Executing '%s' with arguments '%s' in directory '%s'"), *Executable, *Arguments,
 		   *DirectoryToRun);
 

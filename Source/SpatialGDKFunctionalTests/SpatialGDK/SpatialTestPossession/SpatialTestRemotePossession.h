@@ -15,10 +15,10 @@ struct FControllerPawnPair
 	GENERATED_BODY()
 
 	UPROPERTY()
-	ATestPossessionPlayerController* PlayerController;
+	ATestPossessionPlayerController* PlayerController = nullptr; // SKYCELL-add
 
 	UPROPERTY()
-	APawn* Pawn;
+	APawn* Pawn = nullptr; // SKYCELL-add
 };
 
 UCLASS()

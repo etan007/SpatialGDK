@@ -45,16 +45,16 @@ struct FWorkerRegionInfo
 	GENERATED_BODY()
 
 	UPROPERTY()
-	FColor Color;
+	FColor Color = FColor::Green;
 
 	UPROPERTY()
-	FBox2D Extents;
-
+	FBox2D Extents = {nullptr,0};
+	
 	UPROPERTY()
 	FString WorkerName;
 
 	UPROPERTY()
-	uint32 VirtualWorkerID;
+	uint32 VirtualWorkerID = 0;
 };
 
 UENUM()
