@@ -1,0 +1,9 @@
+// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+package unreal;
+import "xCommond.proto";
+
+message ActorOwnership {
+	enum ComponentID { id = CID_ActorOwnership; } 
+	
+	int64 leader_entity = 1;
+}

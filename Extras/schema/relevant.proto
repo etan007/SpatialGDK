@@ -1,0 +1,18 @@
+// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+package unreal;
+import "xCommond.proto";
+message AlwaysRelevant {
+    enum ComponentID { id = CID_AlwaysRelevant; } 
+}
+
+message ServerOnlyAlwaysRelevant {
+    enum ComponentID { id = CID_ServerOnlyAlwaysRelevant; } 
+}
+
+message Dormant {
+   enum ComponentID { id = CID_Dormant; } 
+}
+
+message Visible {
+    enum ComponentID { id = CID_Visible; } 
+}

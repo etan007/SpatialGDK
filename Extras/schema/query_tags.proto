@@ -1,0 +1,28 @@
+// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+package unreal;
+import "xCommond.proto";
+// System query tags for entity completeness
+
+message ActorAuthTag {
+    enum ComponentID { id = CID_ActorAuthTag; } 
+}
+
+message ActorTag {
+    enum ComponentID { id = CID_ActorTag; } 
+}
+
+message ActorOwnerOnlyDataTag {
+	enum ComponentID { id = CID_ActorOwnerOnlyDataTag; } 
+}
+
+message LBTag {
+    enum ComponentID { id = CID_LBTag; } 
+}
+
+message GDKKnownEntityTag {
+    enum ComponentID { id = CID_GDKKnownEntityTag; } 
+}
+
+message RoutingWorkerEntityTag {
+    enum ComponentID { id = CID_RoutingWorkerEntityTag; } 
+}

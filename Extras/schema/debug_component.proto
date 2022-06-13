@@ -1,0 +1,12 @@
+// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+package unreal;
+import "xCommond.proto";
+message DebugComponent {
+     enum ComponentID { id = CID_DebugComponent; } 
+     optional uint32 worker_id_delegation = 1;
+     string actor_tags = 2;
+}
+
+message DebugComponentTag {
+      enum ComponentID { id = CID_DebugComponentTag; } 
+}

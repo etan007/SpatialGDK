@@ -1,0 +1,36 @@
+// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+package unreal;
+import "xCommond.proto";
+message ShutdownMultiProcessRequest {
+}
+
+message ShutdownMultiProcessResponse {
+}
+
+message ShutdownAdditionalServersEvent {
+}
+
+message DeploymentMap {
+    enum ComponentID { id = CID_DeploymentMap; } 
+    string map_url = 1;
+    bool accepting_players = 2;
+    uint32 session_id = 3;
+    uint32 schema_hash = 4;
+}
+
+message SnapshotVersion {
+    enum ComponentID { id = CID_SnapshotVersion; } 
+    uint64 version = 1;
+}
+
+message StartupActorManager {
+    enum ComponentID { id = CID_StartupActorManager; } 
+    bool can_begin_play = 1;
+}
+
+message GSMShutdown {
+    enum ComponentID { id = CID_GSMShutdown; } 
+    //command ShutdownMultiProcessResponse begin_shutdown_multiprocess(ShutdownMultiProcessRequest);
+    rpc begin_shutdown_multiprocess(ShutdownMultiProcessRequest) returns ShutdownMultiProcessResponse;
+    event ShutdownAdditionalServersEvent shutdown_additional_servers;
+}

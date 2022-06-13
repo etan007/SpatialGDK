@@ -1,0 +1,6 @@
+// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+package unreal;
+import "xCommond.proto";
+message PlayerController {
+     enum ComponentID { id = CID_PlayerController; } 
+}

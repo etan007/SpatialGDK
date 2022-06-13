@@ -1,0 +1,7 @@
+// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+package unreal;
+import "xCommond.proto";
+// Actor that is a part of the PersistentLevel or created with SpawnActor
+message NotStreamed {
+    enum ComponentID { id = CID_NotStreamed; } 
+}

@@ -1,0 +1,33 @@
+// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+package unreal;
+import "xCommond.proto";
+import "improbable/standard_library.schema";
+import "unreal/gdk/spawner.schema";
+import "unreal/gdk/global_state_manager.schema";
+import "unreal/gdk/virtual_worker_translation.schema";
+import "unreal/gdk/server_worker.schema";
+
+message KnownEntityAuthComponentSet {
+  enum ComponentID { id = CID_InitialOnlyPresence; } 
+  /*components = [
+	improbable.Position,
+	improbable.Metadata,
+	improbable.Interest,
+	unreal.PlayerSpawner,
+	unreal.DeploymentMap,
+	unreal.StartupActorManager,
+	unreal.GSMShutdown,	 
+	unreal.VirtualWorkerTranslation
+  ];*/
+  message components
+  {
+	improbable.Position Position = 1;
+	improbable.Metadata Metadata = 2;
+	improbable.Interest Interest = 3;
+	unreal.PlayerSpawner PlayerSpawner = 4;
+	unreal.DeploymentMap DeploymentMap = 5;
+	unreal.StartupActorManager StartupActorManager = 6;
+	unreal.GSMShutdown GSMShutdown = 7;
+	unreal.VirtualWorkerTranslation VirtualWorkerTranslation = 8;
+  }
+}

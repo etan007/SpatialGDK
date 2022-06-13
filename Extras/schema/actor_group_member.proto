@@ -1,0 +1,11 @@
+// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+package unreal;
+import "xCommond.proto";
+// Indicates entity's actor group membership; in Offloading scenarios,
+// Actor Groups are based off of class hierarchy.
+// Intended use is for the Strategy Worker.
+message ActorGroupMember {
+	enum ComponentID { id = CID_ActorGroupMember; } 
+	
+	uint32 actor_group_id = 1;
+}
