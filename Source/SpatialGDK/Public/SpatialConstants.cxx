@@ -211,26 +211,26 @@ const TArray<Worker_ComponentId> REQUIRED_COMPONENTS_FOR_AUTH_SERVER_INTEREST =
 	};
 
 const TArray<FString> ServerAuthorityWellKnownSchemaImports = {
-	"improbable/standard_library.schema",
-	"unreal/gdk/authority_intent.schema",
-	"unreal/gdk/debug_component.schema",
-	"unreal/gdk/gameplay_debugger_component.schema",
-	"unreal/gdk/debug_metrics.schema",
-	"unreal/gdk/net_owning_client_worker.schema",
-	"unreal/gdk/not_streamed.schema",
-	"unreal/gdk/query_tags.schema",
-	"unreal/gdk/relevant.schema",
-	"unreal/gdk/rpc_components.schema",
-	"unreal/gdk/spatial_debugging.schema",
-	"unreal/gdk/spawndata.schema",
-	"unreal/gdk/tombstone.schema",
-	"unreal/gdk/unreal_metadata.schema",
-	"unreal/gdk/actor_group_member.schema",
-	"unreal/gdk/actor_set_member.schema",
-	"unreal/gdk/migration_diagnostic.schema",
-	"unreal/gdk/actor_ownership.schema",
-	"unreal/generated/rpc_endpoints.schema",
-	"unreal/generated/NetCullDistance/ncdcomponents.schema",
+	"improbable/standard_library.proto",
+	"unreal/gdk/authority_intent.proto",
+	"unreal/gdk/debug_component.proto",
+	"unreal/gdk/gameplay_debugger_component.proto",
+	"unreal/gdk/debug_metrics.proto",
+	"unreal/gdk/net_owning_client_worker.proto",
+	"unreal/gdk/not_streamed.proto",
+	"unreal/gdk/query_tags.proto",
+	"unreal/gdk/relevant.proto",
+	"unreal/gdk/rpc_components.proto",
+	"unreal/gdk/spatial_debugging.proto",
+	"unreal/gdk/spawndata.proto",
+	"unreal/gdk/tombstone.proto",
+	"unreal/gdk/unreal_metadata.proto",
+	"unreal/gdk/actor_group_member.proto",
+	"unreal/gdk/actor_set_member.proto",
+	"unreal/gdk/migration_diagnostic.proto",
+	"unreal/gdk/actor_ownership.proto",
+	"unreal/generated/rpc_endpoints.proto",
+	"unreal/generated/NetCullDistance/ncdcomponents.proto",
 };
 
 const TMap<Worker_ComponentId, FString> ServerAuthorityWellKnownComponents = {
@@ -262,8 +262,8 @@ const TMap<Worker_ComponentId, FString> ServerAuthorityWellKnownComponents = {
 	{ ACTOR_OWNERSHIP_COMPONENT_ID, "unreal.ActorOwnership" },
 };
 
-const TArray<FString> ClientAuthorityWellKnownSchemaImports = { "unreal/gdk/player_controller.schema", "unreal/gdk/rpc_components.schema",
-																"unreal/generated/rpc_endpoints.schema" };
+const TArray<FString> ClientAuthorityWellKnownSchemaImports = { "unreal/gdk/player_controller.proto", "unreal/gdk/rpc_components.proto",
+																"unreal/generated/rpc_endpoints.proto" };
 
 const TMap<Worker_ComponentId, FString> ClientAuthorityWellKnownComponents = {
 	{ PLAYER_CONTROLLER_COMPONENT_ID, "unreal.PlayerController" },
@@ -275,7 +275,7 @@ const TMap<Worker_ComponentId, FString> RoutingWorkerComponents = {
 	{ CROSS_SERVER_RECEIVER_ENDPOINT_COMPONENT_ID, "unreal.generated.UnrealCrossServerReceiverRPCs" },
 };
 
-const TArray<FString> RoutingWorkerSchemaImports = { "unreal/gdk/rpc_components.schema", "unreal/generated/rpc_endpoints.schema" };
+const TArray<FString> RoutingWorkerSchemaImports = { "unreal/gdk/rpc_components.proto", "unreal/generated/rpc_endpoints.proto" };
 
 const TArray<Worker_ComponentId> KnownEntityAuthorityComponents = { POSITION_COMPONENT_ID,		 METADATA_COMPONENT_ID,
 																	INTEREST_COMPONENT_ID,		 PLAYER_SPAWNER_COMPONENT_ID,
@@ -291,7 +291,7 @@ const TMap<Worker_ComponentId, FString> WorkerEntityAuthorityComponents = {
 	{ CROSS_SERVER_RECEIVER_ACK_ENDPOINT_COMPONENT_ID, "unreal.generated.UnrealCrossServerReceiverACKRPCs" },
 };
 
-const TArray<FString> WorkerEntitySchemaImports = { "unreal/gdk/rpc_components.schema", "unreal/generated/rpc_endpoints.schema" };
+const TArray<FString> WorkerEntitySchemaImports = { "unreal/gdk/rpc_components.proto", "unreal/generated/rpc_endpoints.proto" };
 
 } // namespace SpatialConstants
 

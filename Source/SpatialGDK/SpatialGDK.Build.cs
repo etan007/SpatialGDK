@@ -19,10 +19,16 @@ public class SpatialGDK : ModuleRules
         PrivateIncludePaths.Add("SpatialGDK/Private");
 
         var WorkerSDKPath = Path.GetFullPath(Path.Combine(ModuleDirectory, "Public", "WorkerSDK"));
-
         PublicIncludePaths.Add(WorkerSDKPath); // Worker SDK uses a different include format <improbable/x.h>
         PrivateIncludePaths.Add(WorkerSDKPath);
-
+        
+        PublicDefinitions.Add("GOOGLE_PROTOBUF_NO_RTTI=1");
+        PublicDefinitions.Add("GOOGLE_PROTOBUF_CMAKE_BUILD");
+        
+        var ProtobufPath =  Path.GetFullPath(Path.Combine(ModuleDirectory, "..", "ThirdParty","include"));
+        PublicIncludePaths.Add(ProtobufPath); 
+        PrivateIncludePaths.Add(ProtobufPath);
+        
         PublicDependencyModuleNames.AddRange(
             new string[]
             {
@@ -163,6 +169,33 @@ public class SpatialGDK : ModuleRules
         {
             //Log.TraceInformation("Didn't find trace libraries at {0} and {1}, disabling trace functionality.", TraceStaticLibPath, TraceDynamicLibPath);
             PublicDefinitions.Add("TRACE_LIB_ACTIVE=0");
+        }
+        
+        // protobuf lib
+        /*
+        var ProtobufLibraryDir = Path.Combine(ModuleDirectory, "..",  "ThirdParty", "Lib", Target.Platform.ToString());
+        var ProtobufStaticLibPath = "";
+        if ( Target.Platform == UnrealTargetPlatform.Win64)
+        {
+            ProtobufStaticLibPath = Path.Combine(ProtobufLibraryDir, "libprotobuf.lib");
+          
+        }
+        else if (Target.Platform == UnrealTargetPlatform.Linux)
+        {
+            ProtobufStaticLibPath = Path.Combine(WorkerLibraryDir, "libprotobuf.a");
+             
+        }
+        PublicAdditionalLibraries.Add(ProtobufStaticLibPath);*/
+        var protobufLibraryDir = Path.Combine(ModuleDirectory, "..",  "ThirdParty");
+        if (Target.Platform == UnrealTargetPlatform.Win64) {
+            PublicAdditionalLibraries.Add(Path.Combine(protobufLibraryDir, "lib", "Windows", "libprotobuf.lib"));
+        } else if (Target.Platform == UnrealTargetPlatform.IOS) {
+            PublicAdditionalLibraries.Add(Path.Combine(protobufLibraryDir, "lib", "IOS", "libprotobuf.a"));
+        } else if (Target.Platform == UnrealTargetPlatform.Android) {
+            PublicAdditionalLibraries.Add(Path.Combine(protobufLibraryDir, "lib", "Android", "ARMv7", "libprotobuf.a"));
+            PublicAdditionalLibraries.Add(Path.Combine(protobufLibraryDir, "lib", "Android", "ARM64", "libprotobuf.a"));
+            PublicAdditionalLibraries.Add(Path.Combine(protobufLibraryDir, "lib", "Android", "x64", "libprotobuf.a"));
+            PublicAdditionalLibraries.Add(Path.Combine(protobufLibraryDir, "lib", "Android", "x86", "libprotobuf.a"));
         }
     }
 }

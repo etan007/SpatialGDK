@@ -112,7 +112,7 @@ FString PropertyToSchemaType(GDK_PROPERTY(Property) * Property)
 	else if (Property->IsA(GDK_PROPERTY(ArrayProperty)::StaticClass()))
 	{
 		DataType = PropertyToSchemaType(GDK_CASTFIELD<GDK_PROPERTY(ArrayProperty)>(Property)->Inner);
-		DataType = FString::Printf(TEXT("list<%s>"), *DataType);
+		DataType = FString::Printf(TEXT("repeated %s"), *DataType);
 	}
 	else if (Property->IsA(GDK_PROPERTY(EnumProperty)::StaticClass()))
 	{
@@ -165,9 +165,10 @@ FActorSpecificSubobjectSchemaData GenerateSchemaForStaticallyAttachedSubobject(F
 		Writer.PrintNewLine();
 
 		FString ComponentName = PropertyName + GetReplicatedPropertyGroupName(Group);
-		Writer.Printf("component {0} {", *ComponentName);
+		Writer.Printf("message {0} {", *ComponentName);
 		Writer.Indent();
-		Writer.Printf("id = {0};", ComponentId);
+		//Writer.Printf("id = {0};", ComponentId);
+		Writer.Printf("enum ComponentID { id = {0}; }", ComponentId);
 		Writer.Printf("data unreal.generated.{0};", *SchemaReplicatedDataName(Group, ComponentClass));
 		Writer.Outdent().Print("}");
 
@@ -193,7 +194,7 @@ void GenerateSubobjectSchemaForActorIncludes(FCodeWriter& Writer, TSharedPtr<FUn
 			UClass* Class = Value->GetClass();
 			if (!AlreadyImported.Contains(Class) && SchemaGeneratedClasses.Contains(Class))
 			{
-				Writer.Printf("import \"unreal/generated/Subobjects/{0}.schema\";", *ClassPathToSchemaName[Class->GetPathName()]);
+				Writer.Printf("import \"unreal/generated/Subobjects/{0}.proto\";", *ClassPathToSchemaName[Class->GetPathName()]);
 				AlreadyImported.Add(Class);
 			}
 		}
@@ -207,7 +208,6 @@ void GenerateSubobjectSchemaForActor(FComponentIdGenerator& IdGenerator, UClass*
 	FCodeWriter Writer;
 
 	Writer.Printf(R"""(
-		// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 		// Note that this file has been generated automatically
 		package unreal.generated.{0}.subobjects;)""",
 				  *ClassPathToSchemaName[ActorClass->GetPathName()].ToLower());
@@ -260,7 +260,7 @@ void GenerateSubobjectSchemaForActor(FComponentIdGenerator& IdGenerator, UClass*
 
 	if (bHasComponents)
 	{
-		FString FileName = FString::Printf(TEXT("%sComponents.schema"), *ClassPathToSchemaName[ActorClass->GetPathName()]);
+		FString FileName = FString::Printf(TEXT("%sComponents.proto"), *ClassPathToSchemaName[ActorClass->GetPathName()]);
 		Writer.WriteToFile(*FPaths::Combine(*SchemaPath, FileName));
 	}
 }
@@ -295,9 +295,9 @@ void GenerateRPCEndpoint(FCodeWriter& Writer, FString EndpointName, Worker_Compo
 {
 	FString ComponentName = TEXT("Unreal") + EndpointName;
 	Writer.PrintNewLine();
-	Writer.Printf("component {0} {", *ComponentName).Indent();
-	Writer.Printf("id = {0};", ComponentId);
-
+	Writer.Printf("message {0} {", *ComponentName).Indent();
+	//Writer.Printf("id = {0};", ComponentId);
+	Writer.Printf("enum ComponentID { id = {0}; }", ComponentId);
 	Schema_FieldId FieldId = 1;
 	for (ERPCType SentRPCType : SentRPCTypes)
 	{
@@ -305,7 +305,7 @@ void GenerateRPCEndpoint(FCodeWriter& Writer, FString EndpointName, Worker_Compo
 
 		for (uint32 RingBufferIndex = 0; RingBufferIndex < RingBufferSize; RingBufferIndex++)
 		{
-			Writer.Printf("option<UnrealRPCPayload> {0}_rpc_{1} = {2};", GetRPCFieldPrefix(SentRPCType), RingBufferIndex, FieldId++);
+			Writer.Printf("optional UnrealRPCPayload {0}_rpc_{1} = {2};", GetRPCFieldPrefix(SentRPCType), RingBufferIndex, FieldId++);
 			if (SentRPCType == ERPCType::CrossServer)
 			{
 				Writer.Printf("CrossServerRPCInfo {0}_counterpart_{1} = {2};", GetRPCFieldPrefix(SentRPCType), RingBufferIndex, FieldId++);
@@ -321,7 +321,7 @@ void GenerateRPCEndpoint(FCodeWriter& Writer, FString EndpointName, Worker_Compo
 		{
 			for (uint32 RingBufferIndex = 0; RingBufferIndex < RingBufferSize; RingBufferIndex++)
 			{
-				Writer.Printf("option<ACKItem> {0}_ack_rpc_{1} = {2};", GetRPCFieldPrefix(AckedRPCType), RingBufferIndex, FieldId++);
+				Writer.Printf("optional ACKItem {0}_ack_rpc_{1} = {2};", GetRPCFieldPrefix(AckedRPCType), RingBufferIndex, FieldId++);
 			}
 		}
 		else
@@ -347,7 +347,6 @@ void GenerateSubobjectSchema(FComponentIdGenerator& IdGenerator, UClass* Class, 
 	FCodeWriter Writer;
 
 	Writer.Printf(R"""(
-		// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 		// Note that this file has been generated automatically
 		package unreal.generated;)""");
 
@@ -378,7 +377,7 @@ void GenerateSubobjectSchema(FComponentIdGenerator& IdGenerator, UClass* Class, 
 	if (bShouldIncludeCoreTypes)
 	{
 		Writer.PrintNewLine();
-		Writer.Printf("import \"unreal/gdk/core_types.schema\";");
+		Writer.Printf("import \"unreal/gdk/core_types.proto\";");
 	}
 
 	for (EReplicatedPropertyGroup Group : GetAllReplicatedPropertyGroups())
@@ -408,7 +407,7 @@ void GenerateSubobjectSchema(FComponentIdGenerator& IdGenerator, UClass* Class, 
 		}
 
 		Writer.PrintNewLine();
-		Writer.Printf("type {0} {", *SchemaReplicatedDataName(Group, Class));
+		Writer.Printf("message {0} {", *SchemaReplicatedDataName(Group, Class));
 		Writer.Indent();
 		for (auto& RepProp : RepData[Group])
 		{
@@ -463,9 +462,10 @@ void GenerateSubobjectSchema(FComponentIdGenerator& IdGenerator, UClass* Class, 
 			}
 			FString ComponentName = SchemaReplicatedDataName(Group, Class) + TEXT("Dynamic") + FString::FromInt(i);
 
-			Writer.Printf("component {0} {", *ComponentName);
+			Writer.Printf("message {0} {", *ComponentName);
 			Writer.Indent();
-			Writer.Printf("id = {0};", ComponentId);
+			//Writer.Printf("id = {0};", ComponentId);
+			Writer.Printf("enum ComponentID { id = {0}; }", ComponentId);
 			Writer.Printf("data {0};", *SchemaReplicatedDataName(Group, Class));
 			Writer.Outdent().Print("}");
 
@@ -475,7 +475,7 @@ void GenerateSubobjectSchema(FComponentIdGenerator& IdGenerator, UClass* Class, 
 		SubobjectSchemaData.DynamicSubobjectComponents.Add(MoveTemp(DynamicSubobjectComponents));
 	}
 
-	FString FileName = FString::Printf(TEXT("%s.schema"), *ClassPathToSchemaName[Class->GetPathName()]);
+	FString FileName = FString::Printf(TEXT("%s.proto"), *ClassPathToSchemaName[Class->GetPathName()]);
 	Writer.WriteToFile(FPaths::Combine(*SchemaPath, *FileName));
 	SubobjectSchemaData.GeneratedSchemaName = ClassPathToSchemaName[Class->GetPathName()];
 	SubobjectClassPathToSchema.Add(Class->GetPathName(), SubobjectSchemaData);
@@ -511,14 +511,13 @@ void GenerateActorSchema(FComponentIdGenerator& IdGenerator, UClass* Class, TSha
 	FCodeWriter Writer;
 
 	Writer.Printf(R"""(
-		// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 		// Note that this file has been generated automatically
 		package unreal.generated.{0};)""",
 				  *ClassPathToSchemaName[Class->GetPathName()].ToLower());
 
 	// Will always be included since AActor has replicated pointers to other actors
 	Writer.PrintNewLine();
-	Writer.Printf("import \"unreal/gdk/core_types.schema\";");
+	Writer.Printf("import \"unreal/gdk/core_types.proto\";");
 
 	FActorSchemaData ActorSchemaData;
 	ActorSchemaData.GeneratedSchemaName = ClassPathToSchemaName[Class->GetPathName()];
@@ -561,10 +560,10 @@ void GenerateActorSchema(FComponentIdGenerator& IdGenerator, UClass* Class, TSha
 		Writer.PrintNewLine();
 
 		FString ComponentName = SchemaReplicatedDataName(Group, Class);
-		Writer.Printf("component {0} {", *ComponentName);
+		Writer.Printf("message {0} {", *ComponentName);
 		Writer.Indent();
-		Writer.Printf("id = {0};", ComponentId);
-
+		//Writer.Printf("id = {0};", ComponentId);
+		Writer.Printf("enum ComponentID { id = {0}; }", ComponentId);
 		AddComponentId(ComponentId, ActorSchemaData.SchemaComponents, PropertyGroupToSchemaComponentType(Group));
 
 		int FieldCounter = 0;
@@ -599,7 +598,7 @@ void GenerateActorSchema(FComponentIdGenerator& IdGenerator, UClass* Class, TSha
 			NetCullDistanceToComponentId.Add(NCD, 0);
 		}
 	}
-	FString FileName = FString::Printf(TEXT("%s.schema"), *ClassPathToSchemaName[Class->GetPathName()]);
+	FString FileName = FString::Printf(TEXT("%s.proto"), *ClassPathToSchemaName[Class->GetPathName()]);
 	Writer.WriteToFile(*FPaths::Combine(*SchemaPath, FileName));
 }
 
@@ -608,12 +607,11 @@ void GenerateRPCEndpointsSchema(FString SchemaPath)
 	FCodeWriter Writer;
 
 	Writer.Print(R"""(
-		// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 		// Note that this file has been generated automatically
 		package unreal.generated;)""");
 	Writer.PrintNewLine();
-	Writer.Print("import \"unreal/gdk/core_types.schema\";");
-	Writer.Print("import \"unreal/gdk/rpc_payload.schema\";");
+	Writer.Print("import \"unreal/gdk/core_types.proto\";");
+	Writer.Print("import \"unreal/gdk/rpc_payload.proto\";");
 
 	GenerateRPCEndpoint(Writer, TEXT("ClientEndpoint"), SpatialConstants::CLIENT_ENDPOINT_COMPONENT_ID,
 						{ ERPCType::ServerReliable, ERPCType::ServerUnreliable, ERPCType::ServerAlwaysWrite },
@@ -631,7 +629,7 @@ void GenerateRPCEndpointsSchema(FString SchemaPath)
 	GenerateRPCEndpoint(Writer, TEXT("CrossServerReceiverACKRPCs"), SpatialConstants::CROSS_SERVER_RECEIVER_ACK_ENDPOINT_COMPONENT_ID, {},
 						{ ERPCType::CrossServer });
 
-	Writer.WriteToFile(*FPaths::Combine(*SchemaPath, TEXT("rpc_endpoints.schema")));
+	Writer.WriteToFile(*FPaths::Combine(*SchemaPath, TEXT("rpc_endpoints.proto")));
 }
 
 // Add the component ID to the passed schema components array.

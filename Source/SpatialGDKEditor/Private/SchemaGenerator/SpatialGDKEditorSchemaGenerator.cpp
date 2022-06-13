@@ -340,9 +340,9 @@ void WriteLevelComponent(FCodeWriter& Writer, const FString& LevelName, Worker_C
 	FString ComponentName = UnrealNameToSchemaComponentName(LevelName);
 	Writer.PrintNewLine();
 	Writer.Printf("// {0}", *ClassPath);
-	Writer.Printf("component {0} {", *ComponentName);
+	Writer.Printf("message {0} {", *ComponentName);
 	Writer.Indent();
-	Writer.Printf("id = {0};", ComponentId);
+	Writer.Printf("enum ComponentID { id = {0}; }", ComponentId);
 	Writer.Outdent().Print("}");
 }
 
@@ -424,7 +424,7 @@ void GenerateSchemaForSublevels(const FString& SchemaOutputPath, const TMultiMap
 
 	NextAvailableComponentId = IdGenerator.Peek();
 
-	Writer.WriteToFile(FPaths::Combine(*SchemaOutputPath, TEXT("Sublevels/sublevels.schema")));
+	Writer.WriteToFile(FPaths::Combine(*SchemaOutputPath, TEXT("Sublevels/sublevels.proto")));
 }
 
 void GenerateSchemaForRPCEndpoints()
@@ -465,15 +465,15 @@ void GenerateSchemaForNCDs(const FString& SchemaOutputPath)
 
 		Writer.PrintNewLine();
 		Writer.Printf("// distance {0}", NCDComponent.Key);
-		Writer.Printf("component {0} {", *SchemaComponentName);
+		Writer.Printf("message {0} {", *SchemaComponentName);
 		Writer.Indent();
-		Writer.Printf("id = {0};", ComponentId);
+		Writer.Printf("enum ComponentID { id = {0}; } ", ComponentId);
 		Writer.Outdent().Print("}");
 	}
 
 	NextAvailableComponentId = IdGenerator.Peek();
 
-	Writer.WriteToFile(FPaths::Combine(*SchemaOutputPath, TEXT("NetCullDistance/ncdcomponents.schema")));
+	Writer.WriteToFile(FPaths::Combine(*SchemaOutputPath, TEXT("NetCullDistance/ncdcomponents.proto")));
 }
 
 FString GenerateIntermediateDirectory()
@@ -567,7 +567,7 @@ Worker_ComponentId GetComponentSetIdBySchemaType(ESchemaComponentType SchemaType
 FString GetComponentSetOutputPathBySchemaType(const FString& BasePath, ESchemaComponentType SchemaType)
 {
 	const FString ComponentSetName = GetComponentSetNameBySchemaType(SchemaType);
-	FString FileName = FString::Printf(TEXT("%s.schema"), *ComponentSetName);
+	FString FileName = FString::Printf(TEXT("%s.proto"), *ComponentSetName);
 	return FPaths::Combine(*BasePath, FPaths::Combine(TEXT("ComponentSets"), *FileName));
 }
 
@@ -592,38 +592,41 @@ void WriteServerAuthorityComponentSet(const USchemaDatabase* SchemaDatabase, con
 		for (const auto& GeneratedActorClass : SchemaDatabase->ActorClassPathToSchema)
 		{
 			const FString ActorClassName = UnrealNameToSchemaName(GeneratedActorClass.Value.GeneratedSchemaName);
-			Writer.Printf("import \"{0}/{1}.schema\";", IncludePath, ActorClassName);
+			Writer.Printf("import \"{0}/{1}.proto\";", IncludePath, ActorClassName);
 			if (GeneratedActorClass.Value.SubobjectData.Num() > 0)
 			{
-				Writer.Printf("import \"{0}/{1}Components.schema\";", IncludePath, ActorClassName);
+				Writer.Printf("import \"{0}/{1}Components.proto\";", IncludePath, ActorClassName);
 			}
 		}
 
 		for (const auto& GeneratedSubObjectClass : SchemaDatabase->SubobjectClassPathToSchema)
 		{
 			const FString SubObjectClassName = UnrealNameToSchemaName(GeneratedSubObjectClass.Value.GeneratedSchemaName);
-			Writer.Printf("import \"{0}/Subobjects/{1}.schema\";", IncludePath, SubObjectClassName);
+			Writer.Printf("import \"{0}/Subobjects/{1}.proto\";", IncludePath, SubObjectClassName);
 		}
 	}
 
 	Writer.PrintNewLine();
-	Writer.Printf("component_set {0} {", SpatialConstants::SERVER_AUTH_COMPONENT_SET_NAME).Indent();
-	Writer.Printf("id = {0};", SpatialConstants::SERVER_AUTH_COMPONENT_SET_ID);
-	Writer.Printf("components = [").Indent();
+	Writer.Printf("message {0} {", SpatialConstants::SERVER_AUTH_COMPONENT_SET_NAME).Indent();
+	Writer.Printf("enum ComponentSetID { id = {0}; }", SpatialConstants::SERVER_AUTH_COMPONENT_SET_ID);
+	Writer.Printf("message components{").Indent();
 
 	// Write all components.
 	{
+		int nIndex = 1;
 		// Well-known SpatialOS and handwritten GDK components.
 		for (const auto& WellKnownComponent : SpatialConstants::ServerAuthorityWellKnownComponents)
 		{
-			Writer.Printf("{0},", WellKnownComponent.Value);
+			Writer.Printf("{0} cpts_{1} = {2};", WellKnownComponent.Value,nIndex,nIndex);
+			nIndex++;
 		}
 
 		// NCDs.
 		for (auto& NCDComponent : NetCullDistanceToComponentId)
 		{
 			const FString NcdComponentName = FString::Printf(TEXT("NetCullDistanceSquared%lld"), static_cast<uint64>(NCDComponent.Key));
-			Writer.Printf("unreal.ncdcomponents.{0},", NcdComponentName);
+			Writer.Printf("unreal.ncdcomponents.{0} cpts_{1} = {2};", NcdComponentName,nIndex,nIndex);
+			nIndex++;
 		}
 
 		for (const auto& GeneratedActorClass : SchemaDatabase->ActorClassPathToSchema)
@@ -634,8 +637,9 @@ void WriteServerAuthorityComponentSet(const USchemaDatabase* SchemaDatabase, con
 				const Worker_ComponentId ComponentId = GeneratedActorClass.Value.SchemaComponents[SchemaType];
 				if (ComponentId != 0)
 				{
-					Writer.Printf("unreal.generated.{0}.{1}{2},", ActorClassName.ToLower(), ActorClassName,
-								  GetReplicatedPropertyGroupName(SchemaComponentTypeToPropertyGroup(SchemaType)));
+					Writer.Printf("unreal.generated.{0}.{1}{2} cpts_{3} = {4};", ActorClassName.ToLower(), ActorClassName,
+								  GetReplicatedPropertyGroupName(SchemaComponentTypeToPropertyGroup(SchemaType)),nIndex,nIndex);
+					nIndex++;
 				}
 			});
 
@@ -647,8 +651,9 @@ void WriteServerAuthorityComponentSet(const USchemaDatabase* SchemaDatabase, con
 					const Worker_ComponentId& ComponentId = ActorSubObjectData.Value.SchemaComponents[SchemaType];
 					if (ComponentId != 0)
 					{
-						Writer.Printf("unreal.generated.{0}.subobjects.{1}{2},", ActorClassName.ToLower(), ActorSubObjectName,
-									  GetReplicatedPropertyGroupName(SchemaComponentTypeToPropertyGroup(SchemaType)));
+						Writer.Printf("unreal.generated.{0}.subobjects.{1}{2} cpts_{3} = {4};", ActorClassName.ToLower(), ActorSubObjectName,
+									  GetReplicatedPropertyGroupName(SchemaComponentTypeToPropertyGroup(SchemaType)),nIndex,nIndex);
+						nIndex++;
 					}
 				});
 			}
@@ -667,8 +672,9 @@ void WriteServerAuthorityComponentSet(const USchemaDatabase* SchemaDatabase, con
 					const Worker_ComponentId& ComponentId = SubObjectSchemaData.SchemaComponents[SchemaType];
 					if (ComponentId != 0)
 					{
-						Writer.Printf("unreal.generated.{0}{1}Dynamic{2},", SubObjectClassName,
-									  GetReplicatedPropertyGroupName(SchemaComponentTypeToPropertyGroup(SchemaType)), SubObjectNumber + 1);
+						Writer.Printf("unreal.generated.{0}{1}Dynamic{2} cpts_{3} = {4};", SubObjectClassName,
+									  GetReplicatedPropertyGroupName(SchemaComponentTypeToPropertyGroup(SchemaType)), SubObjectNumber + 1,nIndex,nIndex);
+						nIndex++;
 					}
 				});
 			}
@@ -677,10 +683,10 @@ void WriteServerAuthorityComponentSet(const USchemaDatabase* SchemaDatabase, con
 
 	Writer.RemoveTrailingComma();
 
-	Writer.Outdent().Print("];");
+	Writer.Outdent().Print("}");
 	Writer.Outdent().Print("}");
 
-	Writer.WriteToFile(FPaths::Combine(*SchemaOutputPath, TEXT("ComponentSets/ServerAuthoritativeComponentSet.schema")));
+	Writer.WriteToFile(FPaths::Combine(*SchemaOutputPath, TEXT("ComponentSets/ServerAuthoritativeComponentSet.proto")));
 }
 
 void WriteRoutingWorkerAuthorityComponentSet(const FString& SchemaOutputPath)
@@ -699,22 +705,24 @@ void WriteRoutingWorkerAuthorityComponentSet(const FString& SchemaOutputPath)
 	}
 
 	Writer.PrintNewLine();
-	Writer.Printf("component_set {0} {", SpatialConstants::ROUTING_WORKER_COMPONENT_SET_NAME).Indent();
-	Writer.Printf("id = {0};", SpatialConstants::ROUTING_WORKER_AUTH_COMPONENT_SET_ID);
-	Writer.Printf("components = [").Indent();
+	Writer.Printf("message {0} {", SpatialConstants::ROUTING_WORKER_COMPONENT_SET_NAME).Indent();
+	Writer.Printf("enum ComponentSetID { id = {0}; }", SpatialConstants::ROUTING_WORKER_AUTH_COMPONENT_SET_ID);
+	Writer.Printf("message components{").Indent();
 
+	int nIndex = 1;
 	// Write all import components.
 	for (const auto& WellKnownComponent : SpatialConstants::RoutingWorkerComponents)
 	{
-		Writer.Printf("{0},", WellKnownComponent.Value);
+		Writer.Printf("{0} cpts_{1} = {2};", WellKnownComponent.Value,nIndex,nIndex);
+		nIndex++;
 	}
 
 	Writer.RemoveTrailingComma();
 
-	Writer.Outdent().Print("];");
+	Writer.Outdent().Print("}");
 	Writer.Outdent().Print("}");
 
-	Writer.WriteToFile(FPaths::Combine(*SchemaOutputPath, TEXT("ComponentSets/RoutingWorkerAuthoritativeComponentSet.schema")));
+	Writer.WriteToFile(FPaths::Combine(*SchemaOutputPath, TEXT("ComponentSets/RoutingWorkerAuthoritativeComponentSet.proto")));
 }
 
 void WriteClientAuthorityComponentSet(const FString& SchemaOutputPath)
@@ -733,22 +741,23 @@ void WriteClientAuthorityComponentSet(const FString& SchemaOutputPath)
 	}
 
 	Writer.PrintNewLine();
-	Writer.Printf("component_set {0} {", SpatialConstants::CLIENT_AUTH_COMPONENT_SET_NAME).Indent();
-	Writer.Printf("id = {0};", SpatialConstants::CLIENT_AUTH_COMPONENT_SET_ID);
-	Writer.Printf("components = [").Indent();
-
+	Writer.Printf("message {0} {", SpatialConstants::CLIENT_AUTH_COMPONENT_SET_NAME).Indent();
+	Writer.Printf("enum ComponentSetID { id = {0}; }", SpatialConstants::CLIENT_AUTH_COMPONENT_SET_ID);
+	Writer.Printf("message components{").Indent();
+    int nIndex = 1;
 	// Write all import components.
 	for (const auto& WellKnownComponent : SpatialConstants::ClientAuthorityWellKnownComponents)
 	{
-		Writer.Printf("{0},", WellKnownComponent.Value);
+		Writer.Printf("{0} cpts_{1} = {2};", WellKnownComponent.Value,nIndex,nIndex);
+		nIndex++;
 	}
 
 	Writer.RemoveTrailingComma();
 
-	Writer.Outdent().Print("];");
+	Writer.Outdent().Print("}");
 	Writer.Outdent().Print("}");
 
-	Writer.WriteToFile(FPaths::Combine(*SchemaOutputPath, TEXT("ComponentSets/ClientAuthoritativeComponentSet.schema")));
+	Writer.WriteToFile(FPaths::Combine(*SchemaOutputPath, TEXT("ComponentSets/ClientAuthoritativeComponentSet.proto")));
 }
 
 void WriteComponentSetBySchemaType(const USchemaDatabase* SchemaDatabase, ESchemaComponentType SchemaType, const FString& SchemaOutputPath)
@@ -768,13 +777,13 @@ void WriteComponentSetBySchemaType(const USchemaDatabase* SchemaDatabase, ESchem
 			const FString ActorClassName = UnrealNameToSchemaName(GeneratedActorClass.Value.GeneratedSchemaName);
 			if (GeneratedActorClass.Value.SchemaComponents[SchemaType] != 0)
 			{
-				Writer.Printf("import \"{0}/{1}.schema\";", IncludePath, ActorClassName);
+				Writer.Printf("import \"{0}/{1}.proto\";", IncludePath, ActorClassName);
 			}
 			for (const auto& SubObjectData : GeneratedActorClass.Value.SubobjectData)
 			{
 				if (SubObjectData.Value.SchemaComponents[SchemaType] != 0)
 				{
-					Writer.Printf("import \"{0}/{1}Components.schema\";", IncludePath, ActorClassName);
+					Writer.Printf("import \"{0}/{1}Components.proto\";", IncludePath, ActorClassName);
 					break;
 				}
 			}
@@ -786,7 +795,7 @@ void WriteComponentSetBySchemaType(const USchemaDatabase* SchemaDatabase, ESchem
 			{
 				if (SubObjectData.SchemaComponents[SchemaType] != 0)
 				{
-					Writer.Printf("import \"{0}/Subobjects/{1}.schema\";", IncludePath, SubObjectClassName);
+					Writer.Printf("import \"{0}/Subobjects/{1}.proto\";", IncludePath, SubObjectClassName);
 					break;
 				}
 			}
@@ -794,21 +803,24 @@ void WriteComponentSetBySchemaType(const USchemaDatabase* SchemaDatabase, ESchem
 	}
 
 	Writer.PrintNewLine();
-	Writer.Printf("component_set {0} {", GetComponentSetNameBySchemaType(SchemaType)).Indent();
-	Writer.Printf("id = {0};", GetComponentSetIdBySchemaType(SchemaType));
-	Writer.Printf("components = [").Indent();
+	Writer.Printf("message {0} {", GetComponentSetNameBySchemaType(SchemaType)).Indent();
+	//Writer.Printf("id = {0};", GetComponentSetIdBySchemaType(SchemaType));
+	Writer.Printf("enum ComponentSetID { id = {0}; } ", GetComponentSetIdBySchemaType(SchemaType));
+	Writer.Printf("message components{").Indent();
 
 	FString SchemaTypeString = GetReplicatedPropertyGroupName(SchemaComponentTypeToPropertyGroup(SchemaType));
 
 	// Write all components.
 	{
+		int nIndex = 1;
 		for (const auto& GeneratedActorClass : SchemaDatabase->ActorClassPathToSchema)
 		{
 			// Actor components.
 			const FString& ActorClassName = UnrealNameToSchemaComponentName(GeneratedActorClass.Value.GeneratedSchemaName);
 			if (GeneratedActorClass.Value.SchemaComponents[SchemaType] != 0)
 			{
-				Writer.Printf("unreal.generated.{0}.{1}{2},", ActorClassName.ToLower(), ActorClassName, SchemaTypeString);
+				Writer.Printf("unreal.generated.{0}.{1}{2} cpts_{3} = {4};", ActorClassName.ToLower(), ActorClassName, SchemaTypeString,nIndex,nIndex);
+				nIndex++;
 			}
 			// Actor static subobjects.
 			for (const auto& ActorSubObjectData : GeneratedActorClass.Value.SubobjectData)
@@ -816,8 +828,9 @@ void WriteComponentSetBySchemaType(const USchemaDatabase* SchemaDatabase, ESchem
 				const FString ActorSubObjectName = UnrealNameToSchemaComponentName(ActorSubObjectData.Value.Name.ToString());
 				if (ActorSubObjectData.Value.SchemaComponents[SchemaType] != 0)
 				{
-					Writer.Printf("unreal.generated.{0}.subobjects.{1}{2},", ActorClassName.ToLower(), ActorSubObjectName,
-								  SchemaTypeString);
+					Writer.Printf("unreal.generated.{0}.subobjects.{1}{2} cpts_{3} = {4};", ActorClassName.ToLower(), ActorSubObjectName,
+								  SchemaTypeString,nIndex,nIndex);
+					nIndex++;
 				}
 			}
 		}
@@ -832,7 +845,8 @@ void WriteComponentSetBySchemaType(const USchemaDatabase* SchemaDatabase, ESchem
 					GeneratedSubObjectClass.Value.DynamicSubobjectComponents[SubObjectNumber];
 				if (SubObjectSchemaData.SchemaComponents[SchemaType] != 0)
 				{
-					Writer.Printf("unreal.generated.{0}{1}Dynamic{2},", SubObjectClassName, SchemaTypeString, SubObjectNumber + 1);
+					Writer.Printf("unreal.generated.{0}{1}Dynamic{2} cpts_{3} = {4};", SubObjectClassName, SchemaTypeString, SubObjectNumber + 1,nIndex,nIndex);
+					nIndex++;
 				}
 			}
 		}
@@ -840,7 +854,7 @@ void WriteComponentSetBySchemaType(const USchemaDatabase* SchemaDatabase, ESchem
 
 	Writer.RemoveTrailingComma();
 
-	Writer.Outdent().Print("];");
+	Writer.Outdent().Print("}");
 	Writer.Outdent().Print("}");
 
 	const FString OutputPath = GetComponentSetOutputPathBySchemaType(SchemaOutputPath, SchemaType);
@@ -1327,7 +1341,7 @@ bool RunSchemaCompiler(FString& SchemaBundleJsonOutput, FString SchemaInputDir, 
 
 	if (SchemaInputDir == "")
 	{
-		SchemaInputDir = FPaths::Combine(SpatialGDKServicesConstants::SpatialOSDirectory, TEXT("schema2"));
+		SchemaInputDir = FPaths::Combine(SpatialGDKServicesConstants::SpatialOSDirectory, TEXT("schema"));
 	}
 
 	if (BuildDir == "")
@@ -1546,7 +1560,7 @@ bool ExtractInformationFromSchemaJson(const FString& SchemaJsonPath, TMap<uint32
 				ComponentIdToDataDefinitionName.Add(ComponentId, DataDefinition);
 			}
 		}
-		// TODO:SKYCELL-BEGIN ÔÝÊ±ÆÁ±Îcompontsets
+		// TODO:SKYCELL-BEGIN ???¡À??¡À?compontsets
 		/*
 		const TArray<TSharedPtr<FJsonValue>>* ComponentSets;
 		SAFE_TRYGETFIELD((*FileObject), Array, "componentSets", ComponentSets);
