@@ -32,6 +32,19 @@ struct FSubViewDelta
  * again. If an entity is removed, skip reading the received ops and check the view to see what
  * components or authority to remove.
  */
+ /**
+
+*对视图所做更改的列表，作为EntityDelta和其他杂项消息的列表。
+*EntityDelta按实体ID排序。
+*在EntityDelta中，组件和权限更改按组件ID排序。
+*
+*大致工作流程。
+*输入一组操作列表。其中不应包含任何未完成的关键部分。
+*获取实体组件对应的所有操作，并将其按实体顺序排序，然后按组件排序在该范围内排序。将所有其他操作放在其他列表中，以便在不进行预处理的情况下读取。
+*对于与添加、更新和删除的组件相关的操作：对于每个实体组件，请查看收到op并检查组件当前是否在视图中。从这里你可以得出对组件的净影响已添加、删除或更新。如果更新，则读取以下操作需要计算出总的更新是什么。
+*对于与权限相关的ops，执行相同的操作，但检查视图以查看当前权限状态。
+*对于添加和删除实体操作，它是相同的流程。如果删除了实体，跳过读取接收到的操作并检查视图以查看内容要删除的组件或权限。
+*/
 class ViewDelta
 {
 public:
@@ -39,6 +52,8 @@ public:
 	// Produces a projection of a given main view delta to a sub view delta. The passed SubViewDelta is populated with
 	// the projection. The given arrays represent the state of the sub view and dictates the projection.
 	// Entity ID arrays are assumed to be sorted for view delta projection.
+	// 生成给定主视图增量到子视图增量的投影。传递的子ViewDelta填充为投影。给定的数组表示子视图的状态并指示投影。
+	// 假设实体ID数组为视图增量投影排序。
 	void Project(FSubViewDelta& SubDelta, const TArray<Worker_EntityId>& CompleteEntities,
 				 const TArray<Worker_EntityId>& NewlyCompleteEntities, const TArray<Worker_EntityId>& NewlyIncompleteEntities,
 				 const TArray<Worker_EntityId>& TemporarilyIncompleteEntities) const;
@@ -120,6 +135,7 @@ private:
 	void ProcessOpList(const OpList& Ops, const EntityView& View, const FComponentSetData& ComponentSetData);
 	void GenerateComponentChangesFromSetData(const Worker_ComponentSetAuthorityChangeOp& Op, const EntityView& View,
 											 const FComponentSetData& ComponentSetData);
+	// 填充实体增量
 	void PopulateEntityDeltas(EntityView& View);
 
 	// Adds component changes to `Delta` and updates `Components` accordingly.

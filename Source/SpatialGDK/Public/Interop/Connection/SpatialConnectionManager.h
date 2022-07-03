@@ -20,10 +20,10 @@ class USpatialWorkerConnection;
 
 enum class ESpatialConnectionType
 {
-	Receptionist,
-	LegacyLocator,
-	Locator,
-	DevAuthFlow
+	Receptionist,  // 接收器
+	LegacyLocator, // 旧定位系统
+	Locator,       // 定位系统  
+	DevAuthFlow    // 开发验证流
 };
 
 UCLASS()

@@ -537,6 +537,9 @@ void UGlobalStateManager::SendCanBeginPlayUpdate(const bool bInCanBeginPlay)
 // Queries for the GlobalStateManager in the deployment.
 // bRetryUntilRecievedExpectedValues will continue querying until the state of AcceptingPlayers and SessionId are the same as the given
 // arguments This is so clients know when to connect to the deployment.
+// 在部署中查询GlobalStateManager。
+// bRetryUntilRecievedExpectedValues将继续查询，直到AcceptingPlayer和SessionId的状态与给定的状态相同
+// 参数这是为了让客户端知道何时连接到部署。
 void UGlobalStateManager::QueryGSM(const QueryDelegate& Callback)
 {
 	// Build a constraint for the GSM.

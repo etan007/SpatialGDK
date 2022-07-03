@@ -17,17 +17,14 @@ public class SpatialGDK : ModuleRules
         bUseUnity = false;
 
         PrivateIncludePaths.Add("SpatialGDK/Private");
-
+        PrivateIncludePaths.Add("SpatialGDK/Private/WorkerSDK");
+  
         var WorkerSDKPath = Path.GetFullPath(Path.Combine(ModuleDirectory, "Public", "WorkerSDK"));
         PublicIncludePaths.Add(WorkerSDKPath); // Worker SDK uses a different include format <improbable/x.h>
         PrivateIncludePaths.Add(WorkerSDKPath);
         
-        PublicDefinitions.Add("GOOGLE_PROTOBUF_NO_RTTI=1");
-        PublicDefinitions.Add("GOOGLE_PROTOBUF_CMAKE_BUILD");
-        
-        var ProtobufPath =  Path.GetFullPath(Path.Combine(ModuleDirectory, "..", "ThirdParty","include"));
-        PublicIncludePaths.Add(ProtobufPath); 
-        PrivateIncludePaths.Add(ProtobufPath);
+         
+      
         
         PublicDependencyModuleNames.AddRange(
             new string[]
@@ -70,14 +67,14 @@ public class SpatialGDK : ModuleRules
 
         var WorkerLibraryDir = Path.Combine(ModuleDirectory, "..", "..", "Binaries", "ThirdParty", "Improbable", Target.Platform.ToString());
 
-        string LibPrefix = "libimprobable_";
+        string LibPrefix = "";
         string ImportLibSuffix = ".so";
         string SharedLibSuffix = ".so";
         bool bAddDelayLoad = false;
 
         if ( Target.Platform == UnrealTargetPlatform.Win64)
         {
-            LibPrefix = "improbable_";
+            LibPrefix = "";
             ImportLibSuffix = ".lib";
             SharedLibSuffix = ".dll";
             bAddDelayLoad = true;
@@ -95,8 +92,8 @@ public class SpatialGDK : ModuleRules
             throw new System.Exception(System.String.Format("Unsupported platform {0}", Target.Platform.ToString()));
         }
 
-        string WorkerImportLib = System.String.Format("{0}worker{1}", LibPrefix, ImportLibSuffix);
-        string WorkerSharedLib = System.String.Format("{0}worker{1}", LibPrefix, SharedLibSuffix);
+        string WorkerImportLib = System.String.Format("{0}WorkerSDK{1}", LibPrefix, ImportLibSuffix);
+        string WorkerSharedLib = System.String.Format("{0}WorkerSDK{1}", LibPrefix, SharedLibSuffix);
 
         if (Target.Platform != UnrealTargetPlatform.Android)
         {
@@ -109,7 +106,7 @@ public class SpatialGDK : ModuleRules
             WorkerImportLib = Path.Combine(WorkerLibraryDir, WorkerImportLib);
             PublicRuntimeLibraryPaths.Add(WorkerLibraryDir);
 
-            //PublicAdditionalLibraries.Add(WorkerImportLib);
+            PublicAdditionalLibraries.Add(WorkerImportLib);
         }
         else
         {
@@ -132,7 +129,7 @@ public class SpatialGDK : ModuleRules
                 Path.Combine(WorkerLibraryDir, "x86_64", WorkerSharedLib),
             };
 
-            //PublicAdditionalLibraries.AddRange(WorkerLibraries);
+            PublicAdditionalLibraries.AddRange(WorkerLibraries);
         }
 
         // Detect existence of trace library, if present add preprocessor
@@ -186,7 +183,7 @@ public class SpatialGDK : ModuleRules
              
         }
         PublicAdditionalLibraries.Add(ProtobufStaticLibPath);*/
-        var protobufLibraryDir = Path.Combine(ModuleDirectory, "..",  "ThirdParty");
+        /*var protobufLibraryDir = Path.Combine(ModuleDirectory, "..",  "ThirdParty");
         if (Target.Platform == UnrealTargetPlatform.Win64) {
             PublicAdditionalLibraries.Add(Path.Combine(protobufLibraryDir, "lib", "Windows", "libprotobuf.lib"));
         } else if (Target.Platform == UnrealTargetPlatform.IOS) {
@@ -196,6 +193,6 @@ public class SpatialGDK : ModuleRules
             PublicAdditionalLibraries.Add(Path.Combine(protobufLibraryDir, "lib", "Android", "ARM64", "libprotobuf.a"));
             PublicAdditionalLibraries.Add(Path.Combine(protobufLibraryDir, "lib", "Android", "x64", "libprotobuf.a"));
             PublicAdditionalLibraries.Add(Path.Combine(protobufLibraryDir, "lib", "Android", "x86", "libprotobuf.a"));
-        }
+        }*/
     }
 }

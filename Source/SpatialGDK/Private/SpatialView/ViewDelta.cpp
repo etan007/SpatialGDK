@@ -28,6 +28,7 @@ void ViewDelta::Project(FSubViewDelta& SubDelta, const TArray<Worker_EntityId>& 
 	SubDelta.EntityDeltas.Empty();
 
 	// No projection is applied to worker messages, as they are not entity specific.
+	// 没有投影应用于工作消息，因为它们不是特定于实体的。
 	SubDelta.WorkerMessages = &WorkerMessages;
 
 	// All arrays here are sorted by entity ID.
@@ -49,20 +50,21 @@ void ViewDelta::Project(FSubViewDelta& SubDelta, const TArray<Worker_EntityId>& 
 											   static_cast<uint64>(TemporarilyIncompleteId));
 		const Worker_EntityId CurrentEntityId = static_cast<Worker_EntityId>(MinEntityId);
 		// If no list has elements left to read then stop.
+		// 如果列表没有剩下要读取的元素，则停止。
 		if (CurrentEntityId == SENTINEL_ENTITY_ID)
 		{
 			break;
 		}
 
-		// Find the intersection between complete entities and the entity IDs in the view delta, add them to this
-		// delta.
+		// Find the intersection between complete entities and the entity IDs in the view delta, add them to this delta.
+		// 在视图增量中找到完整实体和实体ID列表之间的交集，将它们添加到此增量中
 		if (CompleteId == CurrentEntityId && DeltaId == CurrentEntityId)
 		{
 			EntityDelta CompleteDelta = *DeltaIt;
 			if (TemporarilyIncompleteId == CurrentEntityId)
 			{
-				// This is a delta for a complete entity which was also temporarily removed. Change its type to
-				// reflect that.
+				// This is a delta for a complete entity which was also temporarily removed. Change its type to reflect that.
+				// 这是临时删除的完整实体的增量。更改其类型以反映这一点。
 				CompleteDelta.Type = EntityDelta::TEMPORARILY_REMOVED;
 				++TemporarilyIncompleteIt;
 			}
@@ -70,26 +72,29 @@ void ViewDelta::Project(FSubViewDelta& SubDelta, const TArray<Worker_EntityId>& 
 		}
 		// Temporarily incomplete entities which aren't present in the projecting view delta are represented as marker
 		// temporarily removed entities with no state.
+		// 投影视图增量中不存在的临时不完整实体表示为标记，暂时删除了无状态的实体。
 		else if (TemporarilyIncompleteId == CurrentEntityId)
 		{
 			SubDelta.EntityDeltas.Emplace(EntityDelta{ CurrentEntityId, EntityDelta::TEMPORARILY_REMOVED });
 			++TemporarilyIncompleteIt;
 		}
 		// Newly complete entities are represented as marker add entities with no state.
+		// 新完成的实体表示为无状态的标记添加实体。
 		else if (NewlyCompleteId == CurrentEntityId)
 		{
 			SubDelta.EntityDeltas.Emplace(EntityDelta{ CurrentEntityId, EntityDelta::ADD });
 			++NewlyCompleteIt;
 		}
 		// Newly incomplete entities are represented as marker remove entities with no state.
+		// 新的不完整实体表示为无状态的标记删除实体。
 		else if (NewlyIncompleteId == CurrentEntityId)
 		{
 			SubDelta.EntityDeltas.Emplace(EntityDelta{ CurrentEntityId, EntityDelta::REMOVE });
 			++NewlyIncompleteIt;
 		}
 
-		// Logic for incrementing complete and delta iterators. If either iterator is done, null the other,
-		// as there can no longer be any intersection.
+		// Logic for incrementing complete and delta iterators. If either iterator is done, null the other,as there can no longer be any intersection.
+		// 递增完整迭代器和增量迭代器的逻辑。如果其中一个迭代器已完成，另一个迭代器为空，因为再也没有交集了。
 		if (CompleteId == CurrentEntityId)
 		{
 			++CompleteIt;
@@ -255,6 +260,7 @@ ComponentChange ViewDelta::CalculateAdd(ReceivedComponentChange* Start, Received
 	}
 	Components.Emplace(ComponentData::CreateCopy(Data, Start->ComponentId));
 	// We don't want to reference the component in the view as is isn't stable.
+	// 我们不想引用视图中的组件，因为它不稳定。
 	return ComponentChange(Start->ComponentId, Data);
 }
 
@@ -386,10 +392,14 @@ void ViewDelta::GenerateComponentChangesFromSetData(const Worker_ComponentSetAut
 	// * Add all components the with data in the op.
 	// If one component is both removed and added then this is interpreted as component refresh in the view delta.
 	// Otherwise the component will be added or removed as appropriate.
-
+	// 生成组件更改以：
+	// *删除实体上组件集中的所有组件。
+	// *添加op中包含数据的所有组件。
+	// 如果同时删除和添加了一个组件，则这将被解释为视图增量中的组件刷新。否则，将酌情添加或删除组件。
 	const TSet<Worker_ComponentId>& Set = ComponentSetData.ComponentSets[Op.component_set_id];
 
 	// If a component on the entity is in the set then generate a remove operation.
+	// 如果实体上的组件在集合中，则生成移除操作。
 	if (const EntityViewElement* Entity = View.Find(Op.entity_id))
 	{
 		for (const ComponentData& Component : Entity->Components)
@@ -404,6 +414,7 @@ void ViewDelta::GenerateComponentChangesFromSetData(const Worker_ComponentSetAut
 	}
 
 	// If the component has data in the authority op then generate an add operation.
+	// 如果组件在权限op中有数据，则生成添加操作。
 	for (uint32 i = 0; i < Op.canonical_component_set_data_count; ++i)
 	{
 		Worker_AddComponentOp AddOp = { Op.entity_id, Op.canonical_component_set_data[i] };
@@ -422,13 +433,13 @@ void ViewDelta::PopulateEntityDeltas(EntityView& View)
 	AuthorityGainedForDelta.Reserve(AuthorityChanges.Num());
 	AuthorityLostForDelta.Reserve(AuthorityChanges.Num());
 	AuthorityLostTempForDelta.Reserve(AuthorityChanges.Num());
-
+    // 根据EntityID排序
 	Algo::StableSort(ComponentChanges, EntityComponentComparison{});
 	Algo::StableSort(AuthorityChanges, EntityComponentComparison{});
 	Algo::StableSort(EntityChanges, EntityComparison{});
 
-	// Add sentinel elements to the ends of the arrays.
-	// Prevents the need for bounds checks on the iterators.
+	// Add sentinel elements to the ends of the arrays.Prevents the need for bounds checks on the iterators.
+	// 将sentinel元素添加到阵列的末端。防止需要对迭代器进行边界检查。
 	ComponentChanges.Emplace(Worker_RemoveComponentOp{ SENTINEL_ENTITY_ID, 0 });
 	AuthorityChanges.Emplace(Worker_ComponentSetAuthorityChangeOp{ SENTINEL_ENTITY_ID, 0, WORKER_AUTHORITY_NOT_AUTHORITATIVE,0, });
 	EntityChanges.Emplace(ReceivedEntityChange{ SENTINEL_ENTITY_ID, false });
@@ -521,11 +532,13 @@ ViewDelta::ReceivedComponentChange* ViewDelta::ProcessEntityComponentChanges(Rec
 		case ReceivedComponentChange::ADD:
 			if (bComponentExists)
 			{
+				// 全部更新
 				ComponentsRefreshedForDelta.Emplace(CalculateCompleteUpdate(It, NextComponentIt, nullptr, nullptr, *Component));
 				++RefreshCount;
 			}
 			else
 			{
+				// 增量添加
 				ComponentsAddedForDelta.Emplace(CalculateAdd(It, NextComponentIt, Components));
 				++AddCount;
 			}
@@ -536,17 +549,20 @@ ViewDelta::ReceivedComponentChange* ViewDelta::ProcessEntityComponentChanges(Rec
 				ComponentChange Update = CalculateUpdate(It, NextComponentIt, *Component);
 				if (Update.Type == ComponentChange::COMPLETE_UPDATE)
 				{
+					// 全部更新
 					ComponentsRefreshedForDelta.Emplace(Update);
 					++RefreshCount;
 				}
 				else
 				{
+					// 增量更新
 					ComponentUpdatesForDelta.Emplace(Update);
 					++UpdateCount;
 				}
 			}
 			else
 			{
+				// 组件新增
 				ComponentsAddedForDelta.Emplace(CalculateAdd(It, NextComponentIt, Components));
 				++AddCount;
 			}
@@ -554,7 +570,9 @@ ViewDelta::ReceivedComponentChange* ViewDelta::ProcessEntityComponentChanges(Rec
 		case ReceivedComponentChange::REMOVE:
 			if (bComponentExists)
 			{
+				// 移除增量
 				ComponentsRemovedForDelta.Emplace(It->ComponentId);
+				// 移除索引组件
 				Components.RemoveAtSwap(Component - Components.GetData());
 				++RemoveCount;
 			}

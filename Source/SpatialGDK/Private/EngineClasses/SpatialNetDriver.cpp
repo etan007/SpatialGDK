@@ -310,10 +310,13 @@ void USpatialNetDriver::InitiateConnectionToSpatialOS(const FURL& URL)
 
 	// If this is the first connection try using the command line arguments to setup the config objects.
 	// If arguments can not be found we will use the regular flow of loading from the input URL.
-
+	// 如果这是第一次连接，请尝试使用命令行参数设置配置对象。
+	// 如果找不到参数，我们将使用从输入URL加载的常规流程。
+	
 	FString SpatialWorkerType = GameInstance->GetSpatialWorkerType().ToString();
 
 	// Ensures that any connections attempting to using command line arguments have a valid locater host in the command line.
+	// 确保尝试使用命令行参数的任何连接在命令行中都具有有效的定位器主机。
 	GameInstance->TryInjectSpatialLocatorIntoCommandLine();
 
 	UE_LOG(LogSpatialOSNetDriver, Log, TEXT("Attempting connection to SpatialOS"));
@@ -357,6 +360,8 @@ void USpatialNetDriver::OnConnectionToSpatialOSSucceeded()
 
 	// If the current Connection comes from an outdated ClientTravel, the associated NetDriver (this) won't match
 	// the NetDriver from the Engine, resulting in a crash. Here, if the NetDriver is outdated, we leave the callback.
+	// 如果当前连接来自过时的ClientTravel，则关联的NetDriver（此）将不匹配
+	// 引擎中的网络驱动程序，导致崩溃。在这里，如果NetDriver已经过时，我们将解绑回调。
 	if (bConnectAsClient && GEngine->GetWorldContextFromPendingNetGameNetDriver(this) == nullptr)
 	{
 		UE_LOG(LogSpatialOSNetDriver, Warning, TEXT("Outdated NetDriver connection skipped. May be due to an outdated ClientTravel"));
@@ -367,6 +372,8 @@ void USpatialNetDriver::OnConnectionToSpatialOSSucceeded()
 
 	// If we're the server, we will spawn the special Spatial connection that will route all updates to SpatialOS.
 	// There may be more than one of these connections in the future for different replication conditions.
+	// 如果我们是服务器，我们将生成特殊的空间连接，将所有更新路由到SpatialOS。
+	// 对于不同的复制条件，将来可能会有多个连接。
 	if (!bConnectAsClient)
 	{
 		CreateServerSpatialOSNetConnection();
@@ -626,6 +633,9 @@ void USpatialNetDriver::CreateServerSpatialOSNetConnection()
 	// This is just a fake address so that Unreal doesn't ensure-crash on disconnecting from SpatialOS
 	// See UNetDriver::RemoveClientConnection for more details, but basically there is a TMap which uses internet addresses as the key and
 	// an unitialised internet address for a connection causes the TMap.Find to fail
+	// 这只是一个假的地址，这样Unreal就不会确保与SpatialOS断开连接时崩溃
+	// 有关更多详细信息，请参见UNetDriver：：RemoveClientConnection，但基本上有一个TMap，它使用internet地址作为键
+	// 连接的统一internet地址会导致TMap。查找失败
 	TSharedRef<FInternetAddr> FromAddr = SocketSubsystem->CreateInternetAddr();
 	bool bIsAddressValid = false;
 	FromAddr->SetIp(*SpatialConstants::LOCAL_HOST, bIsAddressValid);
@@ -635,6 +645,9 @@ void USpatialNetDriver::CreateServerSpatialOSNetConnection()
 	// Each connection stores a URL with various optional settings (host, port, map, netspeed...)
 	// We currently don't make use of any of these as some are meaningless in a SpatialOS world, and some are less of a priority.
 	// So for now we just give the connection a dummy url, might change in the future.
+	// 每个连接存储一个带有各种可选设置（主机、端口、映射、网速…）的URL
+	// 我们目前没有使用任何一个，因为有些在空间世界中毫无意义，有些则不太重要。
+	// 所以现在我们只给连接一个虚拟url，将来可能会改变。
 	FURL DummyURL;
 
 	NetConnection->InitRemoteConnection(this, nullptr, DummyURL, *FromAddr, USOCK_Open);
@@ -642,10 +655,13 @@ void USpatialNetDriver::CreateServerSpatialOSNetConnection()
 	NetConnection->bReliableSpatialConnection = true;
 	AddClientConnection(NetConnection);
 	// Since this is not a "real" client connection, we immediately pretend that it is fully logged on.
+	// 由于这不是一个“真正的”客户端连接，我们立即假装它已完全登录。
 	NetConnection->SetClientLoginState(EClientLoginState::Welcomed);
 
 	// Bind the ProcessServerTravel delegate to the spatial variant. This ensures that if ServerTravel is called and Spatial networking is
 	// enabled, we can travel properly.
+	// 将ProcessServerTravel委托绑定到空间变量。这确保了如果调用了ServerTravel，并且空间网络
+	// 启用后，我们可以正常旅行。
 	GetWorld()->SpatialProcessServerTravelDelegate.BindStatic(SpatialProcessServerTravel);
 }
 
@@ -2056,6 +2072,10 @@ void USpatialNetDriver::ProcessRPC(AActor* Actor, UObject* SubObject, UFunction*
 // In our implementation, connections on the server do not represent clients. They represent direct connections to SpatialOS.
 // For this reason, things like ready checks, acks, throttling based on number of updated connections, interest management are irrelevant at
 // this level.
+// SpatialGDK：这是UNetDriver：：ServerReplicateActors的修改和简化版本。
+// 在我们的实现中，服务器上的连接并不代表客户端。它们表示与SpatialOS的直接连接。
+// 出于这个原因，诸如就绪检查、ACK、基于更新连接数的限制、兴趣管理等都在
+// 此级别。
 int32 USpatialNetDriver::ServerReplicateActors(float DeltaSeconds)
 {
 	SCOPE_CYCLE_COUNTER(STAT_SpatialServerReplicateActors);
@@ -2065,6 +2085,8 @@ int32 USpatialNetDriver::ServerReplicateActors(float DeltaSeconds)
 #if WITH_SERVER_CODE
 	// Only process the stand-in client connection, which is the connection to the runtime itself.
 	// It will be responsible for replicating all actors, regardless of whether they're owned by a client.
+	// 仅处理代理客户端连接，即与运行时本身的连接。
+	// 它将负责复制所有参与者，无论他们是否属于客户端。
 	USpatialNetConnection* SpatialConnection = GetSpatialOSNetConnection();
 	if (SpatialConnection == nullptr)
 	{

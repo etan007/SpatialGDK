@@ -27,6 +27,8 @@ public:
 	// full set of complete entities. During construction, it calculates the initial set of complete entities,
 	// and registers the passed dispatcher callbacks in order to ensure all possible changes which could change
 	// the state of completeness for any entity are picked up by the subview to maintain this invariant.
+	// 子视图构造函数接受子视图的筛选器和调度程序刷新回调，而不是稍后将它们添加到子视图中。这是为了保持不变，即子视图始终具有正确的全套完整实体。
+	// 在构建过程中，它计算完整实体的初始集合，并注册传递的调度程序回调，以确保所有可能发生的更改子视图将拾取任何实体的完整状态，以保持此不变。
 	FSubView(const Worker_ComponentId InTagComponentId, FFilterPredicate InFilter, const EntityView* InView, IDispatcher& Dispatcher,
 			 const TArray<FDispatcherRefreshCallback>& DispatcherRefreshCallbacks);
 

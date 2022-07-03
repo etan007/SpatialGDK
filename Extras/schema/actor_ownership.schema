@@ -1,8 +1,0 @@
-// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
-package unreal;
-
-component ActorOwnership {
-	id = 9959;
-	
-	EntityId leader_entity = 1;
-}

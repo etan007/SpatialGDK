@@ -37,6 +37,8 @@ void FSubView::Advance(const ViewDelta& Delta)
 	// to maintain the ordering of complete entities when merging in the newly complete entities and enforcing
 	// that complete entities is always sorted. This would also need to be enforced in the temporarily incomplete case.
 	// If this sort shows up in a profile it would be worth trying.
+	// 注：对于下的大多数迭代，完整实体的列表将比其他实体的列表更长可能正常使用。这样做的代价可能会很高，一种潜在的优化方法是在合并新的完整实体并执行
+	// 始终对完整实体进行排序。在暂时不完整的情况下，这也需要强制执行。如果这种类型出现在profile中，那么值得一试。
 	Algo::Sort(CompleteEntities);
 	Algo::Sort(NewlyCompleteEntities);
 	Algo::Sort(NewlyIncompleteEntities);
@@ -230,6 +232,8 @@ void FSubView::EntityComplete(const Worker_EntityId EntityId)
 {
 	// We were just about to remove this entity, but it has become complete again before the delta was read.
 	// Mark it as temporarily incomplete, but otherwise treat it as if it hadn't gone incomplete.
+	// 我们正要删除此实体，但在读取增量之前，它又完成了。
+	// 将其标记为暂时不完整，否则将其视为未完成。
 	if (NewlyIncompleteEntities.RemoveSingleSwap(EntityId))
 	{
 		CompleteEntities.Add(EntityId);
@@ -237,6 +241,7 @@ void FSubView::EntityComplete(const Worker_EntityId EntityId)
 		return;
 	}
 	// This is new to us. Mark it as newly complete.
+	// 这对我们来说是新鲜事。将其标记为新完成。
 	if (!NewlyCompleteEntities.Contains(EntityId) && !CompleteEntities.Contains(EntityId))
 	{
 		NewlyCompleteEntities.Add(EntityId);
