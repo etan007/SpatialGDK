@@ -1,27 +1,32 @@
-// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+syntax = "proto2";
 package unreal;
 import "xCommond.proto";
-import "unreal/gdk/core_types.schema";
+import "unreal/gdk/core_types.proto";
 
 message ModifySettingPayload {
-    string setting_name = 1;
-    float setting_value = 2;
+    optional string setting_name = 1;
+    optional float setting_value = 2;
 }
 
 message ExecServerCommandPayload {
-    string server_worker = 1;
-    int32 command = 2;
-    string args = 3;
+    optional string server_worker = 1;
+    optional int32 command = 2;
+    optional string args = 3;
 }
 
+
 message DebugMetrics {
-    enum ComponentID { id = CID_DebugMetrics; } 
-    //command Void start_rpc_metrics(Void);
-    rpc start_rpc_metrics(Void) returns Void;
-    //command Void stop_rpc_metrics(Void);
-    rpc stop_rpc_metrics(Void) returns Void;
+    optional uint32 id = 1[default = 9984];
+}
+
+service DebugMetricsService{
+    // command Void start_rpc_metrics(Void);
+    rpc start_rpc_metrics(Void) returns (Void);
+    // command Void stop_rpc_metrics(Void);
+    rpc stop_rpc_metrics(Void) returns (Void);
     //command Void modify_spatial_settings(ModifySettingPayload);
-    rpc modify_spatial_settings(ModifySettingPayload) returns Void;
+    rpc modify_spatial_settings(ModifySettingPayload) returns (Void);
     //command Void exec_server_command(ExecServerCommandPayload);
-    rpc exec_server_command(ExecServerCommandPayload) returns Void;
+    rpc exec_server_command(ExecServerCommandPayload) returns (Void);
+
 }

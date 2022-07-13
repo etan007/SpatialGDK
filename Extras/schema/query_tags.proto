@@ -1,28 +1,28 @@
-// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+syntax = "proto2";
 package unreal;
 import "xCommond.proto";
 // System query tags for entity completeness
 
 message ActorAuthTag {
-    enum ComponentID { id = CID_ActorAuthTag; } 
+    optional uint32 id = 1[default = 2001];
 }
 
 message ActorTag {
-    enum ComponentID { id = CID_ActorTag; } 
+    optional uint32 id = 1[default = 2002];
 }
 
 message ActorOwnerOnlyDataTag {
-	enum ComponentID { id = CID_ActorOwnerOnlyDataTag; } 
+    optional uint32 id = 1[default = 2003];
 }
 
 message LBTag {
-    enum ComponentID { id = CID_LBTag; } 
+    optional uint32 id = 1[default = 2005];
 }
 
 message GDKKnownEntityTag {
-    enum ComponentID { id = CID_GDKKnownEntityTag; } 
+    optional uint32 id = 1[default = 2007];
 }
 
 message RoutingWorkerEntityTag {
-    enum ComponentID { id = CID_RoutingWorkerEntityTag; } 
+    optional uint32 id = 1[default = 2009];
 }

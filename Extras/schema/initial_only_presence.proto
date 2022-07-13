@@ -1,7 +1,7 @@
-// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+syntax = "proto2";
 package unreal;
 import "xCommond.proto";
 // Marker component to indicate InitialOnly data is present on this entity
-message InitialOnlyPresence {
-     enum ComponentID { id = CID_InitialOnlyPresence; } 
+message InitialOnlyPresence { 
+     optional uint32 id = 1[default = 9966];
 }

@@ -1,12 +1,13 @@
-// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+syntax = "proto2";
 package unreal;
 import "xCommond.proto";
 message DebugComponent {
-     enum ComponentID { id = CID_DebugComponent; } 
-     optional uint32 worker_id_delegation = 1;
-     string actor_tags = 2;
+
+     optional uint32 id = 1[default = 9995];
+     optional uint32 worker_id_delegation = 2;
+     optional string actor_tags = 3;
 }
 
 message DebugComponentTag {
-      enum ComponentID { id = CID_DebugComponentTag; } 
+      optional uint32 id = 1[default = 2011];
 }

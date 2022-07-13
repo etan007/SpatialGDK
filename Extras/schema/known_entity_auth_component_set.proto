@@ -1,14 +1,14 @@
-// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+syntax = "proto2";
 package unreal;
 import "xCommond.proto";
-import "improbable/standard_library.schema";
-import "unreal/gdk/spawner.schema";
-import "unreal/gdk/global_state_manager.schema";
-import "unreal/gdk/virtual_worker_translation.schema";
-import "unreal/gdk/server_worker.schema";
+import "improbable/standard_library.proto";
+import "unreal/gdk/spawner.proto";
+import "unreal/gdk/global_state_manager.proto";
+import "unreal/gdk/virtual_worker_translation.proto";
+import "unreal/gdk/server_worker.proto";
 
 message KnownEntityAuthComponentSet {
-  enum ComponentID { id = CID_InitialOnlyPresence; } 
+  optional uint32 id = 1[default = 9905];
   /*components = [
 	improbable.Position,
 	improbable.Metadata,
@@ -19,15 +19,14 @@ message KnownEntityAuthComponentSet {
 	unreal.GSMShutdown,	 
 	unreal.VirtualWorkerTranslation
   ];*/
-  message components
-  {
-	improbable.Position Position = 1;
-	improbable.Metadata Metadata = 2;
-	improbable.Interest Interest = 3;
-	unreal.PlayerSpawner PlayerSpawner = 4;
-	unreal.DeploymentMap DeploymentMap = 5;
-	unreal.StartupActorManager StartupActorManager = 6;
-	unreal.GSMShutdown GSMShutdown = 7;
-	unreal.VirtualWorkerTranslation VirtualWorkerTranslation = 8;
+  message Components{
+	optional improbable.Position cps_x1 = 1;
+	optional improbable.Metadata cps_x2= 2;
+	optional improbable.Interest cps_x3 = 3;
+	optional unreal.PlayerSpawner cps_x4 = 4;
+	optional unreal.DeploymentMap cps_x5 = 5;
+	optional unreal.StartupActorManager cps_x6 = 6;
+	optional unreal.GSMShutdown cps_x7 = 7;
+	optional unreal.VirtualWorkerTranslation cps_x8 = 8;
   }
 }

@@ -1,6 +1,6 @@
-// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+syntax = "proto2";
 package unreal;
 import "xCommond.proto";
 message PlayerController {
-     enum ComponentID { id = CID_PlayerController; } 
+     optional uint32 id = 1[default = 9991];
 }

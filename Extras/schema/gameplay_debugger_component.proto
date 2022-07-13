@@ -1,8 +1,8 @@
-// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+syntax = "proto2";
 package unreal;
 import "xCommond.proto";
 message GameplayDebuggerComponent {
-     enum ComponentID { id = CID_GameplayDebuggerComponent; } 
-     uint32 delegated_virtual_worker_id = 1;
-     bool track_player = 2;
+     optional uint32 id = 1[default = 9997];
+     optional uint32 delegated_virtual_worker_id = 2;
+     optional bool track_player = 3;
 }

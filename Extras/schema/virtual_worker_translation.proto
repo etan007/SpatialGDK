@@ -1,4 +1,4 @@
-// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+syntax = "proto2";
 package unreal;
 
 // The VirtualWorkerMapping tells the system which physical worker should currently be simulating
@@ -7,13 +7,13 @@ package unreal;
 // up to date.
 import "xCommond.proto";
 message VirtualWorkerMapping {
-     uint32 virtual_worker_id = 1;
-     string physical_worker_name = 2;
-     int64 server_worker_entity = 3;
-     int64 partition_id = 4;
+     optional uint32 virtual_worker_id = 1;
+     optional string physical_worker_name = 2;
+     optional int64 server_worker_entity = 3;
+     optional int64 partition_id = 4;
 }
 
 message VirtualWorkerTranslation {
-     enum ComponentID { id = CID_VirtualWorkerTranslation; } 
-     repeated VirtualWorkerMapping virtual_worker_mapping = 1;
+     optional uint32 id = 1[default = 9979];
+     repeated VirtualWorkerMapping virtual_worker_mapping = 2;
 }

@@ -1,36 +1,38 @@
-// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+syntax = "proto2";
 package unreal;
 import "xCommond.proto";
-import "unreal/gdk/core_types.schema";
-import "unreal/gdk/debug_metrics.schema";
-import "unreal/gdk/spawner.schema";
-import "unreal/generated/rpc_endpoints.schema";
-import "improbable/standard_library.schema";
+import "unreal/gdk/core_types.proto";
+import "unreal/gdk/debug_metrics.proto";
+import "unreal/gdk/spawner.proto";
+import "unreal/generated/rpc_endpoints.proto";
+import "improbable/standard_library.proto";
 
 message ForwardSpawnPlayerRequest {
-    SpawnPlayerRequest spawn_player_request = 1;
-    UnrealObjectRef player_start = 2;
-    int64 client_system_entity_id = 3;
+    optional SpawnPlayerRequest spawn_player_request = 1;
+    optional UnrealObjectRef player_start = 2;
+    optional int64 client_system_entity_id = 3;
 }
 
 message ForwardSpawnPlayerResponse {
-    bool success = 1;
+    optional bool success = 1;
 }
 
 message ServerWorker {
-    enum ComponentID { id = CID_ServerWorker; } 
-    string worker_name = 1;
-    bool ready_to_begin_play = 2;
-    int64 server_system_entity_id = 3;
-    //command ForwardSpawnPlayerResponse forward_spawn_player(ForwardSpawnPlayerRequest);
-    rpc forward_spawn_player(ForwardSpawnPlayerRequest) returns ForwardSpawnPlayerResponse;
-    //command Void exec_server_command(ExecServerCommandPayload);
-    rpc exec_server_command(ExecServerCommandPayload) returns Void;
+    optional uint32 id = 1[default = 9974];
+    optional string worker_name = 2;
+    optional bool ready_to_begin_play = 3;
+    optional int64 server_system_entity_id = 4;
+  
 }
-
+service  ServerWorkerService{
+    //command ForwardSpawnPlayerResponse forward_spawn_player(ForwardSpawnPlayerRequest);
+    rpc forward_spawn_player(ForwardSpawnPlayerRequest) returns (ForwardSpawnPlayerResponse);
+    //command Void exec_server_command(ExecServerCommandPayload);
+    rpc exec_server_command(ExecServerCommandPayload) returns (Void);
+}
 message ServerWorkerAuthComponentSet {
  
-  enum ComponentSetID { id = CSID_ServerWorkerAuthComponentSet; }
+  optional uint32 id = 1[default = 9908];
   /* 
   components = [
     improbable.Position,
@@ -39,12 +41,12 @@ message ServerWorkerAuthComponentSet {
     unreal.ServerWorker,
     unreal.generated.UnrealCrossServerSenderRPCs
   ];*/
-  message components
+  message Components
   {
-    improbable.Position Position = 1;
-    improbable.Metadata Metadata = 2;
-    improbable.Interest Interest = 3;
-    unreal.ServerWorker ServerWorker = 4;
-    unreal.generated.UnrealCrossServerSenderRPCs UnrealCrossServerSenderRPCs = 5;
+    optional improbable.Position cps_x1 = 1;
+    optional improbable.Metadata cps_x2 = 2;
+    optional improbable.Interest cps_x3 = 3;
+    optional unreal.ServerWorker cps_x4 = 4;
+    optional unreal.generated.UnrealCrossServerSenderRPCs cps_x5 = 5;
   }
 }

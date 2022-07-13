@@ -1,11 +1,14 @@
-// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+syntax = "proto2";
 package unreal;
 import "xCommond.proto";
-import "unreal/gdk/core_types.schema";
-import "unreal/gdk/rpc_payload.schema";
+import "unreal/gdk/core_types.proto";
+import "unreal/gdk/rpc_payload.proto";
 
 message UnrealServerToServerCommandEndpoint {
-    enum ComponentID { id = CID_UnrealServerToServerCommandEndpoint; } 
+    optional uint32 id = 1[default = 9973];
+   
+}
+service UnrealServerToServerCommandEndpointService{
     //command Void server_to_server_rpc_command(UnrealRPCPayload);
-    rpc server_to_server_rpc_command(UnrealRPCPayload) returns command;
+    rpc server_to_server_rpc_command(UnrealRPCPayload) returns (Void);
 }

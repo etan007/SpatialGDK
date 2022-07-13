@@ -1,18 +1,22 @@
-// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+syntax = "proto2";
 package unreal;
 import "xCommond.proto";
 message SpawnPlayerRequest {
-    string url = 1;
-    bytes unique_id = 2;
-    string online_platform_name = 3;
-    bool simulated = 4;
-    EntityId client_system_entity_id = 5;
+    optional string url = 1;
+    optional bytes unique_id = 2;
+    optional string online_platform_name = 3;
+    optional bool simulated = 4;
+    optional int64 client_system_entity_id = 5;
 }
 
 message SpawnPlayerResponse { }
 
 message PlayerSpawner {
-    enum ComponentID { id = CID_PlayerSpawner; } 
+    optional uint32 id = 1[default = 9998];
+   
+}
+
+service PlayerSpawnerService{
     //command SpawnPlayerResponse spawn_player(SpawnPlayerRequest);
-    rpc spawn_player(SpawnPlayerRequest) returns SpawnPlayerResponse;
+    rpc spawn_player(SpawnPlayerRequest) returns (SpawnPlayerResponse);
 }

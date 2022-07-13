@@ -1,25 +1,25 @@
-// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+syntax = "proto2";
 package unreal;
 import "xCommond.proto";
 message Rotator {
-    float pitch = 1;
-    float yaw = 2;
-    float roll = 3;
+    optional float pitch = 1;
+    optional float yaw = 2;
+    optional float roll = 3;
 }
 
 message Vector3f {
-    float x = 1;
-    float y = 2;
-    float z = 3;
+    optional float x = 1;
+    optional float y = 2;
+    optional float z = 3;
 }
 
 message SpawnData {
     // When Unreal replicates actors for the first time, it serializes their location, rotation,
     // scale, and velocity, regardless of whether the actor replicates movement. In our case,
     // location is represented by Spatial position, and this component contains the rest.
-    enum ComponentID { id = CID_SpawnData; } 
-    Vector3f location = 1;
-    Rotator rotation = 2;
-    Vector3f scale = 3;
-    Vector3f velocity = 4;
+    optional uint32 id = 1[default = 9999];
+    optional Vector3f location = 2;
+    optional Rotator rotation = 3;
+    optional Vector3f scale = 4;
+    optional Vector3f velocity = 5;
 }

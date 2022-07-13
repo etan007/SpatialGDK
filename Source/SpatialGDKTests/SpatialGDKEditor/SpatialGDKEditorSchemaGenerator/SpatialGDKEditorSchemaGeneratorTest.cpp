@@ -42,7 +42,7 @@ TArray<FString> LoadSchemaFileForClassToStringArray(const FString& InSchemaOutpu
 	TArray<FString> FileContent;
 	FFileHelper::LoadFileToStringArray(
 		FileContent,
-		*FPaths::SetExtension(FPaths::Combine(InSchemaOutputFolder, SchemaFileFolder, CurrentClass->GetName()), TEXT(".schema")));
+		*FPaths::SetExtension(FPaths::Combine(InSchemaOutputFolder, SchemaFileFolder, CurrentClass->GetName()), TEXT(".proto")));
 
 	return FileContent;
 }
@@ -255,7 +255,7 @@ FString LoadSchemaFileForClass(const FString& InSchemaOutputFolder, const UClass
 	FString FileContent;
 	FFileHelper::LoadFileToString(
 		FileContent,
-		*FPaths::SetExtension(FPaths::Combine(InSchemaOutputFolder, SchemaFileFolder, CurrentClass->GetName()), TEXT(".schema")));
+		*FPaths::SetExtension(FPaths::Combine(InSchemaOutputFolder, SchemaFileFolder, CurrentClass->GetName()), TEXT(".proto")));
 
 	return FileContent;
 }
@@ -309,16 +309,16 @@ FString ExpectedContentsDirectory =
 	TEXT("SpatialGDK/Source/SpatialGDKTests/SpatialGDKEditor/SpatialGDKEditorSchemaGenerator/ExpectedSchema_425");
  
 TMap<FString, FString> ExpectedContentsFilenames = {
-	{ "SpatialTypeActor", "SpatialTypeActor.schema" },
-	{ "NonSpatialTypeActor", "NonSpatialTypeActor.schema" },
-	{ "SpatialTypeActorComponent", "SpatialTypeActorComponent.schema" },
-	{ "SpatialTypeActorWithActorComponent", "SpatialTypeActorWithActorComponent.schema" },
-	{ "SpatialTypeActorWithMultipleActorComponents", "SpatialTypeActorWithMultipleActorComponents.schema" },
-	{ "SpatialTypeActorWithMultipleObjectComponents", "SpatialTypeActorWithMultipleObjectComponents.schema" }
+	{ "SpatialTypeActor", "SpatialTypeActor.proto" },
+	{ "NonSpatialTypeActor", "NonSpatialTypeActor.proto" },
+	{ "SpatialTypeActorComponent", "SpatialTypeActorComponent.proto" },
+	{ "SpatialTypeActorWithActorComponent", "SpatialTypeActorWithActorComponent.proto" },
+	{ "SpatialTypeActorWithMultipleActorComponents", "SpatialTypeActorWithMultipleActorComponents.proto" },
+	{ "SpatialTypeActorWithMultipleObjectComponents", "SpatialTypeActorWithMultipleObjectComponents.proto" }
 };
 uint32 ExpectedRPCEndpointsRingBufferSize = 32;
 TMap<ERPCType, uint32> ExpectedRPCRingBufferSizeOverrides = { { ERPCType::ServerAlwaysWrite, 1 } };
-FString ExpectedRPCEndpointsSchemaFilename = TEXT("rpc_endpoints.schema");
+FString ExpectedRPCEndpointsSchemaFilename = TEXT("rpc_endpoints.proto");
 
 class SchemaValidator
 {
@@ -774,7 +774,7 @@ SCHEMA_GENERATOR_TEST(GIVEN_a_class_with_schema_generated_WHEN_schema_database_s
 
 	// THEN
 	bool bDatabaseMatchesExpected = true;
-	FSoftObjectPath SchemaDatabasePath = FSoftObjectPath(FPaths::SetExtension(DatabaseOutputFile, TEXT(".SchemaDatabase")));
+	FSoftObjectPath SchemaDatabasePath = FSoftObjectPath(FPaths::SetExtension(DatabaseOutputFile, TEXT(".protoDatabase")));
 	USchemaDatabase* LoadedSchemaDatabase = Cast<USchemaDatabase>(SchemaDatabasePath.TryLoad());
 	if (SchemaDatabase == nullptr)
 	{
@@ -810,7 +810,7 @@ SCHEMA_GENERATOR_TEST(GIVEN_multiple_classes_with_schema_generated_WHEN_schema_d
 
 	// THEN
 	bool bDatabaseMatchesExpected = true;
-	FSoftObjectPath SchemaDatabasePath = FSoftObjectPath(FPaths::SetExtension(DatabaseOutputFile, TEXT(".SchemaDatabase")));
+	FSoftObjectPath SchemaDatabasePath = FSoftObjectPath(FPaths::SetExtension(DatabaseOutputFile, TEXT(".protoDatabase")));
 	USchemaDatabase* LoadedSchemaDatabase = Cast<USchemaDatabase>(SchemaDatabasePath.TryLoad());
 	if (SchemaDatabase == nullptr)
 	{
@@ -909,34 +909,34 @@ SCHEMA_GENERATOR_TEST(GIVEN_source_and_destination_of_well_known_schema_files_WH
 	FString GDKSchemaCopyDir = FPaths::Combine(SpatialGDKServicesConstants::SpatialOSDirectory, TEXT("/Tests/schema/unreal/gdk"));
 	FString CoreSDKSchemaCopyDir =
 		FPaths::Combine(SpatialGDKServicesConstants::SpatialOSDirectory, TEXT("/Tests/build/dependencies/schema/standard_library"));
-	TArray<FString> GDKSchemaFilePaths = { "authority_intent.schema",
-										   "core_types.schema",
-										   "debug_component.schema",
-										   "gameplay_debugger_component.schema",
-										   "debug_metrics.schema",
-										   "global_state_manager.schema",
-										   "initial_only_presence.schema",
-										   "player_controller.schema",
-										   "known_entity_auth_component_set.schema",
-										   "migration_diagnostic.schema",
-										   "net_owning_client_worker.schema",
-										   "not_streamed.schema",
-										   "partition_shadow.schema",
-										   "query_tags.schema",
-										   "relevant.schema",
-										   "rpc_components.schema",
-										   "rpc_payload.schema",
-										   "server_worker.schema",
-										   "spatial_debugging.schema",
-										   "actor_group_member.schema",
-										   "actor_set_member.schema",
-										   "actor_ownership.schema",
-										   "spawndata.schema",
-										   "spawner.schema",
-										   "tombstone.schema",
-										   "unreal_metadata.schema",
-										   "virtual_worker_translation.schema" };
-	TArray<FString> CoreSDKFilePaths = { "improbable\\restricted\\system_components.schema", "improbable\\standard_library.schema" };
+	TArray<FString> GDKSchemaFilePaths = { "authority_intent.proto",
+										   "core_types.proto",
+										   "debug_component.proto",
+										   "gameplay_debugger_component.proto",
+										   "debug_metrics.proto",
+										   "global_state_manager.proto",
+										   "initial_only_presence.proto",
+										   "player_controller.proto",
+										   "known_entity_auth_component_set.proto",
+										   "migration_diagnostic.proto",
+										   "net_owning_client_worker.proto",
+										   "not_streamed.proto",
+										   "partition_shadow.proto",
+										   "query_tags.proto",
+										   "relevant.proto",
+										   "rpc_components.proto",
+										   "rpc_payload.proto",
+										   "server_worker.proto",
+										   "spatial_debugging.proto",
+										   "actor_group_member.proto",
+										   "actor_set_member.proto",
+										   "actor_ownership.proto",
+										   "spawndata.proto",
+										   "spawner.proto",
+										   "tombstone.proto",
+										   "unreal_metadata.proto",
+										   "virtual_worker_translation.proto" };
+	TArray<FString> CoreSDKFilePaths = { "improbable\\restricted\\system_components.proto", "improbable\\standard_library.proto" };
 
 	// WHEN
 	SpatialGDKEditor::Schema::CopyWellKnownSchemaFiles(GDKSchemaCopyDir, CoreSDKSchemaCopyDir);
@@ -1040,7 +1040,7 @@ SCHEMA_GENERATOR_TEST(
 
 	// THEN
 	TArray<FString> LoadedSchema;
-	FFileHelper::LoadFileToStringArray(LoadedSchema, *FPaths::Combine(SchemaOutputFolder, TEXT("Sublevels/sublevels.schema")));
+	FFileHelper::LoadFileToStringArray(LoadedSchema, *FPaths::Combine(SchemaOutputFolder, TEXT("Sublevels/sublevels.proto")));
 	ComponentNamesAndIds ParsedNamesAndIds = ParseAvailableNamesAndIdsFromSchemaFile(LoadedSchema);
 
 	bool bHasDuplicateNames = false;
@@ -1266,8 +1266,8 @@ SCHEMA_GENERATOR_TEST(
 
 	// GIVEN
 	FString GDKSchemaCopyDir = FPaths::Combine(SpatialGDKServicesConstants::SpatialOSDirectory, TEXT("schema/unreal/gdk"));
-	TArray<FString> GDKSchemaFilePaths = { TEXT("global_state_manager.schema"), TEXT("spawner.schema"),
-										   TEXT("virtual_worker_translation.schema") };
+	TArray<FString> GDKSchemaFilePaths = { TEXT("global_state_manager.proto"), TEXT("spawner.proto"),
+										   TEXT("virtual_worker_translation.proto") };
 
 	// WHEN
 	IPlatformFile& PlatformFile = FPlatformFileManager::Get().GetPlatformFile();

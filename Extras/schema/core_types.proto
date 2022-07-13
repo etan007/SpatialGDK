@@ -1,4 +1,4 @@
-// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+syntax = "proto2";
 package unreal;
 import "xCommond.proto";
 message Void {
@@ -8,8 +8,8 @@ message Void {
 // boolean indicates false. This is cheaper for having that property set to false
 // because empty options types involve no idea being sent across the network.
 message UnrealObjectRef {
-    int64 entity = 1;
-    uint32 offset = 2;
+    optional int64 entity = 1;
+    optional uint32 offset = 2;
     optional string path = 3;
     // Not all objects should be loaded on clients as a result of resolving
     // a reference, e.g. anything inside streaming levels should not be loaded.

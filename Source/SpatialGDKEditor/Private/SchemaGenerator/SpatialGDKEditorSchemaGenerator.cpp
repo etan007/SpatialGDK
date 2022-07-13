@@ -342,7 +342,7 @@ void WriteLevelComponent(FCodeWriter& Writer, const FString& LevelName, Worker_C
 	Writer.Printf("// {0}", *ClassPath);
 	Writer.Printf("message {0} {", *ComponentName);
 	Writer.Indent();
-	Writer.Printf("enum ComponentID { id = {0}; }", ComponentId);
+	Writer.Printf("optional uint32 id = 1[default = {0}];", ComponentId);
 	Writer.Outdent().Print("}");
 }
 
@@ -379,7 +379,7 @@ void GenerateSchemaForSublevels(const FString& SchemaOutputPath, const TMultiMap
 {
 	FCodeWriter Writer;
 	Writer.Printf(R"""(
-		// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+		syntax = "proto2";
 		// Note that this file has been generated automatically
 		package unreal.sublevels;)""");
 
@@ -446,7 +446,7 @@ void GenerateSchemaForNCDs(const FString& SchemaOutputPath)
 {
 	FCodeWriter Writer;
 	Writer.Printf(R"""(
-		// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+		syntax = "proto2";
 		// Note that this file has been generated automatically
 		package unreal.ncdcomponents;)""");
 
@@ -467,7 +467,7 @@ void GenerateSchemaForNCDs(const FString& SchemaOutputPath)
 		Writer.Printf("// distance {0}", NCDComponent.Key);
 		Writer.Printf("message {0} {", *SchemaComponentName);
 		Writer.Indent();
-		Writer.Printf("enum ComponentID { id = {0}; } ", ComponentId);
+		Writer.Printf("optional uint32 id = 1[default = {0}];", ComponentId);
 		Writer.Outdent().Print("}");
 	}
 
@@ -575,11 +575,11 @@ void WriteServerAuthorityComponentSet(const USchemaDatabase* SchemaDatabase, con
 {
 	FCodeWriter Writer;
 	Writer.Printf(R"""(
-		// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+		syntax = "proto2";
 		// Note that this file has been generated automatically
 		package unreal.generated;)""");
 	Writer.PrintNewLine();
-
+	Writer.Printf("import \"xCommond.proto\";");
 	// Write all import statements.
 	{
 		// Well-known SpatialOS and handwritten GDK schema files.
@@ -608,8 +608,8 @@ void WriteServerAuthorityComponentSet(const USchemaDatabase* SchemaDatabase, con
 
 	Writer.PrintNewLine();
 	Writer.Printf("message {0} {", SpatialConstants::SERVER_AUTH_COMPONENT_SET_NAME).Indent();
-	Writer.Printf("enum ComponentSetID { id = {0}; }", SpatialConstants::SERVER_AUTH_COMPONENT_SET_ID);
-	Writer.Printf("message components{").Indent();
+	Writer.Printf("optional uint32 id = 1[default = {0}];", SpatialConstants::SERVER_AUTH_COMPONENT_SET_ID);
+	Writer.Printf("message Components{").Indent();
 
 	// Write all components.
 	{
@@ -617,7 +617,7 @@ void WriteServerAuthorityComponentSet(const USchemaDatabase* SchemaDatabase, con
 		// Well-known SpatialOS and handwritten GDK components.
 		for (const auto& WellKnownComponent : SpatialConstants::ServerAuthorityWellKnownComponents)
 		{
-			Writer.Printf("{0} cpts_{1} = {2};", WellKnownComponent.Value,nIndex,nIndex);
+			Writer.Printf("optional {0} cpts_x{1} = {2};", WellKnownComponent.Value,nIndex,nIndex);
 			nIndex++;
 		}
 
@@ -625,7 +625,7 @@ void WriteServerAuthorityComponentSet(const USchemaDatabase* SchemaDatabase, con
 		for (auto& NCDComponent : NetCullDistanceToComponentId)
 		{
 			const FString NcdComponentName = FString::Printf(TEXT("NetCullDistanceSquared%lld"), static_cast<uint64>(NCDComponent.Key));
-			Writer.Printf("unreal.ncdcomponents.{0} cpts_{1} = {2};", NcdComponentName,nIndex,nIndex);
+			Writer.Printf("optional unreal.ncdcomponents.{0} cpts_x{1} = {2};", NcdComponentName,nIndex,nIndex);
 			nIndex++;
 		}
 
@@ -637,7 +637,7 @@ void WriteServerAuthorityComponentSet(const USchemaDatabase* SchemaDatabase, con
 				const Worker_ComponentId ComponentId = GeneratedActorClass.Value.SchemaComponents[SchemaType];
 				if (ComponentId != 0)
 				{
-					Writer.Printf("unreal.generated.{0}.{1}{2} cpts_{3} = {4};", ActorClassName.ToLower(), ActorClassName,
+					Writer.Printf("optional unreal.generated.{0}.{1}{2} cpts_x{3} = {4};", ActorClassName.ToLower(), ActorClassName,
 								  GetReplicatedPropertyGroupName(SchemaComponentTypeToPropertyGroup(SchemaType)),nIndex,nIndex);
 					nIndex++;
 				}
@@ -651,7 +651,7 @@ void WriteServerAuthorityComponentSet(const USchemaDatabase* SchemaDatabase, con
 					const Worker_ComponentId& ComponentId = ActorSubObjectData.Value.SchemaComponents[SchemaType];
 					if (ComponentId != 0)
 					{
-						Writer.Printf("unreal.generated.{0}.subobjects.{1}{2} cpts_{3} = {4};", ActorClassName.ToLower(), ActorSubObjectName,
+						Writer.Printf("optional unreal.generated.{0}.subobjects.{1}{2} cpts_x{3} = {4};", ActorClassName.ToLower(), ActorSubObjectName,
 									  GetReplicatedPropertyGroupName(SchemaComponentTypeToPropertyGroup(SchemaType)),nIndex,nIndex);
 						nIndex++;
 					}
@@ -672,7 +672,7 @@ void WriteServerAuthorityComponentSet(const USchemaDatabase* SchemaDatabase, con
 					const Worker_ComponentId& ComponentId = SubObjectSchemaData.SchemaComponents[SchemaType];
 					if (ComponentId != 0)
 					{
-						Writer.Printf("unreal.generated.{0}{1}Dynamic{2} cpts_{3} = {4};", SubObjectClassName,
+						Writer.Printf("optional unreal.generated.{0}{1}Dynamic{2} cpts_x{3} = {4};", SubObjectClassName,
 									  GetReplicatedPropertyGroupName(SchemaComponentTypeToPropertyGroup(SchemaType)), SubObjectNumber + 1,nIndex,nIndex);
 						nIndex++;
 					}
@@ -693,11 +693,11 @@ void WriteRoutingWorkerAuthorityComponentSet(const FString& SchemaOutputPath)
 {
 	FCodeWriter Writer;
 	Writer.Printf(R"""(
-		// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+		syntax = "proto2";
 		// Note that this file has been generated automatically
 		package unreal.generated;)""");
 	Writer.PrintNewLine();
-
+	Writer.Printf("import \"xCommond.proto\";");
 	// Write all import statements.
 	for (const auto& WellKnownSchemaImport : SpatialConstants::RoutingWorkerSchemaImports)
 	{
@@ -706,14 +706,14 @@ void WriteRoutingWorkerAuthorityComponentSet(const FString& SchemaOutputPath)
 
 	Writer.PrintNewLine();
 	Writer.Printf("message {0} {", SpatialConstants::ROUTING_WORKER_COMPONENT_SET_NAME).Indent();
-	Writer.Printf("enum ComponentSetID { id = {0}; }", SpatialConstants::ROUTING_WORKER_AUTH_COMPONENT_SET_ID);
-	Writer.Printf("message components{").Indent();
+	Writer.Printf("optional uint32 id = 1[default = {0}];", SpatialConstants::ROUTING_WORKER_AUTH_COMPONENT_SET_ID);
+	Writer.Printf("message Components{").Indent();
 
 	int nIndex = 1;
 	// Write all import components.
 	for (const auto& WellKnownComponent : SpatialConstants::RoutingWorkerComponents)
 	{
-		Writer.Printf("{0} cpts_{1} = {2};", WellKnownComponent.Value,nIndex,nIndex);
+		Writer.Printf("optional {0} cpts_x{1} = {2};", WellKnownComponent.Value,nIndex,nIndex);
 		nIndex++;
 	}
 
@@ -729,11 +729,11 @@ void WriteClientAuthorityComponentSet(const FString& SchemaOutputPath)
 {
 	FCodeWriter Writer;
 	Writer.Printf(R"""(
-		// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+		syntax = "proto2";
 		// Note that this file has been generated automatically
 		package unreal.generated;)""");
 	Writer.PrintNewLine();
-
+	Writer.Printf("import \"xCommond.proto\";");
 	// Write all import statements.
 	for (const auto& WellKnownSchemaImport : SpatialConstants::ClientAuthorityWellKnownSchemaImports)
 	{
@@ -742,13 +742,13 @@ void WriteClientAuthorityComponentSet(const FString& SchemaOutputPath)
 
 	Writer.PrintNewLine();
 	Writer.Printf("message {0} {", SpatialConstants::CLIENT_AUTH_COMPONENT_SET_NAME).Indent();
-	Writer.Printf("enum ComponentSetID { id = {0}; }", SpatialConstants::CLIENT_AUTH_COMPONENT_SET_ID);
-	Writer.Printf("message components{").Indent();
+	Writer.Printf("optional uint32 id = 1[default = {0}];", SpatialConstants::CLIENT_AUTH_COMPONENT_SET_ID);
+	Writer.Printf("message Components{").Indent();
     int nIndex = 1;
 	// Write all import components.
 	for (const auto& WellKnownComponent : SpatialConstants::ClientAuthorityWellKnownComponents)
 	{
-		Writer.Printf("{0} cpts_{1} = {2};", WellKnownComponent.Value,nIndex,nIndex);
+		Writer.Printf("optional {0} cpts_x{1} = {2};", WellKnownComponent.Value,nIndex,nIndex);
 		nIndex++;
 	}
 
@@ -764,11 +764,11 @@ void WriteComponentSetBySchemaType(const USchemaDatabase* SchemaDatabase, ESchem
 {
 	FCodeWriter Writer;
 	Writer.Printf(R"""(
-		// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+		syntax = "proto2";
 		// Note that this file has been generated automatically
 		package unreal.generated;)""");
 	Writer.PrintNewLine();
-
+	Writer.Printf("import \"xCommond.proto\";");
 	// Write all import statements.
 	{
 		const FString IncludePath = TEXT("unreal/generated");
@@ -805,8 +805,8 @@ void WriteComponentSetBySchemaType(const USchemaDatabase* SchemaDatabase, ESchem
 	Writer.PrintNewLine();
 	Writer.Printf("message {0} {", GetComponentSetNameBySchemaType(SchemaType)).Indent();
 	//Writer.Printf("id = {0};", GetComponentSetIdBySchemaType(SchemaType));
-	Writer.Printf("enum ComponentSetID { id = {0}; } ", GetComponentSetIdBySchemaType(SchemaType));
-	Writer.Printf("message components{").Indent();
+	Writer.Printf("optional uint32 id = 1[default = {0}];", GetComponentSetIdBySchemaType(SchemaType));
+	Writer.Printf("message Components{").Indent();
 
 	FString SchemaTypeString = GetReplicatedPropertyGroupName(SchemaComponentTypeToPropertyGroup(SchemaType));
 
@@ -819,7 +819,7 @@ void WriteComponentSetBySchemaType(const USchemaDatabase* SchemaDatabase, ESchem
 			const FString& ActorClassName = UnrealNameToSchemaComponentName(GeneratedActorClass.Value.GeneratedSchemaName);
 			if (GeneratedActorClass.Value.SchemaComponents[SchemaType] != 0)
 			{
-				Writer.Printf("unreal.generated.{0}.{1}{2} cpts_{3} = {4};", ActorClassName.ToLower(), ActorClassName, SchemaTypeString,nIndex,nIndex);
+				Writer.Printf("optional unreal.generated.{0}.{1}{2} cpts_x{3} = {4};", ActorClassName.ToLower(), ActorClassName, SchemaTypeString,nIndex,nIndex);
 				nIndex++;
 			}
 			// Actor static subobjects.
@@ -828,7 +828,7 @@ void WriteComponentSetBySchemaType(const USchemaDatabase* SchemaDatabase, ESchem
 				const FString ActorSubObjectName = UnrealNameToSchemaComponentName(ActorSubObjectData.Value.Name.ToString());
 				if (ActorSubObjectData.Value.SchemaComponents[SchemaType] != 0)
 				{
-					Writer.Printf("unreal.generated.{0}.subobjects.{1}{2} cpts_{3} = {4};", ActorClassName.ToLower(), ActorSubObjectName,
+					Writer.Printf("optional unreal.generated.{0}.subobjects.{1}{2} cpts_x{3} = {4};", ActorClassName.ToLower(), ActorSubObjectName,
 								  SchemaTypeString,nIndex,nIndex);
 					nIndex++;
 				}
@@ -845,7 +845,7 @@ void WriteComponentSetBySchemaType(const USchemaDatabase* SchemaDatabase, ESchem
 					GeneratedSubObjectClass.Value.DynamicSubobjectComponents[SubObjectNumber];
 				if (SubObjectSchemaData.SchemaComponents[SchemaType] != 0)
 				{
-					Writer.Printf("unreal.generated.{0}{1}Dynamic{2} cpts_{3} = {4};", SubObjectClassName, SchemaTypeString, SubObjectNumber + 1,nIndex,nIndex);
+					Writer.Printf("optional unreal.generated.{0}{1}Dynamic{2} cpts_x{3} = {4};", SubObjectClassName, SchemaTypeString, SubObjectNumber + 1,nIndex,nIndex);
 					nIndex++;
 				}
 			}

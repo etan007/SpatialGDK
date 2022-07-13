@@ -46,10 +46,10 @@ ESchemaComponentType PropertyGroupToSchemaComponentType(EReplicatedPropertyGroup
 
 // Given a RepLayout cmd type (a data type supported by the replication system). Generates the corresponding
 // type used in schema.
-FString PropertyToSchemaType(GDK_PROPERTY(Property) * Property)
+FString PropertyToSchemaType(GDK_PROPERTY(Property) * Property,bool bPreFix = true)
 {
 	FString DataType;
-
+    FString PreFix = TEXT("optional ");
 	if (Property->IsA(GDK_PROPERTY(StructProperty)::StaticClass()))
 	{
 		GDK_PROPERTY(StructProperty)* StructProp = GDK_CASTFIELD<GDK_PROPERTY(StructProperty)>(Property);
@@ -111,8 +111,9 @@ FString PropertyToSchemaType(GDK_PROPERTY(Property) * Property)
 	}
 	else if (Property->IsA(GDK_PROPERTY(ArrayProperty)::StaticClass()))
 	{
-		DataType = PropertyToSchemaType(GDK_CASTFIELD<GDK_PROPERTY(ArrayProperty)>(Property)->Inner);
+		DataType = PropertyToSchemaType(GDK_CASTFIELD<GDK_PROPERTY(ArrayProperty)>(Property)->Inner,false);
 		DataType = FString::Printf(TEXT("repeated %s"), *DataType);
+		PreFix = TEXT("");
 	}
 	else if (Property->IsA(GDK_PROPERTY(EnumProperty)::StaticClass()))
 	{
@@ -122,13 +123,14 @@ FString PropertyToSchemaType(GDK_PROPERTY(Property) * Property)
 	{
 		DataType = TEXT("bytes");
 	}
-
+	if(bPreFix)
+	DataType = PreFix + DataType;
 	return DataType;
 }
 
 void WriteSchemaRepField(FCodeWriter& Writer, const TSharedPtr<FUnrealProperty> RepProp, const int FieldCounter)
 {
-	Writer.Printf("{0} {1} = {2};", *PropertyToSchemaType(RepProp->Property), *SchemaFieldName(RepProp), FieldCounter);
+	Writer.Printf(" {0} {1} = {2};", *PropertyToSchemaType(RepProp->Property), *SchemaFieldName(RepProp), FieldCounter);
 }
 
 // Generates schema for a statically attached subobject on an Actor.
@@ -168,7 +170,7 @@ FActorSpecificSubobjectSchemaData GenerateSchemaForStaticallyAttachedSubobject(F
 		Writer.Printf("message {0} {", *ComponentName);
 		Writer.Indent();
 		//Writer.Printf("id = {0};", ComponentId);
-		Writer.Printf("enum ComponentID { id = {0}; }", ComponentId);
+		Writer.Printf("optional uint32 id = 1[default = {0}];", ComponentId);
 		Writer.Printf("data unreal.generated.{0};", *SchemaReplicatedDataName(Group, ComponentClass));
 		Writer.Outdent().Print("}");
 
@@ -208,6 +210,7 @@ void GenerateSubobjectSchemaForActor(FComponentIdGenerator& IdGenerator, UClass*
 	FCodeWriter Writer;
 
 	Writer.Printf(R"""(
+		syntax = "proto2";
 		// Note that this file has been generated automatically
 		package unreal.generated.{0}.subobjects;)""",
 				  *ClassPathToSchemaName[ActorClass->GetPathName()].ToLower());
@@ -297,21 +300,21 @@ void GenerateRPCEndpoint(FCodeWriter& Writer, FString EndpointName, Worker_Compo
 	Writer.PrintNewLine();
 	Writer.Printf("message {0} {", *ComponentName).Indent();
 	//Writer.Printf("id = {0};", ComponentId);
-	Writer.Printf("enum ComponentID { id = {0}; }", ComponentId);
-	Schema_FieldId FieldId = 1;
+	Writer.Printf("optional uint32 id = 1[default = {0}];", ComponentId);
+	Schema_FieldId FieldId = 2;
 	for (ERPCType SentRPCType : SentRPCTypes)
 	{
 		uint32 RingBufferSize = GetDefault<USpatialGDKSettings>()->GetRPCRingBufferSize(SentRPCType);
 
 		for (uint32 RingBufferIndex = 0; RingBufferIndex < RingBufferSize; RingBufferIndex++)
 		{
-			Writer.Printf("optional UnrealRPCPayload {0}_rpc_{1} = {2};", GetRPCFieldPrefix(SentRPCType), RingBufferIndex, FieldId++);
+			Writer.Printf("optional UnrealRPCPayload {0}_rpc_x{1} = {2};", GetRPCFieldPrefix(SentRPCType), RingBufferIndex, FieldId++);
 			if (SentRPCType == ERPCType::CrossServer)
 			{
-				Writer.Printf("CrossServerRPCInfo {0}_counterpart_{1} = {2};", GetRPCFieldPrefix(SentRPCType), RingBufferIndex, FieldId++);
+				Writer.Printf("optional CrossServerRPCInfo {0}_counterpart_x{1} = {2};", GetRPCFieldPrefix(SentRPCType), RingBufferIndex, FieldId++);
 			}
 		}
-		Writer.Printf("uint64 last_sent_{0}_rpc_id = {1};", GetRPCFieldPrefix(SentRPCType), FieldId++);
+		Writer.Printf("optional uint64 last_sent_{0}_rpc_id = {1};", GetRPCFieldPrefix(SentRPCType), FieldId++);
 	}
 
 	for (ERPCType AckedRPCType : AckedRPCTypes)
@@ -321,12 +324,12 @@ void GenerateRPCEndpoint(FCodeWriter& Writer, FString EndpointName, Worker_Compo
 		{
 			for (uint32 RingBufferIndex = 0; RingBufferIndex < RingBufferSize; RingBufferIndex++)
 			{
-				Writer.Printf("optional ACKItem {0}_ack_rpc_{1} = {2};", GetRPCFieldPrefix(AckedRPCType), RingBufferIndex, FieldId++);
+				Writer.Printf("optional ACKItem {0}_ack_rpc_x{1} = {2};", GetRPCFieldPrefix(AckedRPCType), RingBufferIndex, FieldId++);
 			}
 		}
 		else
 		{
-			Writer.Printf("uint64 last_acked_{0}_rpc_id = {1};", GetRPCFieldPrefix(AckedRPCType), FieldId++);
+			Writer.Printf("optional uint64 last_acked_{0}_rpc_id = {1};", GetRPCFieldPrefix(AckedRPCType), FieldId++);
 		}
 	}
 
@@ -334,7 +337,7 @@ void GenerateRPCEndpoint(FCodeWriter& Writer, FString EndpointName, Worker_Compo
 	{
 		// This counter is used to let clients execute initial multicast RPCs when entity is just getting created,
 		// while ignoring existing multicast RPCs when an entity enters the interest range.
-		Writer.Printf("uint32 initially_present_multicast_rpc_count = {0};", FieldId++);
+		Writer.Printf("optional uint32 initially_present_multicast_rpc_count = {0};", FieldId++);
 	}
 
 	Writer.Outdent().Print("}");
@@ -347,9 +350,11 @@ void GenerateSubobjectSchema(FComponentIdGenerator& IdGenerator, UClass* Class, 
 	FCodeWriter Writer;
 
 	Writer.Printf(R"""(
+		syntax = "proto2";
 		// Note that this file has been generated automatically
 		package unreal.generated;)""");
-
+	Writer.PrintNewLine();
+	Writer.Printf("import \"xCommond.proto\";");
 	bool bShouldIncludeCoreTypes = false;
 
 	// Only include core types if the subobject has replicated references to other UObjects
@@ -465,7 +470,7 @@ void GenerateSubobjectSchema(FComponentIdGenerator& IdGenerator, UClass* Class, 
 			Writer.Printf("message {0} {", *ComponentName);
 			Writer.Indent();
 			//Writer.Printf("id = {0};", ComponentId);
-			Writer.Printf("enum ComponentID { id = {0}; }", ComponentId);
+			Writer.Printf("optional uint32 id = 1[default = {0}];", ComponentId);
 			Writer.Printf("data {0};", *SchemaReplicatedDataName(Group, Class));
 			Writer.Outdent().Print("}");
 
@@ -511,10 +516,13 @@ void GenerateActorSchema(FComponentIdGenerator& IdGenerator, UClass* Class, TSha
 	FCodeWriter Writer;
 
 	Writer.Printf(R"""(
+		syntax = "proto2";
 		// Note that this file has been generated automatically
 		package unreal.generated.{0};)""",
 				  *ClassPathToSchemaName[Class->GetPathName()].ToLower());
 
+	Writer.PrintNewLine();
+	Writer.Printf("import \"xCommond.proto\";");
 	// Will always be included since AActor has replicated pointers to other actors
 	Writer.PrintNewLine();
 	Writer.Printf("import \"unreal/gdk/core_types.proto\";");
@@ -563,14 +571,14 @@ void GenerateActorSchema(FComponentIdGenerator& IdGenerator, UClass* Class, TSha
 		Writer.Printf("message {0} {", *ComponentName);
 		Writer.Indent();
 		//Writer.Printf("id = {0};", ComponentId);
-		Writer.Printf("enum ComponentID { id = {0}; }", ComponentId);
+		Writer.Printf("optional uint32 id = 1[default = {0}];", ComponentId);
 		AddComponentId(ComponentId, ActorSchemaData.SchemaComponents, PropertyGroupToSchemaComponentType(Group));
 
-		int FieldCounter = 0;
+		int FieldCounter = 1;
 		for (auto& RepProp : RepData[Group])
 		{
 			FieldCounter++;
-			WriteSchemaRepField(Writer, RepProp.Value, RepProp.Value->ReplicationData->Handle);
+			WriteSchemaRepField(Writer, RepProp.Value, RepProp.Value->ReplicationData->Handle + 1);
 		}
 
 		Writer.Outdent().Print("}");
@@ -607,8 +615,11 @@ void GenerateRPCEndpointsSchema(FString SchemaPath)
 	FCodeWriter Writer;
 
 	Writer.Print(R"""(
+		syntax = "proto2";
 		// Note that this file has been generated automatically
 		package unreal.generated;)""");
+	Writer.PrintNewLine();
+	Writer.Printf("import \"xCommond.proto\";");
 	Writer.PrintNewLine();
 	Writer.Print("import \"unreal/gdk/core_types.proto\";");
 	Writer.Print("import \"unreal/gdk/rpc_payload.proto\";");

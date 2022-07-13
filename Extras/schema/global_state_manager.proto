@@ -1,4 +1,4 @@
-// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+syntax = "proto2";
 package unreal;
 import "xCommond.proto";
 message ShutdownMultiProcessRequest {
@@ -11,26 +11,31 @@ message ShutdownAdditionalServersEvent {
 }
 
 message DeploymentMap {
-    enum ComponentID { id = CID_DeploymentMap; } 
-    string map_url = 1;
-    bool accepting_players = 2;
-    uint32 session_id = 3;
-    uint32 schema_hash = 4;
+    optional uint32 id = 1[default = 9994];
+    optional string map_url = 2;
+    optional bool accepting_players = 3;
+    optional uint32 session_id = 4;
+    optional uint32 schema_hash = 5;
 }
 
 message SnapshotVersion {
-    enum ComponentID { id = CID_SnapshotVersion; } 
-    uint64 version = 1;
+    optional uint32 id = 1[default = 9990];
+    optional uint64 version = 2;
 }
 
 message StartupActorManager {
-    enum ComponentID { id = CID_StartupActorManager; } 
-    bool can_begin_play = 1;
+    optional uint32 id = 1[default = 9993];
+    optional bool can_begin_play = 2;
 }
 
 message GSMShutdown {
-    enum ComponentID { id = CID_GSMShutdown; } 
+ 
+    optional uint32 id = 1[default = 9992];
+   
+}
+
+service GSMShutdownService {
     //command ShutdownMultiProcessResponse begin_shutdown_multiprocess(ShutdownMultiProcessRequest);
-    rpc begin_shutdown_multiprocess(ShutdownMultiProcessRequest) returns ShutdownMultiProcessResponse;
-    event ShutdownAdditionalServersEvent shutdown_additional_servers;
+    rpc begin_shutdown_multiprocess(ShutdownMultiProcessRequest) returns (ShutdownMultiProcessResponse);
+    //event ShutdownAdditionalServersEvent shutdown_additional_servers;
 }
