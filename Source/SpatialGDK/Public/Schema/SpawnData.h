@@ -49,13 +49,13 @@ struct SpawnData : AbstractMutableComponent
 	{
 		Worker_ComponentData Data = {};
 		Data.component_id = ComponentId;
-		Data.schema_type = Schema_CreateComponentData();
+		Data.schema_type = Schema_CreateComponentData(ComponentId);
 		Schema_Object* ComponentObject = Schema_GetComponentDataFields(Data.schema_type);
 
-		AddVectorToSchema(ComponentObject, 1, Location);
-		AddRotatorToSchema(ComponentObject, 2, Rotation);
-		AddVectorToSchema(ComponentObject, 3, Scale);
-		AddVectorToSchema(ComponentObject, 4, Velocity);
+		AddVectorToSchema(ComponentObject, 2, Location);
+		AddRotatorToSchema(ComponentObject, 3, Rotation);
+		AddVectorToSchema(ComponentObject, 4, Scale);
+		AddVectorToSchema(ComponentObject, 5, Velocity);
 
 		return Data;
 	}

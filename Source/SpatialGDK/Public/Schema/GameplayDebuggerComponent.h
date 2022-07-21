@@ -26,7 +26,7 @@ struct GameplayDebuggerComponent
 	{
 		Worker_ComponentData Data = {};
 		Data.component_id = ComponentId;
-		Data.schema_type = Schema_CreateComponentData();
+		Data.schema_type = Schema_CreateComponentData(ComponentId);
 		Schema_Object* ComponentObject = Schema_GetComponentDataFields(Data.schema_type);
 		WriteToSchema(ComponentObject);
 		return Data;
@@ -61,8 +61,8 @@ private:
 
 	void WriteToSchema(Schema_Object* ComponentObject) const
 	{
-		Schema_AddInt32(ComponentObject, 1, DelegatedVirtualWorkerId);
-		Schema_AddBool(ComponentObject, 2, bTrackPlayer);
+		Schema_AddInt32(ComponentObject, 2, DelegatedVirtualWorkerId);
+		Schema_AddBool(ComponentObject, 3, bTrackPlayer);
 	}
 };
 

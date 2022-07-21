@@ -158,14 +158,14 @@ const Worker_ComponentId GDK_DEBUG_TAG_COMPONENT_ID = 2011;
 // Add component ids above here, this should always be last and be equal to the previous component id
 const Worker_ComponentId LAST_EC_COMPONENT_ID = 2011;
 
-const Schema_FieldId DEPLOYMENT_MAP_MAP_URL_ID = 1;
-const Schema_FieldId DEPLOYMENT_MAP_ACCEPTING_PLAYERS_ID = 2;
-const Schema_FieldId DEPLOYMENT_MAP_SESSION_ID = 3;
-const Schema_FieldId DEPLOYMENT_MAP_SCHEMA_HASH = 4;
+const Schema_FieldId DEPLOYMENT_MAP_MAP_URL_ID = 2;
+const Schema_FieldId DEPLOYMENT_MAP_ACCEPTING_PLAYERS_ID = 3;
+const Schema_FieldId DEPLOYMENT_MAP_SESSION_ID = 4;
+const Schema_FieldId DEPLOYMENT_MAP_SCHEMA_HASH = 5;
 
 const Schema_FieldId SNAPSHOT_VERSION_NUMBER_ID = 1;
 
-const Schema_FieldId STARTUP_ACTOR_MANAGER_CAN_BEGIN_PLAY_ID = 1;
+const Schema_FieldId STARTUP_ACTOR_MANAGER_CAN_BEGIN_PLAY_ID = 2;
 
 const Schema_FieldId ACTOR_COMPONENT_REPLICATES_ID = 1;
 const Schema_FieldId ACTOR_TEAROFF_ID = 3;
@@ -214,7 +214,7 @@ const Schema_FieldId UNREAL_RPC_ENDPOINT_COMMAND_ID = 1;
 const Schema_FieldId PLAYER_SPAWNER_SPAWN_PLAYER_COMMAND_ID = 1;
 
 // AuthorityIntent codes and Field IDs.
-const Schema_FieldId AUTHORITY_INTENT_VIRTUAL_WORKER_ID = 1;
+const Schema_FieldId AUTHORITY_INTENT_VIRTUAL_WORKER_ID = 2;
 
 // VirtualWorkerTranslation Field IDs.
 const Schema_FieldId VIRTUAL_WORKER_TRANSLATION_MAPPING_ID = 1;
@@ -233,16 +233,16 @@ const Schema_FieldId WORKER_DISCONNECT_COMMAND_ID = 1;
 const Schema_FieldId WORKER_CLAIM_PARTITION_COMMAND_ID = 2;
 
 // SpatialDebugger Field IDs.
-const Schema_FieldId SPATIAL_DEBUGGING_AUTHORITATIVE_VIRTUAL_WORKER_ID = 1;
-const Schema_FieldId SPATIAL_DEBUGGING_AUTHORITATIVE_COLOR = 2;
-const Schema_FieldId SPATIAL_DEBUGGING_INTENT_VIRTUAL_WORKER_ID = 3;
-const Schema_FieldId SPATIAL_DEBUGGING_INTENT_COLOR = 4;
-const Schema_FieldId SPATIAL_DEBUGGING_IS_LOCKED = 5;
+const Schema_FieldId SPATIAL_DEBUGGING_AUTHORITATIVE_VIRTUAL_WORKER_ID = 2;
+const Schema_FieldId SPATIAL_DEBUGGING_AUTHORITATIVE_COLOR = 3;
+const Schema_FieldId SPATIAL_DEBUGGING_INTENT_VIRTUAL_WORKER_ID = 4;
+const Schema_FieldId SPATIAL_DEBUGGING_INTENT_COLOR = 5;
+const Schema_FieldId SPATIAL_DEBUGGING_IS_LOCKED = 6;
 
 // ServerWorker Field IDs.
-const Schema_FieldId SERVER_WORKER_NAME_ID = 1;
-const Schema_FieldId SERVER_WORKER_READY_TO_BEGIN_PLAY_ID = 2;
-const Schema_FieldId SERVER_WORKER_SYSTEM_ENTITY_ID = 3;
+const Schema_FieldId SERVER_WORKER_NAME_ID = 2;
+const Schema_FieldId SERVER_WORKER_READY_TO_BEGIN_PLAY_ID = 3;
+const Schema_FieldId SERVER_WORKER_SYSTEM_ENTITY_ID = 4;
 const Schema_FieldId SERVER_WORKER_FORWARD_SPAWN_REQUEST_COMMAND_ID = 1;
 const Schema_FieldId SERVER_WORKER_EXEC_SERVER_COMMAND_COMMAND_ID = 2;
 
@@ -260,12 +260,12 @@ const Schema_FieldId FORWARD_SPAWN_PLAYER_CLIENT_SYSTEM_ENTITY_ID = 3;
 const Schema_FieldId FORWARD_SPAWN_PLAYER_RESPONSE_SUCCESS_ID = 1;
 
 // NetOwningClientWorker Field IDs.
-const Schema_FieldId NET_OWNING_CLIENT_PARTITION_ENTITY_FIELD_ID = 1;
+const Schema_FieldId NET_OWNING_CLIENT_PARTITION_ENTITY_FIELD_ID = 2;
 
 // UnrealMetadata Field IDs.
-const Schema_FieldId UNREAL_METADATA_STABLY_NAMED_REF_ID = 1;
-const Schema_FieldId UNREAL_METADATA_CLASS_PATH_ID = 2;
-const Schema_FieldId UNREAL_METADATA_NET_STARTUP_ID = 3;
+const Schema_FieldId UNREAL_METADATA_STABLY_NAMED_REF_ID = 2;
+const Schema_FieldId UNREAL_METADATA_CLASS_PATH_ID = 3;
+const Schema_FieldId UNREAL_METADATA_NET_STARTUP_ID = 4;
 
 // Migration diagnostic Field IDs
 const Schema_FieldId MIGRATION_DIAGNOSTIC_COMMAND_ID = 1;

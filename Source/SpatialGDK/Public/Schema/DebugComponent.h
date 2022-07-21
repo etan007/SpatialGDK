@@ -28,7 +28,7 @@ struct DebugComponent
 	{
 		Worker_ComponentData Data = {};
 		Data.component_id = ComponentId;
-		Data.schema_type = Schema_CreateComponentData();
+		Data.schema_type = Schema_CreateComponentData(ComponentId);
 		Schema_Object* ComponentObject = Schema_GetComponentDataFields(Data.schema_type);
 		WriteToSchema(ComponentObject);
 		return Data;
@@ -84,11 +84,11 @@ private:
 	{
 		if (DelegatedWorkerId.IsSet())
 		{
-			Schema_AddInt32(ComponentObject, 1, DelegatedWorkerId.GetValue());
+			Schema_AddInt32(ComponentObject, 2, DelegatedWorkerId.GetValue());
 		}
 		for (const auto& Tag : ActorTags)
 		{
-			AddStringToSchema(ComponentObject, 2, Tag.ToString());
+			AddStringToSchema(ComponentObject, 3, Tag.ToString());
 		}
 	}
 };

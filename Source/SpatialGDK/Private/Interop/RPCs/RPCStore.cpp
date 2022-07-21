@@ -29,7 +29,7 @@ Schema_ComponentData* FRPCStore::GetOrCreateComponentData(const EntityComponentI
 	Schema_ComponentData** ComponentDataPtr = PendingRPCsOnEntityCreation.Find(EntityComponentIdPair);
 	if (ComponentDataPtr == nullptr)
 	{
-		ComponentDataPtr = &PendingRPCsOnEntityCreation.Add(EntityComponentIdPair, Schema_CreateComponentData());
+		ComponentDataPtr = &PendingRPCsOnEntityCreation.Add(EntityComponentIdPair, Schema_CreateComponentData(EntityComponentIdPair.ComponentId));
 	}
 	return *ComponentDataPtr;
 }

@@ -44,7 +44,7 @@ struct NetOwningClientWorker : AbstractMutableComponent
 	{
 		Worker_ComponentData Data = {};
 		Data.component_id = ComponentId;
-		Data.schema_type = Schema_CreateComponentData();
+		Data.schema_type = Schema_CreateComponentData(ComponentId);
 		Schema_Object* ComponentObject = Schema_GetComponentDataFields(Data.schema_type);
 
 		if (PartitionId.IsSet())

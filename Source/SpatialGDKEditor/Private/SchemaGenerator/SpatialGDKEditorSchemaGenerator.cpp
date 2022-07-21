@@ -42,7 +42,7 @@
 #include "Utils/RepLayoutUtils.h"
 #include "Utils/SchemaDatabase.h"
 
- 
+#include <WorkerSDK/improbable/c_worker.h>
 #define GDK_CREATE_PACKAGE(PackagePath) CreatePackage((PackagePath));
  
 
@@ -1358,7 +1358,7 @@ bool RunSchemaCompiler(FString& SchemaBundleJsonOutput, FString SchemaInputDir, 
 	IPlatformFile& PlatformFile = FPlatformFileManager::Get().GetPlatformFile();
 
 	// clang-format off
-	const FString& SchemaCompilerBaseArgs = FString::Printf(TEXT("--schema_path=\"%s\" --schema_path=\"%s\" --bundle_out=\"%s\" --bundle_json_out=\"%s\" --load_all_schema_on_schema_path "), *SchemaInputDir, *CoreSDKSchemaDir, *SchemaBundleOutput, *SchemaBundleJsonOutput);
+	const FString& SchemaCompilerBaseArgs = FString::Printf(TEXT("--schema_path=\"%s\" --core_path=\"%s\" --bundle_out=\"%s\" --bundle_json_out=\"%s\" --load_all_schema_on_schema_path "), *SchemaInputDir, *CoreSDKSchemaDir, *SchemaBundleOutput, *SchemaBundleJsonOutput);
 	// clang-format on
 
 	// If there's already a compiled schema dir, blow it away so we don't have lingering artifacts from previous generation runs.
@@ -1652,18 +1652,26 @@ bool SpatialGDKGenerateSchema()
 	// Needs to happen before RunSchemaCompiler
 	WriteComponentSetFiles(SchemaDatabase);
 
+	//±àÒëÉú³ÉµÄproto
+	
+    
 	FString SchemaJsonOutput;
 	if (!RunSchemaCompiler(SchemaJsonOutput))
 	{
 		return false;
 	}
-
-	if (!ExtractInformationFromSchemaJson(SchemaJsonOutput, SchemaDatabase->ComponentSetIdToComponentIds,
+    
+	/*if (!ExtractInformationFromSchemaJson(SchemaJsonOutput, SchemaDatabase->ComponentSetIdToComponentIds,
 										  SchemaDatabase->ComponentIdToFieldIdsIndex, SchemaDatabase->FieldIdsArray))
 	{
 		return false;
 	}
-
+	
+	if (!build_schema("",""))
+	{
+		return false;
+	}*/
+	 
 	if (!SaveSchemaDatabase(SchemaDatabase)) // This requires RunSchemaCompiler to run first
 	{
 		return false;

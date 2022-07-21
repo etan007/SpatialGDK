@@ -95,10 +95,10 @@ struct Metadata : AbstractMutableComponent
 	{
 		Worker_ComponentData Data = {};
 		Data.component_id = ComponentId;
-		Data.schema_type = Schema_CreateComponentData();
+		Data.schema_type = Schema_CreateComponentData(ComponentId);
 		Schema_Object* ComponentObject = Schema_GetComponentDataFields(Data.schema_type);
 
-		AddStringToSchema(ComponentObject, 1, EntityType);
+		AddStringToSchema(ComponentObject, 2, EntityType);
 
 		return Data;
 	}
@@ -128,10 +128,10 @@ struct Position : AbstractMutableComponent
 	{
 		Worker_ComponentData Data = {};
 		Data.component_id = ComponentId;
-		Data.schema_type = Schema_CreateComponentData();
+		Data.schema_type = Schema_CreateComponentData(ComponentId);
 		Schema_Object* ComponentObject = Schema_GetComponentDataFields(Data.schema_type);
 
-		AddCoordinateToSchema(ComponentObject, 1, Coords);
+		AddCoordinateToSchema(ComponentObject, 2, Coords);
 
 		return Data;
 	}
@@ -171,7 +171,7 @@ struct Persistence : AbstractMutableComponent
 	{
 		Worker_ComponentData Data = {};
 		Data.component_id = ComponentId;
-		Data.schema_type = Schema_CreateComponentData();
+		Data.schema_type = Schema_CreateComponentData(ComponentId);
 
 		return Data;
 	}
@@ -289,12 +289,12 @@ struct AuthorityDelegation : AbstractMutableComponent
 	{
 		Worker_ComponentData Data = {};
 		Data.component_id = ComponentId;
-		Data.schema_type = Schema_CreateComponentData();
+		Data.schema_type = Schema_CreateComponentData(ComponentId);
 		Schema_Object* ComponentObject = Schema_GetComponentDataFields(Data.schema_type);
 
 		for (const auto& KVPair : Delegations)
 		{
-			Schema_Object* KVPairObject = Schema_AddObject(ComponentObject, 1);
+			Schema_Object* KVPairObject = Schema_AddObject(ComponentObject, 2);
 			Schema_AddUint32(KVPairObject, SCHEMA_MAP_KEY_FIELD_ID, KVPair.Key);
 			Schema_AddUint64(KVPairObject, SCHEMA_MAP_VALUE_FIELD_ID, KVPair.Value);
 		}

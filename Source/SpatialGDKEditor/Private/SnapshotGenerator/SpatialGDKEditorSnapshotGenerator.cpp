@@ -46,12 +46,12 @@ bool CreateSpawnerEntity(Worker_SnapshotOutputStream* OutputStream)
 
 	Worker_ComponentData PlayerSpawnerData = {};
 	PlayerSpawnerData.component_id = SpatialConstants::PLAYER_SPAWNER_COMPONENT_ID;
-	PlayerSpawnerData.schema_type = Schema_CreateComponentData();
+	PlayerSpawnerData.schema_type = Schema_CreateComponentData(SpatialConstants::PLAYER_SPAWNER_COMPONENT_ID);
 
 	Interest SelfInterest;
 	Query AuthoritySelfQuery = {};
 	AuthoritySelfQuery.ResultComponentIds = { SpatialConstants::GDK_KNOWN_ENTITY_TAG_COMPONENT_ID };
-	AuthoritySelfQuery.Constraint.bSelfConstraint = true;
+	AuthoritySelfQuery.Constraint.bSelfConstraint = true; 
 	SelfInterest.ComponentInterestMap.Add(SpatialConstants::GDK_KNOWN_ENTITY_AUTH_COMPONENT_SET_ID);
 	SelfInterest.ComponentInterestMap[SpatialConstants::GDK_KNOWN_ENTITY_AUTH_COMPONENT_SET_ID].Queries.Add(AuthoritySelfQuery);
 
@@ -80,7 +80,7 @@ Worker_ComponentData CreateDeploymentData()
 {
 	Worker_ComponentData DeploymentData{};
 	DeploymentData.component_id = SpatialConstants::DEPLOYMENT_MAP_COMPONENT_ID;
-	DeploymentData.schema_type = Schema_CreateComponentData();
+	DeploymentData.schema_type = Schema_CreateComponentData(DeploymentData.component_id);
 	Schema_Object* DeploymentDataObject = Schema_GetComponentDataFields(DeploymentData.schema_type);
 
 	AddStringToSchema(DeploymentDataObject, SpatialConstants::DEPLOYMENT_MAP_MAP_URL_ID, "");
@@ -95,7 +95,7 @@ Worker_ComponentData CreateGSMShutdownData()
 {
 	Worker_ComponentData GSMShutdownData{};
 	GSMShutdownData.component_id = SpatialConstants::GSM_SHUTDOWN_COMPONENT_ID;
-	GSMShutdownData.schema_type = Schema_CreateComponentData();
+	GSMShutdownData.schema_type = Schema_CreateComponentData(GSMShutdownData.component_id);
 	return GSMShutdownData;
 }
 
@@ -103,7 +103,7 @@ Worker_ComponentData CreateStartupActorManagerData()
 {
 	Worker_ComponentData StartupActorManagerData{};
 	StartupActorManagerData.component_id = SpatialConstants::STARTUP_ACTOR_MANAGER_COMPONENT_ID;
-	StartupActorManagerData.schema_type = Schema_CreateComponentData();
+	StartupActorManagerData.schema_type = Schema_CreateComponentData(StartupActorManagerData.component_id);
 	Schema_Object* StartupActorManagerObject = Schema_GetComponentDataFields(StartupActorManagerData.schema_type);
 
 	Schema_AddBool(StartupActorManagerObject, SpatialConstants::STARTUP_ACTOR_MANAGER_CAN_BEGIN_PLAY_ID, false);
@@ -152,7 +152,7 @@ Worker_ComponentData CreateVirtualWorkerTranslatorData()
 {
 	Worker_ComponentData VirtualWorkerTranslatorData{};
 	VirtualWorkerTranslatorData.component_id = SpatialConstants::VIRTUAL_WORKER_TRANSLATION_COMPONENT_ID;
-	VirtualWorkerTranslatorData.schema_type = Schema_CreateComponentData();
+	VirtualWorkerTranslatorData.schema_type = Schema_CreateComponentData(VirtualWorkerTranslatorData.component_id);
 	return VirtualWorkerTranslatorData;
 }
 
@@ -374,7 +374,7 @@ bool SpatialGDKGenerateSnapshot(UWorld* World, FString SnapshotPath)
 	Parameters.default_component_vtable = &DefaultVtable;
 
 	bool bSuccess = true;
-	Worker_SnapshotOutputStream* OutputStream = Worker_SnapshotOutputStream_Create(TCHAR_TO_UTF8(*SnapshotPath), &Parameters);
+  	Worker_SnapshotOutputStream* OutputStream = Worker_SnapshotOutputStream_Create(TCHAR_TO_UTF8(*SnapshotPath), &Parameters);
 	if (const char* SchemaError = Worker_SnapshotOutputStream_GetState(OutputStream).error_message)
 	{
 		UE_LOG(LogSpatialGDKSnapshot, Error, TEXT("Error creating SnapshotOutputStream: %s"), UTF8_TO_TCHAR(SchemaError));
@@ -382,7 +382,7 @@ bool SpatialGDKGenerateSnapshot(UWorld* World, FString SnapshotPath)
 	}
 	else
 	{
-		bSuccess = FillSnapshot(OutputStream, World);
+		bSuccess = FillSnapshot(OutputStream, World); 
 	}
 
 	Worker_SnapshotOutputStream_Destroy(OutputStream);

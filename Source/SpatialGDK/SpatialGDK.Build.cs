@@ -7,6 +7,8 @@ using System.Text;
 using System.IO;
 using System.Diagnostics;
 using UnrealBuildTool;
+using EpicGames.Core;
+ 
 
 public class SpatialGDK : ModuleRules
 {
@@ -107,6 +109,16 @@ public class SpatialGDK : ModuleRules
             PublicRuntimeLibraryPaths.Add(WorkerLibraryDir);
 
             PublicAdditionalLibraries.Add(WorkerImportLib);
+            if (File.Exists(WorkerLibraryDir) && File.Exists(WorkerImportLib))
+            {
+                Log.TraceInformation("Detection of WorkerSDK libraries found at {0} and {1}, enabling trace functionality.", WorkerLibraryDir, WorkerImportLib);
+                
+            }
+            else
+            {
+                Log.TraceInformation("Didn't find WorkerSDK libraries at {0} and {1}, disabling trace functionality.", WorkerLibraryDir, WorkerImportLib);
+           
+            }
         }
         else
         {

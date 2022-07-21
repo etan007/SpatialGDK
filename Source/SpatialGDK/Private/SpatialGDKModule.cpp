@@ -5,6 +5,7 @@
 // clang-format off
 #include "SpatialConstants.h"
 #include "SpatialConstants.cxx"
+#include <WorkerSDK/improbable/c_worker.h>
 // clang-format on
 
 #define LOCTEXT_NAMESPACE "FSpatialGDKModule"
@@ -13,7 +14,10 @@ DEFINE_LOG_CATEGORY(LogSpatialGDKModule);
 
 IMPLEMENT_MODULE(FSpatialGDKModule, SpatialGDK)
 
-void FSpatialGDKModule::StartupModule() {}
+void FSpatialGDKModule::StartupModule()
+{
+   
+}
 
 void FSpatialGDKModule::ShutdownModule() {}
 

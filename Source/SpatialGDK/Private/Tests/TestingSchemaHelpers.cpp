@@ -12,7 +12,7 @@ Schema_Object* TestingSchemaHelpers::CreateTranslationComponentDataFields()
 {
 	Worker_ComponentData Data = {};
 	Data.component_id = SpatialConstants::VIRTUAL_WORKER_TRANSLATION_COMPONENT_ID;
-	Data.schema_type = Schema_CreateComponentData();
+	Data.schema_type = Schema_CreateComponentData(Data.component_id);
 	return Schema_GetComponentDataFields(Data.schema_type);
 }
 

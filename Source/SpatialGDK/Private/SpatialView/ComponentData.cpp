@@ -7,7 +7,7 @@ namespace SpatialGDK
 {
 ComponentData::ComponentData(Worker_ComponentId Id)
 	: ComponentId(Id)
-	, Data(Schema_CreateComponentData())
+	, Data(Schema_CreateComponentData(Id))
 {
 }
 

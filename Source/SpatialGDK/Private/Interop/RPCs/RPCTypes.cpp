@@ -72,7 +72,7 @@ Schema_Object* RPCWritingContext::EntityWrite::GetFieldsToWrite()
 			Fields = Schema_GetGenericDataObject(GenData);
 			break;
 		case DataKind::ComponentData:
-			Data = Schema_CreateComponentData();
+			Data = Schema_CreateComponentData(ComponentId);
 			Fields = Schema_GetComponentDataFields(Data);
 			break;
 		case DataKind::ComponentUpdate:

@@ -349,7 +349,7 @@ FWorkerComponentData ComponentFactory::CreateComponentData(Worker_ComponentId Co
 {
 	FWorkerComponentData ComponentData = {};
 	ComponentData.component_id = ComponentId;
-	ComponentData.schema_type = Schema_CreateComponentData();
+	ComponentData.schema_type = Schema_CreateComponentData(ComponentId);
 	Schema_Object* ComponentObject = Schema_GetComponentDataFields(ComponentData.schema_type);
 
 	// We're currently ignoring ClearedId fields, which is problematic if the initial replicated state
@@ -363,7 +363,7 @@ FWorkerComponentData ComponentFactory::CreateEmptyComponentData(Worker_Component
 {
 	FWorkerComponentData ComponentData = {};
 	ComponentData.component_id = ComponentId;
-	ComponentData.schema_type = Schema_CreateComponentData();
+	ComponentData.schema_type = Schema_CreateComponentData(ComponentId);
 
 	return ComponentData;
 }

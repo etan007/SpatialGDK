@@ -22,9 +22,7 @@ inline void AddStringToSchema(Schema_Object* Object, Schema_FieldId Id, const FS
 {
 	FTCHARToUTF8 CStrConversion(*Value);
 	uint32 StringLength = CStrConversion.Length();
-	uint8* StringBuffer = Schema_AllocateBuffer(Object, sizeof(char) * StringLength);
-	FMemory::Memcpy(StringBuffer, CStrConversion.Get(), sizeof(char) * StringLength);
-	Schema_AddBytes(Object, Id, StringBuffer, sizeof(char) * StringLength);
+	Schema_AddBytes(Object, Id, (const uint8*)CStrConversion.Get(), sizeof(char) * StringLength);
 }
 
 inline FString IndexStringFromSchema(const Schema_Object* Object, Schema_FieldId Id, uint32 Index)
@@ -47,9 +45,8 @@ inline bool GetBoolFromSchema(const Schema_Object* Object, Schema_FieldId Id)
 
 inline void AddBytesToSchema(Schema_Object* Object, Schema_FieldId Id, const uint8* Data, uint32 NumBytes)
 {
-	uint8* PayloadBuffer = Schema_AllocateBuffer(Object, sizeof(char) * NumBytes);
-	FMemory::Memcpy(PayloadBuffer, Data, sizeof(char) * NumBytes);
-	Schema_AddBytes(Object, Id, PayloadBuffer, sizeof(char) * NumBytes);
+	 
+	Schema_AddBytes(Object, Id, Data, sizeof(char) * NumBytes);
 }
 
 inline void AddBytesToSchema(Schema_Object* Object, Schema_FieldId Id, FBitWriter& Writer)

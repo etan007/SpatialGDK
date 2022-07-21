@@ -33,12 +33,12 @@ struct SnapshotVersion : AbstractMutableComponent
 	{
 		Worker_ComponentData Data = {};
 		Data.component_id = ComponentId;
-		Data.schema_type = Schema_CreateComponentData();
+		Data.schema_type = Schema_CreateComponentData(ComponentId);
 
 		Schema_Object* ComponentObject = Schema_GetComponentDataFields(Data.schema_type);
 		check(ComponentObject);
 
-		Schema_AddUint64(ComponentObject, 1, Version);
+		Schema_AddUint64(ComponentObject, 2, Version);
 
 		return Data;
 	}

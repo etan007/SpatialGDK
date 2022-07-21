@@ -76,7 +76,7 @@ void FSpatialNetDriverRPC::OnDataWritten(TArray<FWorkerComponentData>& OutArray,
 		{
 			FWorkerComponentData Data;
 			Data.component_id = ComponentId;
-			Data.schema_type = Schema_CreateComponentData();
+			Data.schema_type = Schema_CreateComponentData(ComponentId);
 			ExistingData = &OutArray.Add_GetRef(Data);
 		}
 		Schema_ApplyComponentUpdateToData(InData, ExistingData->schema_type);
@@ -184,7 +184,7 @@ TArray<FWorkerComponentData> FSpatialNetDriverRPC::GetRPCComponentsOnEntityCreat
 		{
 			FWorkerComponentData Data;
 			Data.component_id = EndpointId;
-			Data.schema_type = Schema_CreateComponentData();
+			Data.schema_type = Schema_CreateComponentData(EndpointId);
 			Components.Add(Data);
 		}
 	}

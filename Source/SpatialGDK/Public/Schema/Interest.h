@@ -501,7 +501,7 @@ struct Interest : AbstractMutableComponent
 	{
 		Worker_ComponentData Data = {};
 		Data.component_id = ComponentId;
-		Data.schema_type = Schema_CreateComponentData();
+		Data.schema_type = Schema_CreateComponentData(ComponentId);
 		Schema_Object* ComponentObject = Schema_GetComponentDataFields(Data.schema_type);
 
 		FillComponentData(ComponentObject);
@@ -525,7 +525,7 @@ struct Interest : AbstractMutableComponent
 	{
 		for (const auto& KVPair : ComponentInterestMap)
 		{
-			Schema_Object* KVPairObject = Schema_AddObject(InterestComponentObject, 1);
+			Schema_Object* KVPairObject = Schema_AddObject(InterestComponentObject, 2);
 			Schema_AddUint32(KVPairObject, SCHEMA_MAP_KEY_FIELD_ID, KVPair.Key);
 			AddComponentInterestToInterestSchema(KVPairObject, SCHEMA_MAP_VALUE_FIELD_ID, KVPair.Value);
 		}

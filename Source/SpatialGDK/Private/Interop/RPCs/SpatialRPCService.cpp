@@ -291,7 +291,7 @@ TArray<FWorkerComponentData> SpatialRPCService::GetRPCComponentsOnEntityCreation
 		}
 		else
 		{
-			Component.schema_type = Schema_CreateComponentData();
+			Component.schema_type = Schema_CreateComponentData(EntityComponent.ComponentId);
 		}
 	}
 
