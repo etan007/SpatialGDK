@@ -4,7 +4,8 @@
 
 #include "HAL/PlatformProcess.h"
 #include "Interfaces/IPluginManager.h"
-
+#include "SpatialGDKServices/Public/SpatialGDKServicesConstants.h"
+#include  "WorkerSDK/improbable/c_worker.h"
 /**
  * This class ensures that the C API worker library is loaded before it is needed by code.
  * This is only required when a platform uses PublicDelayLoadDLLs in SpatialGDK.Build.cs.
@@ -22,13 +23,30 @@ public:
 #else
 		Path = Path / TEXT("Win32");
 #endif // PLATFORM_64BITS
-		/*
-		FString WorkerFilePath = Path / TEXT("improbable_worker.dll");
+		
+		FString WorkerFilePath = Path / TEXT("WorkerSDK.dll");
 		WorkerLibraryHandle = FPlatformProcess::GetDllHandle(*WorkerFilePath);
 		if (WorkerLibraryHandle == nullptr)
 		{
 			UE_LOG(LogTemp, Fatal, TEXT("Failed to load %s. Have you run `UnrealGDK/Setup.bat`?"), *WorkerFilePath);
-		}*/
+		}
+		//先加载所有协议
+		FString BuildDir;
+		if (BuildDir == "")
+		{
+			BuildDir = FPaths::Combine(SpatialGDKServicesConstants::SpatialOSDirectory, TEXT("build"));
+		}
+		FString CompiledSchemaDir = FPaths::Combine(BuildDir, TEXT("assembly/schema/"));
+		 
+		FString proto_root = FPaths::Combine(SpatialGDKServicesConstants::SpatialOSDirectory, TEXT("schema/"));
+    
+		std::string path(TCHAR_TO_UTF8(*proto_root));
+		std::string json_path(TCHAR_TO_UTF8(*CompiledSchemaDir));
+		if(!LoadAllSchema(path,json_path))
+		{
+			UE_LOG(LogTemp, Fatal, TEXT("FSpatialGDKLoader::FSpatialGDKLoader LoadAllSchema path=%s,json_path=%s"),*proto_root,*CompiledSchemaDir);
+			 
+		}
 
 #if TRACE_LIB_ACTIVE
 

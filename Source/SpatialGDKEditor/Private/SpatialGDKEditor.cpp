@@ -328,6 +328,8 @@ bool FSpatialGDKEditor::LoadPotentialAssets(TArray<TStrongObjectPtr<UObject>>& O
 void FSpatialGDKEditor::GenerateSnapshot(UWorld* World, FString SnapshotFilename, FSimpleDelegate SuccessCallback,
 										 FSimpleDelegate FailureCallback, FSpatialGDKEditorErrorHandler ErrorCallback)
 {
+
+	
 	const USpatialGDKEditorSettings* Settings = GetDefault<USpatialGDKEditorSettings>();
 	FString SavePath = FPaths::Combine(SpatialGDKServicesConstants::SpatialOSSnapshotFolderPath, SnapshotFilename);
 	const bool bSuccess = SpatialGDKGenerateSnapshot(World, SavePath);

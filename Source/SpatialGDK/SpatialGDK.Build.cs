@@ -18,8 +18,8 @@ public class SpatialGDK : ModuleRules
         PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
         bUseUnity = false;
 
-        PrivateIncludePaths.Add("SpatialGDK/Private");
-        PrivateIncludePaths.Add("SpatialGDK/Private/WorkerSDK");
+        //PrivateIncludePaths.Add("SpatialGDK/Private");
+        //PrivateIncludePaths.Add("SpatialGDK/Private/WorkerSDK");
   
         var WorkerSDKPath = Path.GetFullPath(Path.Combine(ModuleDirectory, "Public", "WorkerSDK"));
         PublicIncludePaths.Add(WorkerSDKPath); // Worker SDK uses a different include format <improbable/x.h>
@@ -94,7 +94,7 @@ public class SpatialGDK : ModuleRules
             throw new System.Exception(System.String.Format("Unsupported platform {0}", Target.Platform.ToString()));
         }
 
-        string WorkerImportLib = System.String.Format("{0}WorkerSDK{1}", LibPrefix, ImportLibSuffix);
+        string WorkerImportLib = System.String.Format("{0}WorkerSDK{1}", LibPrefix, ImportLibSuffix);  
         string WorkerSharedLib = System.String.Format("{0}WorkerSDK{1}", LibPrefix, SharedLibSuffix);
 
         if (Target.Platform != UnrealTargetPlatform.Android)

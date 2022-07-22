@@ -257,11 +257,11 @@ inline void AddQueryConstraintToQuerySchema(Schema_Object* QueryObject, Schema_F
 	}
 }
 
-inline void AddQueryToComponentInterestSchema(Schema_Object* ComponentInterestObject, Schema_FieldId Id, const Query& Query)
+inline void AddQueryToComponentInterestSchema(Schema_Object* ComponentInterestObject, Schema_FieldId Id,uint32 index, const Query& Query)
 {
 	checkf(!(Query.FullSnapshotResult.IsSet() && !Query.FullSnapshotResult), TEXT("Invalid to set FullSnapshotResult to false"));
 
-	Schema_Object* QueryObject = Schema_AddObject(ComponentInterestObject, Id);
+	Schema_Object* QueryObject = Schema_AddObjectList(ComponentInterestObject, Id,index);
 
 	AddQueryConstraintToQuerySchema(QueryObject, 1, Query.Constraint);
 
@@ -272,12 +272,13 @@ inline void AddQueryToComponentInterestSchema(Schema_Object* ComponentInterestOb
 
 	for (uint32 ComponentId : Query.ResultComponentIds)
 	{
-		Schema_AddUint32(QueryObject, 3, ComponentId);
+		Schema_AddUint32_Index(QueryObject, 3, ComponentId);
+		
 	}
 
 	for (uint32 ComponentSetId : Query.ResultComponentSetIds)
 	{
-		Schema_AddUint32(QueryObject, 5, ComponentSetId);
+		Schema_AddUint32_Index(QueryObject, 5, ComponentSetId);
 	}
 
 	if (Query.Frequency.IsSet())
@@ -289,10 +290,10 @@ inline void AddQueryToComponentInterestSchema(Schema_Object* ComponentInterestOb
 inline void AddComponentInterestToInterestSchema(Schema_Object* InterestObject, Schema_FieldId Id, const ComponentSetInterest& Value)
 {
 	Schema_Object* ComponentInterestObject = Schema_AddObject(InterestObject, Id);
-
+    uint32 index = 0;
 	for (const Query& QueryEntry : Value.Queries)
 	{
-		AddQueryToComponentInterestSchema(ComponentInterestObject, 1, QueryEntry);
+		AddQueryToComponentInterestSchema(ComponentInterestObject, 1,index++, QueryEntry);
 	}
 }
 
@@ -523,9 +524,10 @@ struct Interest : AbstractMutableComponent
 
 	void FillComponentData(Schema_Object* InterestComponentObject) const
 	{
+		int index = 0;
 		for (const auto& KVPair : ComponentInterestMap)
 		{
-			Schema_Object* KVPairObject = Schema_AddObject(InterestComponentObject, 2);
+			Schema_Object* KVPairObject = Schema_AddObjectList(InterestComponentObject, 2,index++);
 			Schema_AddUint32(KVPairObject, SCHEMA_MAP_KEY_FIELD_ID, KVPair.Key);
 			AddComponentInterestToInterestSchema(KVPairObject, SCHEMA_MAP_VALUE_FIELD_ID, KVPair.Value);
 		}
