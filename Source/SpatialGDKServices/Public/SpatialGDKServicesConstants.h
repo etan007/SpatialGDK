@@ -36,7 +36,7 @@ const FString CompiledSchemaDir = FPaths::Combine(SpatialOSDirectory, TEXT("buil
 const FString SchemaBundlePath = FPaths::Combine(CompiledSchemaDir, TEXT("schema.sb"));
 const FString SpatialOSSnapshotFolderPath = FPaths::Combine(SpatialOSDirectory, TEXT("snapshots"));
 const FString ChinaEnvironmentArgument = TEXT(" --environment=cn-production");
-const FString RuntimePackageName = TEXT("runtime");
+const FString RuntimePackageName = TEXT("rcell");
 const FString InspectorPackageName = TEXT("inspector");
 const FString RuntimeExe = FPaths::SetExtension(RuntimePackageName, Extension);
 const FString InspectorExe = FPaths::SetExtension(InspectorPackageName, Extension);

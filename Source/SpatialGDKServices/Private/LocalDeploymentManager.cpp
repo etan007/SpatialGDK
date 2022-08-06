@@ -187,7 +187,7 @@ bool FLocalDeploymentManager::LocalDeploymentPreRunChecks()
 
 	for (int32 RuntimePort : RequiredRuntimePorts)
 	{
-		if (CheckIfPortIsBound(RequiredRuntimePort))
+		if (CheckIfPortIsBound(RuntimePort))
 		{
 			// If it exists offer the user the ability to kill it.
 			FText DialogMessage = LOCTEXT("KillPortBlockingProcess",
@@ -195,7 +195,7 @@ bool FLocalDeploymentManager::LocalDeploymentPreRunChecks()
 										  "deployment). Would you like to kill this process?");
 			if (FMessageDialog::Open(EAppMsgType::YesNo, DialogMessage) == EAppReturnType::Yes)
 			{
-				bSuccess &= KillProcessBlockingPort(RequiredRuntimePort);
+				bSuccess &= KillProcessBlockingPort(RuntimePort);
 			}
 			else
 			{
@@ -287,12 +287,12 @@ FLocalDeploymentManager::ERuntimeStartResponse FLocalDeploymentManager::StartLoc
 	}
 
 	// runtime.exe --config=squid_config.json --snapshot=snapshots/default.snapshot --worker-port 8018 --http-port 5006 --grpc-port 7777
-	// --worker-external-host 127.0.0.1 --snapshots-directory=spatial/snapshots/<timestamp>
-	// --schema-bundle=spatial/build/assembly/schema/schema.sb
+	// --worker_external_host 127.0.0.1 --snapshots_directory=spatial/snapshots/<timestamp>
+	// --schema_bundle=spatial/build/assembly/schema/schema.sb
 	// --event - tracing - logs - directory = `<Project > / spatial / localdeployment / <timestamp> / `
 	FString RuntimeArgs = FString::Printf(
-		TEXT("--config=\"%s\" --snapshot=\"%s\" --worker-port %s --http-port=%s --grpc-port=%s "
-			 "--snapshots-directory=\"%s\" --schema-bundle=\"%s\" --event-tracing-logs-directory=\"%s\" %s"),
+		TEXT("--config=\"%s\" --snapshot=\"%s\" --worker_port=%s --http_port=%s --grpc_port=%s "
+			 "--snapshots_directory=\"%s\" --schema_bundle=\"%s\" --event_tracing_logs_directory=\"%s\" %s"),
 		*LaunchConfig, *SnapshotName, *FString::FromInt(WorkerPort), *FString::FromInt(HTTPPort),
 		*FString::FromInt(SpatialGDKServicesConstants::RuntimeGRPCPort), *CurrentSnapshotPath, *SchemaBundle, *EventTracingPath, *LaunchArgs);
 

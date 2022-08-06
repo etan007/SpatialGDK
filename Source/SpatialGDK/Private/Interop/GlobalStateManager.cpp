@@ -571,6 +571,7 @@ void UGlobalStateManager::QueryGSM(const QueryDelegate& Callback)
 			ApplyDataFromQueryResponse(Op);
 			Callback.ExecuteIfBound(Op);
 		}
+		
 	});
 
 	QueryHandler.AddRequest(RequestID, GSMQueryDelegate);

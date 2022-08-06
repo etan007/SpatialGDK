@@ -35,7 +35,12 @@ USpatialGameInstance::USpatialGameInstance()
 	, bPreparingForShutdown(false)
 {
 }
-
+USpatialGameInstance::USpatialGameInstance(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+	, bIsSpatialNetDriverReady(false)
+	, bPreparingForShutdown(false)
+{
+}
 bool USpatialGameInstance::HasSpatialNetDriver() const
 {
 	bool bHasSpatialNetDriver = false;

@@ -168,9 +168,12 @@ struct ComponentSetInterest
 	TArray<Query> Queries;
 };
 
-inline void AddQueryConstraintToQuerySchema(Schema_Object* QueryObject, Schema_FieldId Id, const QueryConstraint& Constraint)
+inline void AddQueryConstraintToQuerySchema(Schema_Object* QueryObject, Schema_FieldId Id, const QueryConstraint& Constraint,bool brepeated = false)
 {
-	Schema_Object* QueryConstraintObject = Schema_AddObject(QueryObject, Id);
+	Schema_Object* QueryConstraintObject ;
+	QueryConstraintObject = brepeated?Schema_AddObject_Index(QueryObject, Id) :Schema_AddObject(QueryObject, Id);
+	
+	
 
 	// option<SphereConstraint> sphere_constraint = 1;
 	if (Constraint.SphereConstraint.IsSet())
@@ -237,7 +240,7 @@ inline void AddQueryConstraintToQuerySchema(Schema_Object* QueryObject, Schema_F
 	{
 		for (const QueryConstraint& AndConstraintEntry : Constraint.AndConstraint)
 		{
-			AddQueryConstraintToQuerySchema(QueryConstraintObject, 9, AndConstraintEntry);
+			AddQueryConstraintToQuerySchema(QueryConstraintObject, 9, AndConstraintEntry,true);
 		}
 	}
 
@@ -246,7 +249,7 @@ inline void AddQueryConstraintToQuerySchema(Schema_Object* QueryObject, Schema_F
 	{
 		for (const QueryConstraint& OrConstraintEntry : Constraint.OrConstraint)
 		{
-			AddQueryConstraintToQuerySchema(QueryConstraintObject, 10, OrConstraintEntry);
+			AddQueryConstraintToQuerySchema(QueryConstraintObject, 10, OrConstraintEntry,true);
 		}
 	}
 

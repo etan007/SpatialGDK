@@ -26,7 +26,7 @@ class SPATIALGDK_API USpatialGameInstance : public UGameInstance
 
 public:
 	USpatialGameInstance();
-
+	USpatialGameInstance(const FObjectInitializer& ObjectInitializer);
 #if WITH_EDITOR
 	virtual FGameInstancePIEResult StartPlayInEditorGameInstance(ULocalPlayer* LocalPlayer,
 																 const FGameInstancePIEParameters& Params) override;

@@ -13,7 +13,7 @@ DEFINE_LOG_CATEGORY(LogSpatialGDKDefaultWorkerJsonGenerator);
 bool GenerateDefaultWorkerJson(const FString& JsonPath, bool& bOutRedeployRequired)
 {
 	const FString TemplateWorkerJsonPath =
-		FSpatialGDKServicesModule::GetSpatialGDKPluginDirectory(TEXT("SpatialGDK/Extras/templates/WorkerJsonTemplate.json"));
+		FSpatialGDKServicesModule::GetSpatialGDKPluginDirectory(TEXT("Extras/templates/WorkerJsonTemplate.json"));
 
 	FString Contents;
 	if (FFileHelper::LoadFileToString(Contents, *TemplateWorkerJsonPath))

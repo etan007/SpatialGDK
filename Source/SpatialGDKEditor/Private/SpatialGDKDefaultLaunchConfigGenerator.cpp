@@ -221,8 +221,8 @@ bool GenerateLaunchConfig(const FString& LaunchConfigPath, const FSpatialLaunchC
 
 		if (bGenerateCloudConfig)
 		{
-			// TODO: UNR-4471 - Remove classic config conversion when new cloud platform exists.
-			return ConvertToClassicConfig(LaunchConfigPath, InLaunchConfigDescription);
+			// TODO SKYCELL 2022年7月25日 - Remove classic config conversion when new cloud platform exists.
+			//return ConvertToClassicConfig(LaunchConfigPath, InLaunchConfigDescription);
 		}
 
 		return true;
@@ -245,7 +245,7 @@ bool ConvertToClassicConfig(const FString& LaunchConfigPath, const FSpatialLaunc
 	// runtime.exe --export-classic-config=classic_config_dir --config=Game\Intermediate\Improbable\Control_Small_LocalLaunchConfig.json
 	// --launch-template=w2_r0500_e5 --export-worker-configuration=true
 	FString ConversionArgs =
-		FString::Printf(TEXT("--export-classic-config=\"%s\" --config=\"%s\" --launch-template=%s --export-worker-configuration=false"),
+		FString::Printf(TEXT("--export_classic_config=\"%s\" --config=\"%s\" --launch_template=%s --export_worker_configuration=false"),
 						*LaunchConfigDir, *LaunchConfigPath, *InLaunchConfigDescription->GetTemplate());
 
 	FString Output;
