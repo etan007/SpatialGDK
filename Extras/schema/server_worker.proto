@@ -33,14 +33,6 @@ service  ServerWorkerService{
 message ServerWorkerAuthComponentSet {
  
   optional uint32 id = 1[default = 9908];
-  /* 
-  components = [
-    improbable.Position,
-    improbable.Metadata,
-    improbable.Interest,
-    unreal.ServerWorker,
-    unreal.generated.UnrealCrossServerSenderRPCs
-  ];*/
   message Components
   {
     optional improbable.Position cps_x1 = 1;
@@ -49,4 +41,5 @@ message ServerWorkerAuthComponentSet {
     optional unreal.ServerWorker cps_x4 = 4;
     optional unreal.generated.UnrealCrossServerSenderRPCs cps_x5 = 5;
   }
+  optional Components components = 2;
 }
