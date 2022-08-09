@@ -17,7 +17,7 @@ WorkerView::WorkerView(FComponentSetData ComponentSetData)
 void WorkerView::AdvanceViewDelta(TArray<OpList> OpLists)
 {
 	Delta.SetFromOpList(MoveTemp(OpLists), View, ComponentSetData);
-}
+} 
 
 const ViewDelta& WorkerView::GetViewDelta() const
 {

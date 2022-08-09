@@ -290,9 +290,12 @@ FLocalDeploymentManager::ERuntimeStartResponse FLocalDeploymentManager::StartLoc
 	// --worker_external_host 127.0.0.1 --snapshots_directory=spatial/snapshots/<timestamp>
 	// --schema_bundle=spatial/build/assembly/schema/schema.sb
 	// --event - tracing - logs - directory = `<Project > / spatial / localdeployment / <timestamp> / `
+	FString schema_root = FPaths::Combine(SpatialGDKServicesConstants::SpatialOSDirectory, TEXT("schema/"));
+	FString schema_json = SpatialGDKServicesConstants::CompiledSchemaDir + TEXT("/");
 	FString RuntimeArgs = FString::Printf(
-		TEXT("--config=\"%s\" --snapshot=\"%s\" --worker_port=%s --http_port=%s --grpc_port=%s "
+		TEXT("--schema_root=\"%s\" --schema_json=\"%s\" --config=\"%s\" --snapshot=\"%s\" --worker_port=%s --http_port=%s --grpc_port=%s "
 			 "--snapshots_directory=\"%s\" --schema_bundle=\"%s\" --event_tracing_logs_directory=\"%s\" %s"),
+			 *schema_root,*schema_json,
 		*LaunchConfig, *SnapshotName, *FString::FromInt(WorkerPort), *FString::FromInt(HTTPPort),
 		*FString::FromInt(SpatialGDKServicesConstants::RuntimeGRPCPort), *CurrentSnapshotPath, *SchemaBundle, *EventTracingPath, *LaunchArgs);
 
