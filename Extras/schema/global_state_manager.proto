@@ -31,11 +31,16 @@ message StartupActorManager {
 message GSMShutdown {
  
     optional uint32 id = 1[default = 9992];
-   
-}
+    message command_begin_shutdown_multiprocess
+    {
+        optional ShutdownMultiProcessRequest request = 1;
+        optional ShutdownMultiProcessResponse response = 2;
+    }
+    message commands
+    {
 
-service GSMShutdownService {
-    //command ShutdownMultiProcessResponse begin_shutdown_multiprocess(ShutdownMultiProcessRequest);
-    rpc begin_shutdown_multiprocess(ShutdownMultiProcessRequest) returns (ShutdownMultiProcessResponse);
-    //event ShutdownAdditionalServersEvent shutdown_additional_servers;
+        optional command_begin_shutdown_multiprocess begin_shutdown_multiprocess = 1;
+        //event ShutdownAdditionalServersEvent shutdown_additional_servers;
+    }
+   
 }

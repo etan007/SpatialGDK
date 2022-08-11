@@ -34,10 +34,14 @@ message MigrationDiagnosticResponse
 message MigrationDiagnostic
 {
     optional uint32 id = 1[default = 9969];
+	message command_diagnostic
+	{
+		optional MigrationDiagnosticRequest request = 1;
+		optional MigrationDiagnosticResponse response = 2;
+	}
+	message commands
+	{
+       optional command_diagnostic diagnostic = 1;
+	}
 	
-}
-
-service MigrationDiagnosticService{
-    //command MigrationDiagnosticResponse diagnostic(MigrationDiagnosticRequest);
-	rpc diagnostic(MigrationDiagnosticRequest) returns (MigrationDiagnosticResponse);
 }

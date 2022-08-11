@@ -7,7 +7,7 @@ namespace SpatialGDK
 CommandRequest::CommandRequest(Worker_ComponentId ComponentId, Worker_CommandIndex CommandIndex)
 	: ComponentId(ComponentId)
 	, CommandIndex(CommandIndex)
-	, Data(Schema_CreateCommandRequest())
+	, Data(Schema_CreateCommandRequest(ComponentId,CommandIndex))
 {
 }
 

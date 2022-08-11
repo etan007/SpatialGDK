@@ -225,7 +225,7 @@ struct Worker : Component
 		Worker_CommandRequest CommandRequest = {};
 		CommandRequest.component_id = SpatialConstants::WORKER_COMPONENT_ID;
 		CommandRequest.command_index = SpatialConstants::WORKER_CLAIM_PARTITION_COMMAND_ID;
-		CommandRequest.schema_type = Schema_CreateCommandRequest();
+		CommandRequest.schema_type = Schema_CreateCommandRequest(CommandRequest.component_id,CommandRequest.command_index);
 		Schema_Object* RequestObject = Schema_GetCommandRequestObject(CommandRequest.schema_type);
 
 		Schema_AddInt64(RequestObject, 1, PartitionId);

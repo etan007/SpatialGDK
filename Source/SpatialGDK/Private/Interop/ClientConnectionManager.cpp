@@ -88,7 +88,7 @@ void ClientConnectionManager::DisconnectPlayer(Worker_EntityId ClientEntityId)
 	Worker_CommandRequest Request = {};
 	Request.component_id = SpatialConstants::WORKER_COMPONENT_ID;
 	Request.command_index = SpatialConstants::WORKER_DISCONNECT_COMMAND_ID;
-	Request.schema_type = Schema_CreateCommandRequest();
+	Request.schema_type = Schema_CreateCommandRequest(Request.component_id,Request.command_index);
 
 	const Worker_RequestId RequestId = NetDriver->Connection->SendCommandRequest(ClientEntityId, &Request, RETRY_UNTIL_COMPLETE, {});
 

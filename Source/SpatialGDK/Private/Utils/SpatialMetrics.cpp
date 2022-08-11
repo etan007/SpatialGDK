@@ -157,7 +157,7 @@ void USpatialMetrics::SpatialStartRPCMetrics()
 			Worker_CommandRequest Request = {};
 			Request.component_id = SpatialConstants::DEBUG_METRICS_COMPONENT_ID;
 			Request.command_index = SpatialConstants::DEBUG_METRICS_START_RPC_METRICS_ID;
-			Request.schema_type = Schema_CreateCommandRequest();
+			Request.schema_type = Schema_CreateCommandRequest(Request.component_id,Request.command_index);
 			Connection->SendCommandRequest(ControllerEntityId, &Request, SpatialGDK::RETRY_MAX_TIMES, {});
 		}
 		else
@@ -257,7 +257,7 @@ void USpatialMetrics::SpatialStopRPCMetrics()
 			Worker_CommandRequest Request = {};
 			Request.component_id = SpatialConstants::DEBUG_METRICS_COMPONENT_ID;
 			Request.command_index = SpatialConstants::DEBUG_METRICS_STOP_RPC_METRICS_ID;
-			Request.schema_type = Schema_CreateCommandRequest();
+			Request.schema_type = Schema_CreateCommandRequest(Request.component_id,Request.command_index);
 			Connection->SendCommandRequest(ControllerEntityId, &Request, SpatialGDK::RETRY_MAX_TIMES, {});
 		}
 		else
@@ -286,7 +286,7 @@ void USpatialMetrics::SpatialModifySetting(const FString& Name, const float Valu
 			Worker_CommandRequest Request = {};
 			Request.component_id = SpatialConstants::DEBUG_METRICS_COMPONENT_ID;
 			Request.command_index = SpatialConstants::DEBUG_METRICS_MODIFY_SETTINGS_ID;
-			Request.schema_type = Schema_CreateCommandRequest();
+			Request.schema_type = Schema_CreateCommandRequest(Request.component_id,Request.command_index);
 
 			Schema_Object* RequestObject = Schema_GetCommandRequestObject(Request.schema_type);
 			SpatialGDK::AddStringToSchema(RequestObject, SpatialConstants::MODIFY_SETTING_PAYLOAD_NAME_ID, Name);
@@ -482,7 +482,7 @@ void USpatialMetrics::SpatialExecServerCmd_Internal(const FString& ServerName, c
 			Worker_CommandRequest Request = {};
 			Request.component_id = SpatialConstants::DEBUG_METRICS_COMPONENT_ID;
 			Request.command_index = SpatialConstants::DEBUG_METRICS_EXEC_SERVER_COMMAND_ID;
-			Request.schema_type = Schema_CreateCommandRequest();
+			Request.schema_type = Schema_CreateCommandRequest(Request.component_id,Request.command_index );
 
 			Schema_Object* RequestObject = Schema_GetCommandRequestObject(Request.schema_type);
 
@@ -587,7 +587,7 @@ void USpatialMetrics::SpatialExecServerCmd_Internal(const FString& ServerName, c
 			Worker_CommandRequest Request = {};
 			Request.component_id = SpatialConstants::SERVER_WORKER_COMPONENT_ID;
 			Request.command_index = SpatialConstants::SERVER_WORKER_EXEC_SERVER_COMMAND_COMMAND_ID;
-			Request.schema_type = Schema_CreateCommandRequest();
+			Request.schema_type = Schema_CreateCommandRequest(Request.component_id,Request.command_index );
 
 			Schema_Object* RequestObject = Schema_GetCommandRequestObject(Request.schema_type);
 

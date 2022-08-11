@@ -6,9 +6,14 @@ import "unreal/gdk/rpc_payload.proto";
 
 message UnrealServerToServerCommandEndpoint {
     optional uint32 id = 1[default = 9973];
-   
+    message command_server_to_server_rpc_command
+    {
+        optional UnrealRPCPayload request = 1;
+        optional Void response = 2;
+    }
+    message commands
+    {
+        optional command_server_to_server_rpc_command server_to_server_rpc_command = 1;
+    }
 }
-service UnrealServerToServerCommandEndpointService{
-    //command Void server_to_server_rpc_command(UnrealRPCPayload);
-    rpc server_to_server_rpc_command(UnrealRPCPayload) returns (Void);
-}
+ 

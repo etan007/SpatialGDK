@@ -80,11 +80,11 @@ Schema_Object* RPCWritingContext::EntityWrite::GetFieldsToWrite()
 			Fields = Schema_GetComponentUpdateFields(Update);
 			break;
 		case DataKind::CommandRequest:
-			Request = Schema_CreateCommandRequest();
+			Request = Schema_CreateCommandRequest(ComponentId,0);
 			Fields = Schema_GetCommandRequestObject(Request);
 			break;
 		case DataKind::CommandResponse:
-			Response = Schema_CreateCommandResponse();
+			Response = Schema_CreateCommandResponse(ComponentId,0);
 			Fields = Schema_GetCommandResponseObject(Response);
 			break;
 		}

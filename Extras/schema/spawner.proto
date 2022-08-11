@@ -12,11 +12,15 @@ message SpawnPlayerRequest {
 message SpawnPlayerResponse { }
 
 message PlayerSpawner {
-    optional uint32 id = 1[default = 9998];
-   
+    optional uint32 id = 1[default = 60];
+    message command_spawn_player
+    {
+        optional SpawnPlayerRequest request = 1;
+        optional SpawnPlayerResponse response = 2;
+    }
+    message commands
+    {
+        optional command_spawn_player spawn_player = 1;
+    }
 }
-
-service PlayerSpawnerService{
-    //command SpawnPlayerResponse spawn_player(SpawnPlayerRequest);
-    rpc spawn_player(SpawnPlayerRequest) returns (SpawnPlayerResponse);
-}
+ 

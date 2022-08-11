@@ -32,7 +32,7 @@ struct MigrationDiagnostic : Component
 		Worker_CommandRequest CommandRequest = {};
 		CommandRequest.component_id = SpatialConstants::MIGRATION_DIAGNOSTIC_COMPONENT_ID;
 		CommandRequest.command_index = SpatialConstants::MIGRATION_DIAGNOSTIC_COMMAND_ID;
-		CommandRequest.schema_type = Schema_CreateCommandRequest();
+		CommandRequest.schema_type = Schema_CreateCommandRequest(CommandRequest.component_id,CommandRequest.command_index);
 
 		return CommandRequest;
 	}
@@ -54,7 +54,7 @@ struct MigrationDiagnostic : Component
 
 		CommandResponse.component_id = SpatialConstants::MIGRATION_DIAGNOSTIC_COMPONENT_ID;
 		CommandResponse.command_index = SpatialConstants::MIGRATION_DIAGNOSTIC_COMMAND_ID;
-		CommandResponse.schema_type = Schema_CreateCommandResponse();
+		CommandResponse.schema_type = Schema_CreateCommandResponse(CommandResponse.component_id,CommandResponse.command_index);
 
 		Schema_Object* ResponseObject = Schema_GetCommandResponseObject(CommandResponse.schema_type);
 		Schema_AddEntityId(ResponseObject, SpatialConstants::MIGRATION_DIAGNOSTIC_ENTITY_ID, EntityId);

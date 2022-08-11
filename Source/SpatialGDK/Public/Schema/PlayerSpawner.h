@@ -38,7 +38,7 @@ struct PlayerSpawner : Component
 		Worker_CommandRequest CommandRequest = {};
 		CommandRequest.component_id = SpatialConstants::PLAYER_SPAWNER_COMPONENT_ID;
 		CommandRequest.command_index = SpatialConstants::PLAYER_SPAWNER_SPAWN_PLAYER_COMMAND_ID;
-		CommandRequest.schema_type = Schema_CreateCommandRequest();
+		CommandRequest.schema_type = Schema_CreateCommandRequest(CommandRequest.component_id,CommandRequest.command_index);
 
 		Schema_Object* RequestFields = Schema_GetCommandRequestObject(CommandRequest.schema_type);
 		AddSpawnPlayerData(RequestFields, SpawnRequest);
@@ -51,7 +51,7 @@ struct PlayerSpawner : Component
 		Worker_CommandResponse CommandResponse = {};
 		CommandResponse.component_id = SpatialConstants::PLAYER_SPAWNER_COMPONENT_ID;
 		CommandResponse.command_index = SpatialConstants::PLAYER_SPAWNER_SPAWN_PLAYER_COMMAND_ID;
-		CommandResponse.schema_type = Schema_CreateCommandResponse();
+		CommandResponse.schema_type = Schema_CreateCommandResponse(CommandResponse.component_id,CommandResponse.command_index);
 		return CommandResponse;
 	}
 

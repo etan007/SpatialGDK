@@ -85,7 +85,7 @@ void DebugMetricsSystem::ProcessOps(const TArray<Worker_Op>& Ops) const
 				Worker_CommandResponse Response = {};
 				Response.component_id = ComponentId;
 				Response.command_index = CommandIndex;
-				Response.schema_type = Schema_CreateCommandResponse();
+				Response.schema_type = Schema_CreateCommandResponse(Response.component_id,Response.command_index);
 
 				const FSpatialGDKSpanId CauseSpanId(Op.span_id);
 				FSpatialGDKSpanId SpanId;

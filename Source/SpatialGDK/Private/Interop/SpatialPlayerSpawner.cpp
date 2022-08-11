@@ -366,7 +366,7 @@ void USpatialPlayerSpawner::ForwardSpawnRequestToStrategizedServer(const Schema_
 	// Create a request using the PlayerStart reference and by copying the data from the PlayerSpawn request from the client.
 	// The Schema_CommandRequest is constructed separately from the Worker_CommandRequest so we can store it in the outgoing
 	// map for future retries.
-	Schema_CommandRequest* ForwardSpawnPlayerSchemaRequest = Schema_CreateCommandRequest();
+	Schema_CommandRequest* ForwardSpawnPlayerSchemaRequest = Schema_CreateCommandRequest(SpatialConstants::SPAWN_DATA_COMPONENT_ID,1);
 	ServerWorker::CreateForwardPlayerSpawnSchemaRequest(ForwardSpawnPlayerSchemaRequest, PlayerStartObjectRef, OriginalPlayerSpawnRequest,
 														ClientWorkerId);
 	Worker_CommandRequest ForwardSpawnPlayerRequest =

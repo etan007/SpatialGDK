@@ -96,7 +96,7 @@ struct ServerWorker : Component
 		Worker_CommandResponse CommandResponse = {};
 		CommandResponse.component_id = SpatialConstants::SERVER_WORKER_COMPONENT_ID;
 		CommandResponse.command_index = SpatialConstants::SERVER_WORKER_FORWARD_SPAWN_REQUEST_COMMAND_ID;
-		CommandResponse.schema_type = Schema_CreateCommandResponse();
+		CommandResponse.schema_type = Schema_CreateCommandResponse(CommandResponse.component_id,CommandResponse.command_index);
 		Schema_Object* ResponseObject = Schema_GetCommandResponseObject(CommandResponse.schema_type);
 
 		Schema_AddBool(ResponseObject, SpatialConstants::FORWARD_SPAWN_PLAYER_RESPONSE_SUCCESS_ID, bSuccess);
