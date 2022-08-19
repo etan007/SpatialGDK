@@ -75,7 +75,7 @@ void UGlobalStateManager::ApplyDeploymentMapData(Schema_ComponentData* Data)
 
 	bAcceptingPlayers = GetBoolFromSchema(ComponentObject, SpatialConstants::DEPLOYMENT_MAP_ACCEPTING_PLAYERS_ID);
 
-	DeploymentSessionId = Schema_GetInt32(ComponentObject, SpatialConstants::DEPLOYMENT_MAP_SESSION_ID);
+	DeploymentSessionId = Schema_GetUint32(ComponentObject, SpatialConstants::DEPLOYMENT_MAP_SESSION_ID);
 
 	SchemaHash = Schema_GetUint32(ComponentObject, SpatialConstants::DEPLOYMENT_MAP_SCHEMA_HASH);
 }
@@ -667,15 +667,15 @@ bool UGlobalStateManager::GetAcceptingPlayersAndSessionIdFromQueryResponse(const
 		{
 			Schema_Object* ComponentObject = Schema_GetComponentDataFields(Data.schema_type);
 
-			if (Schema_GetBoolCount(ComponentObject, SpatialConstants::DEPLOYMENT_MAP_ACCEPTING_PLAYERS_ID) == 1)
+			//if (Schema_GetBoolCount(ComponentObject, SpatialConstants::DEPLOYMENT_MAP_ACCEPTING_PLAYERS_ID) == 1)
 			{
 				OutAcceptingPlayers = GetBoolFromSchema(ComponentObject, SpatialConstants::DEPLOYMENT_MAP_ACCEPTING_PLAYERS_ID);
 				AcceptingPlayersFound = true;
 			}
 
-			if (Schema_GetUint32Count(ComponentObject, SpatialConstants::DEPLOYMENT_MAP_SESSION_ID) == 1)
+			//if (Schema_GetUint32Count(ComponentObject, SpatialConstants::DEPLOYMENT_MAP_SESSION_ID) == 1)
 			{
-				OutSessionId = Schema_GetInt32(ComponentObject, SpatialConstants::DEPLOYMENT_MAP_SESSION_ID);
+				OutSessionId = Schema_GetUint32(ComponentObject, SpatialConstants::DEPLOYMENT_MAP_SESSION_ID);
 				SessionIdFound = true;
 			}
 

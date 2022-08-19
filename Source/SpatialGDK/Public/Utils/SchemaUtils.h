@@ -35,7 +35,11 @@ inline FString IndexStringFromSchema(const Schema_Object* Object, Schema_FieldId
 
 inline FString GetStringFromSchema(const Schema_Object* Object, Schema_FieldId Id)
 {
-	return IndexStringFromSchema(Object, Id, 0);
+	int32 StringLength = (int32)Schema_GetBytesLength(Object, Id);
+	const uint8_t* Bytes = Schema_GetBytes(Object, Id);
+	FUTF8ToTCHAR FStringConversion(reinterpret_cast<const ANSICHAR*>(Bytes), StringLength);
+	return FString(FStringConversion.Length(), FStringConversion.Get());
+	//return IndexStringFromSchema(Object, Id, 0);
 }
 
 inline bool GetBoolFromSchema(const Schema_Object* Object, Schema_FieldId Id)
