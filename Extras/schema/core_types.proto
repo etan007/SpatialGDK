@@ -1,9 +1,5 @@
 syntax = "proto2";
 package unreal;
-import "xCommond.proto";
-message Void {
-}
-
 // Below, option<bool> property types are used for boolean behaviour where an empty
 // boolean indicates false. This is cheaper for having that property set to false
 // because empty options types involve no idea being sent across the network.
@@ -21,4 +17,8 @@ message UnrealObjectRef {
     // will indicate that non-auth servers should try to load such Actors from
     // their package map.
     optional bool use_class_path_to_load_object = 6;
+}
+
+message Void
+{
 }

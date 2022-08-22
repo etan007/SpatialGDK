@@ -1,6 +1,5 @@
 syntax = "proto2";
 package unreal;
-import "xCommond.proto";
 // Indicates entity's actor group membership; in Offloading scenarios,
 // Actor Groups are based off of class hierarchy.
 // Intended use is for the Strategy Worker.

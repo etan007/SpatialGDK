@@ -354,7 +354,6 @@ void GenerateSubobjectSchema(FComponentIdGenerator& IdGenerator, UClass* Class, 
 		// Note that this file has been generated automatically
 		package unreal.generated;)""");
 	Writer.PrintNewLine();
-	Writer.Printf("import \"xCommond.proto\";");
 	bool bShouldIncludeCoreTypes = false;
 
 	// Only include core types if the subobject has replicated references to other UObjects
@@ -522,7 +521,6 @@ void GenerateActorSchema(FComponentIdGenerator& IdGenerator, UClass* Class, TSha
 				  *ClassPathToSchemaName[Class->GetPathName()].ToLower());
 
 	Writer.PrintNewLine();
-	Writer.Printf("import \"xCommond.proto\";");
 	// Will always be included since AActor has replicated pointers to other actors
 	Writer.PrintNewLine();
 	Writer.Printf("import \"unreal/gdk/core_types.proto\";");
@@ -619,7 +617,6 @@ void GenerateRPCEndpointsSchema(FString SchemaPath)
 		// Note that this file has been generated automatically
 		package unreal.generated;)""");
 	Writer.PrintNewLine();
-	Writer.Printf("import \"xCommond.proto\";");
 	Writer.PrintNewLine();
 	Writer.Print("import \"unreal/gdk/core_types.proto\";");
 	Writer.Print("import \"unreal/gdk/rpc_payload.proto\";");

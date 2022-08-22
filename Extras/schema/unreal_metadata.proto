@@ -1,6 +1,6 @@
 syntax = "proto2";
 package unreal;
-import "xCommond.proto";
+
 import "unreal/gdk/core_types.proto";
 
 message UnrealMetadata {

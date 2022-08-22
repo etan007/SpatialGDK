@@ -1,6 +1,6 @@
 syntax = "proto2";
 package unreal;
-import "xCommond.proto";
+
 
 message TracePayload {
     optional bytes trace_id = 1;

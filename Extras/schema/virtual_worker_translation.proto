@@ -5,7 +5,7 @@ package unreal;
 // an area assigned to a given virtual worker ID. The virtual worker ID is assigned by the
 // authoritative VirtualWorkerTranslator and that is responsible for keeping the Translation records
 // up to date.
-import "xCommond.proto";
+
 message VirtualWorkerMapping {
      optional uint32 virtual_worker_id = 1;
      optional string physical_worker_name = 2;

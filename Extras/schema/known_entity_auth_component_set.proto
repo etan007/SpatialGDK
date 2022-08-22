@@ -1,11 +1,11 @@
 syntax = "proto2";
 package unreal;
-import "xCommond.proto";
+
 import "improbable/standard_library.proto";
 import "unreal/gdk/spawner.proto";
 import "unreal/gdk/global_state_manager.proto";
 import "unreal/gdk/virtual_worker_translation.proto";
-import "unreal/gdk/server_worker.proto";
+//import "unreal/gdk/server_worker.proto";
 
 message KnownEntityAuthComponentSet {
   optional uint32 id = 1[default = 9905];

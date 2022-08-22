@@ -579,7 +579,6 @@ void WriteServerAuthorityComponentSet(const USchemaDatabase* SchemaDatabase, con
 		// Note that this file has been generated automatically
 		package unreal.generated;)""");
 	Writer.PrintNewLine();
-	Writer.Printf("import \"xCommond.proto\";");
 	// Write all import statements.
 	{
 		// Well-known SpatialOS and handwritten GDK schema files.
@@ -697,7 +696,6 @@ void WriteRoutingWorkerAuthorityComponentSet(const FString& SchemaOutputPath)
 		// Note that this file has been generated automatically
 		package unreal.generated;)""");
 	Writer.PrintNewLine();
-	Writer.Printf("import \"xCommond.proto\";");
 	// Write all import statements.
 	for (const auto& WellKnownSchemaImport : SpatialConstants::RoutingWorkerSchemaImports)
 	{
@@ -733,7 +731,6 @@ void WriteClientAuthorityComponentSet(const FString& SchemaOutputPath)
 		// Note that this file has been generated automatically
 		package unreal.generated;)""");
 	Writer.PrintNewLine();
-	Writer.Printf("import \"xCommond.proto\";");
 	// Write all import statements.
 	for (const auto& WellKnownSchemaImport : SpatialConstants::ClientAuthorityWellKnownSchemaImports)
 	{
@@ -768,7 +765,6 @@ void WriteComponentSetBySchemaType(const USchemaDatabase* SchemaDatabase, ESchem
 		// Note that this file has been generated automatically
 		package unreal.generated;)""");
 	Writer.PrintNewLine();
-	Writer.Printf("import \"xCommond.proto\";");
 	// Write all import statements.
 	{
 		const FString IncludePath = TEXT("unreal/generated");

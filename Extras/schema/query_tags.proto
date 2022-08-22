@@ -1,6 +1,6 @@
 syntax = "proto2";
 package unreal;
-import "xCommond.proto";
+
 // System query tags for entity completeness
 
 message ActorAuthTag {

@@ -1,6 +1,5 @@
 syntax = "proto2";
 package unreal;
-import "xCommond.proto";
 message AuthorityIntent {
      optional uint32 id = 1[default = 9980];
      // Id assigned to the Unreal server worker which should be authoritative for this entity.

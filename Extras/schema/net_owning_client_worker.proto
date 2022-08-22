@@ -1,6 +1,6 @@
 syntax = "proto2";
 package unreal;
-import "xCommond.proto";
+
 // The NetOwningClientWorker component should be present on all entities
 // representing Actors or subobjects which can have owning connections.
 message NetOwningClientWorker {

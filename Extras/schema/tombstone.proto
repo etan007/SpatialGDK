@@ -1,6 +1,6 @@
 syntax = "proto2";
 package unreal;
-import "xCommond.proto";
+
 message Tombstone {
     optional uint32 id = 1[default = 9982];
 }

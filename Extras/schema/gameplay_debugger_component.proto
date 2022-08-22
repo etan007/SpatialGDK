@@ -1,6 +1,6 @@
 syntax = "proto2";
 package unreal;
-import "xCommond.proto";
+
 message GameplayDebuggerComponent {
      optional uint32 id = 1[default = 9997];
      optional uint32 delegated_virtual_worker_id = 2;

@@ -1,6 +1,6 @@
 syntax = "proto2";
 package unreal;
-import "xCommond.proto";
+
 message SpawnPlayerRequest {
     optional string url = 1;
     optional bytes unique_id = 2;

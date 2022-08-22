@@ -1,6 +1,6 @@
 syntax = "proto2";
 package unreal;
-import "xCommond.proto";
+
 message Rotator {
     optional float pitch = 1;
     optional float yaw = 2;
