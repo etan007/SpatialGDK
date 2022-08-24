@@ -137,7 +137,7 @@ void UGlobalStateManager::TrySendWorkerReadyToBeginPlay()
 
 	FWorkerComponentUpdate Update = {};
 	Update.component_id = SpatialConstants::SERVER_WORKER_COMPONENT_ID;
-	Update.schema_type = Schema_CreateComponentUpdate();
+	Update.schema_type = Schema_CreateComponentUpdate(Update.component_id);
 	Schema_Object* UpdateObject = Schema_GetComponentUpdateFields(Update.schema_type);
 	Schema_AddBool(UpdateObject, SpatialConstants::SERVER_WORKER_READY_TO_BEGIN_PLAY_ID, true);
 
@@ -262,7 +262,7 @@ void UGlobalStateManager::SendShutdownAdditionalServersEvent()
 	FWorkerComponentUpdate ComponentUpdate = {};
 
 	ComponentUpdate.component_id = SpatialConstants::GSM_SHUTDOWN_COMPONENT_ID;
-	ComponentUpdate.schema_type = Schema_CreateComponentUpdate();
+	ComponentUpdate.schema_type = Schema_CreateComponentUpdate(ComponentUpdate.component_id );
 	Schema_Object* EventsObject = Schema_GetComponentUpdateEvents(ComponentUpdate.schema_type);
 	Schema_AddObject(EventsObject, SpatialConstants::SHUTDOWN_ADDITIONAL_SERVERS_EVENT_ID);
 
@@ -295,7 +295,7 @@ void UGlobalStateManager::SetDeploymentState()
 
 	FWorkerComponentUpdate Update = {};
 	Update.component_id = SpatialConstants::DEPLOYMENT_MAP_COMPONENT_ID;
-	Update.schema_type = Schema_CreateComponentUpdate();
+	Update.schema_type = Schema_CreateComponentUpdate(Update.component_id );
 	Schema_Object* UpdateObject = Schema_GetComponentUpdateFields(Update.schema_type);
 
 	// Set the map URL on the GSM.
@@ -328,7 +328,7 @@ void UGlobalStateManager::SetAcceptingPlayers(bool bInAcceptingPlayers)
 	UE_LOG(LogGlobalStateManager, Log, TEXT("Setting accepting players to '%s'"), bInAcceptingPlayers ? TEXT("true") : TEXT("false"));
 	FWorkerComponentUpdate Update = {};
 	Update.component_id = SpatialConstants::DEPLOYMENT_MAP_COMPONENT_ID;
-	Update.schema_type = Schema_CreateComponentUpdate();
+	Update.schema_type = Schema_CreateComponentUpdate(Update.component_id );
 	Schema_Object* UpdateObject = Schema_GetComponentUpdateFields(Update.schema_type);
 
 	// Set the AcceptingPlayers state on the GSM
@@ -526,7 +526,7 @@ void UGlobalStateManager::SendCanBeginPlayUpdate(const bool bInCanBeginPlay)
 
 	FWorkerComponentUpdate Update = {};
 	Update.component_id = SpatialConstants::STARTUP_ACTOR_MANAGER_COMPONENT_ID;
-	Update.schema_type = Schema_CreateComponentUpdate();
+	Update.schema_type = Schema_CreateComponentUpdate(Update.component_id);
 	Schema_Object* UpdateObject = Schema_GetComponentUpdateFields(Update.schema_type);
 
 	Schema_AddBool(UpdateObject, SpatialConstants::STARTUP_ACTOR_MANAGER_CAN_BEGIN_PLAY_ID, static_cast<uint8_t>(bCanBeginPlay));
@@ -720,7 +720,7 @@ void UGlobalStateManager::SendSessionIdUpdate()
 {
 	FWorkerComponentUpdate Update = {};
 	Update.component_id = SpatialConstants::DEPLOYMENT_MAP_COMPONENT_ID;
-	Update.schema_type = Schema_CreateComponentUpdate();
+	Update.schema_type = Schema_CreateComponentUpdate(Update.component_id);
 	Schema_Object* ComponentObject = Schema_GetComponentUpdateFields(Update.schema_type);
 
 	Schema_AddInt32(ComponentObject, SpatialConstants::DEPLOYMENT_MAP_SESSION_ID, DeploymentSessionId);

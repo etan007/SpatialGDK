@@ -10,7 +10,7 @@ Schema_ComponentUpdate* FRPCStore::GetOrCreateComponentUpdate(const EntityCompon
 	PendingUpdate* ComponentUpdatePtr = PendingComponentUpdatesToSend.Find(EntityComponentIdPair);
 	if (ComponentUpdatePtr == nullptr)
 	{
-		ComponentUpdatePtr = &PendingComponentUpdatesToSend.Emplace(EntityComponentIdPair, Schema_CreateComponentUpdate());
+		ComponentUpdatePtr = &PendingComponentUpdatesToSend.Emplace(EntityComponentIdPair, Schema_CreateComponentUpdate(EntityComponentIdPair.ComponentId));
 	}
 	return ComponentUpdatePtr->Update;
 }

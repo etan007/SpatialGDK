@@ -1970,7 +1970,7 @@ void ActorSystem::SendActorTornOffUpdate(const Worker_EntityId EntityId, const W
 	FWorkerComponentUpdate ComponentUpdate = {};
 
 	ComponentUpdate.component_id = ComponentId;
-	ComponentUpdate.schema_type = Schema_CreateComponentUpdate();
+	ComponentUpdate.schema_type = Schema_CreateComponentUpdate(ComponentId);
 	Schema_Object* ComponentObject = Schema_GetComponentUpdateFields(ComponentUpdate.schema_type);
 
 	Schema_AddBool(ComponentObject, SpatialConstants::ACTOR_TEAROFF_ID, 1);

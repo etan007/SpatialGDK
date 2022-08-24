@@ -517,7 +517,7 @@ struct Interest : AbstractMutableComponent
 	{
 		Worker_ComponentUpdate ComponentUpdate = {};
 		ComponentUpdate.component_id = ComponentId;
-		ComponentUpdate.schema_type = Schema_CreateComponentUpdate();
+		ComponentUpdate.schema_type = Schema_CreateComponentUpdate(ComponentId);
 		Schema_Object* ComponentObject = Schema_GetComponentUpdateFields(ComponentUpdate.schema_type);
 
 		FillComponentData(ComponentObject);

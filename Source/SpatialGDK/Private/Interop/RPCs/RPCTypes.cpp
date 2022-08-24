@@ -76,7 +76,7 @@ Schema_Object* RPCWritingContext::EntityWrite::GetFieldsToWrite()
 			Fields = Schema_GetComponentDataFields(Data);
 			break;
 		case DataKind::ComponentUpdate:
-			Update = Schema_CreateComponentUpdate();
+			Update = Schema_CreateComponentUpdate(ComponentId);
 			Fields = Schema_GetComponentUpdateFields(Update);
 			break;
 		case DataKind::CommandRequest:

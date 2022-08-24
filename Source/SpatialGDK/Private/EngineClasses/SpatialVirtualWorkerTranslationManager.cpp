@@ -203,7 +203,7 @@ void SpatialVirtualWorkerTranslationManager::SendVirtualWorkerMappingUpdate() co
 	// Construct the mapping update based on the local virtual worker to physical worker mapping.
 	FWorkerComponentUpdate Update = {};
 	Update.component_id = SpatialConstants::VIRTUAL_WORKER_TRANSLATION_COMPONENT_ID;
-	Update.schema_type = Schema_CreateComponentUpdate();
+	Update.schema_type = Schema_CreateComponentUpdate(Update.component_id);
 	Schema_Object* UpdateObject = Schema_GetComponentUpdateFields(Update.schema_type);
 
 	WriteMappingToSchema(UpdateObject);

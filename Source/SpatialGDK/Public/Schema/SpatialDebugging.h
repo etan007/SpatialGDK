@@ -68,7 +68,7 @@ struct SpatialDebugging : AbstractMutableComponent
 	{
 		Worker_ComponentUpdate Update = {};
 		Update.component_id = ComponentId;
-		Update.schema_type = Schema_CreateComponentUpdate();
+		Update.schema_type = Schema_CreateComponentUpdate(ComponentId);
 		Schema_Object* ComponentObject = Schema_GetComponentUpdateFields(Update.schema_type);
 
 		Schema_AddUint32(ComponentObject, SpatialConstants::SPATIAL_DEBUGGING_AUTHORITATIVE_VIRTUAL_WORKER_ID,

@@ -457,7 +457,7 @@ FWorkerComponentUpdate ComponentFactory::CreateComponentUpdate(Worker_ComponentI
 	FWorkerComponentUpdate ComponentUpdate = {};
 
 	ComponentUpdate.component_id = ComponentId;
-	ComponentUpdate.schema_type = Schema_CreateComponentUpdate();
+	ComponentUpdate.schema_type = Schema_CreateComponentUpdate(ComponentId);
 	Schema_Object* ComponentObject = Schema_GetComponentUpdateFields(ComponentUpdate.schema_type);
 
 	TArray<Schema_FieldId> ClearedIds;

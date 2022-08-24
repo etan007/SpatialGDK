@@ -63,7 +63,7 @@ struct ServerWorker : Component
 	{
 		Worker_ComponentUpdate Update = {};
 		Update.component_id = ComponentId;
-		Update.schema_type = Schema_CreateComponentUpdate();
+		Update.schema_type = Schema_CreateComponentUpdate(ComponentId);
 		Schema_Object* ComponentObject = Schema_GetComponentUpdateFields(Update.schema_type);
 
 		AddStringToSchema(ComponentObject, SpatialConstants::SERVER_WORKER_NAME_ID, WorkerName);

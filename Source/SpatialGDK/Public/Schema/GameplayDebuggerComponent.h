@@ -36,7 +36,7 @@ struct GameplayDebuggerComponent
 	{
 		Worker_ComponentUpdate Data = {};
 		Data.component_id = ComponentId;
-		Data.schema_type = Schema_CreateComponentUpdate();
+		Data.schema_type = Schema_CreateComponentUpdate(ComponentId);
 		Schema_Object* ComponentObject = Schema_GetComponentUpdateFields(Data.schema_type);
 		WriteToSchema(ComponentObject);
 

@@ -267,7 +267,7 @@ Schema_ComponentUpdate* SpatialRoutingSystem::GetOrCreateComponentUpdate(
 	Schema_ComponentUpdate** ComponentUpdatePtr = PendingComponentUpdatesToSend.Find(EntityComponentIdPair);
 	if (ComponentUpdatePtr == nullptr)
 	{
-		ComponentUpdatePtr = &PendingComponentUpdatesToSend.Add(EntityComponentIdPair, Schema_CreateComponentUpdate());
+		ComponentUpdatePtr = &PendingComponentUpdatesToSend.Add(EntityComponentIdPair, Schema_CreateComponentUpdate(EntityComponentIdPair.Value));
 	}
 	return *ComponentUpdatePtr;
 }

@@ -56,7 +56,7 @@ struct AuthorityIntent : AbstractMutableComponent
 	{
 		Worker_ComponentUpdate Update = {};
 		Update.component_id = ComponentId;
-		Update.schema_type = Schema_CreateComponentUpdate();
+		Update.schema_type = Schema_CreateComponentUpdate(ComponentId);
 		Schema_Object* ComponentObject = Schema_GetComponentUpdateFields(Update.schema_type);
 
 		Schema_AddUint32(ComponentObject, SpatialConstants::AUTHORITY_INTENT_VIRTUAL_WORKER_ID, VirtualWorkerId);

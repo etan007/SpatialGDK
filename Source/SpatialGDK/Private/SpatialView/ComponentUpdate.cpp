@@ -6,7 +6,7 @@ namespace SpatialGDK
 {
 ComponentUpdate::ComponentUpdate(Worker_ComponentId Id)
 	: ComponentId(Id)
-	, Update(Schema_CreateComponentUpdate())
+	, Update(Schema_CreateComponentUpdate(Id))
 {
 }
 
