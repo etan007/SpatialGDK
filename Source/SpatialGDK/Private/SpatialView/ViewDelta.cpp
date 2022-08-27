@@ -396,6 +396,10 @@ void ViewDelta::GenerateComponentChangesFromSetData(const Worker_ComponentSetAut
 	// *删除实体上组件集中的所有组件。
 	// *添加op中包含数据的所有组件。
 	// 如果同时删除和添加了一个组件，则这将被解释为视图增量中的组件刷新。否则，将酌情添加或删除组件。
+	if (!ComponentSetData.ComponentSets.Contains(Op.component_set_id))
+		return;
+ 
+
 	const TSet<Worker_ComponentId>& Set = ComponentSetData.ComponentSets[Op.component_set_id];
 
 	// If a component on the entity is in the set then generate a remove operation.
