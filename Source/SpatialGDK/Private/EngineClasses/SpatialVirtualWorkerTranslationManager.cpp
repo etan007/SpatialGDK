@@ -118,7 +118,7 @@ void SpatialVirtualWorkerTranslationManager::WriteMappingToSchema(Schema_Object*
 {
 	for (const auto& Entry : VirtualToPhysicalWorkerMapping)
 	{
-		Schema_Object* EntryObject = Schema_AddObject(Object, SpatialConstants::VIRTUAL_WORKER_TRANSLATION_MAPPING_ID);
+		Schema_Object* EntryObject = Schema_AddObject_Index(Object, SpatialConstants::VIRTUAL_WORKER_TRANSLATION_MAPPING_ID);
 		Schema_AddUint32(EntryObject, SpatialConstants::MAPPING_VIRTUAL_WORKER_ID, Entry.Key);
 		SpatialGDK::AddStringToSchema(EntryObject, SpatialConstants::MAPPING_PHYSICAL_WORKER_NAME_ID, Entry.Value.WorkerName);
 		Schema_AddEntityId(EntryObject, SpatialConstants::MAPPING_SERVER_WORKER_ENTITY_ID, Entry.Value.ServerWorkerEntityId);
