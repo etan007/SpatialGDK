@@ -143,7 +143,7 @@ struct Position : AbstractMutableComponent
 		ComponentUpdate.schema_type = Schema_CreateComponentUpdate(ComponentId);
 		Schema_Object* ComponentObject = Schema_GetComponentUpdateFields(ComponentUpdate.schema_type);
 
-		AddCoordinateToSchema(ComponentObject, 1, Coords);
+		AddCoordinateToSchema(ComponentObject, 2, Coords);
 
 		return ComponentUpdate;
 	}
@@ -151,7 +151,7 @@ struct Position : AbstractMutableComponent
 	void ApplyComponentUpdate(const Worker_ComponentUpdate& Update)
 	{
 		Schema_Object* ComponentObject = Schema_GetComponentUpdateFields(Update.schema_type);
-		Schema_Object* CoordsObject = Schema_GetObject(ComponentObject, 1);
+		Schema_Object* CoordsObject = Schema_GetObject(ComponentObject, 2);
 		Coords.X = Schema_GetDouble(CoordsObject, 1);
 		Coords.Y = Schema_GetDouble(CoordsObject, 2);
 		Coords.Z = Schema_GetDouble(CoordsObject, 3);
