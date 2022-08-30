@@ -35,32 +35,32 @@ OpList SpatialOSConnectionHandler::GetNextOpList()
 	for (uint32 i = 0; i < Ops.Count; ++i)
 	{
 		Worker_Op& Op = Ops.Ops[i];
-		Worker_RequestId Id = 0;
+		Worker_RequestId* Id;
 		switch (static_cast<Worker_OpType>(Op.op_type))
 		{
 		case WORKER_OP_TYPE_RESERVE_ENTITY_IDS_RESPONSE:
-			Id = Op.op.reserve_entity_ids_response.request_id;
+			Id = &Op.op.reserve_entity_ids_response.request_id;
 			break;
 		case WORKER_OP_TYPE_CREATE_ENTITY_RESPONSE:
-			Id = Op.op.create_entity_response.request_id;
+			Id = &Op.op.create_entity_response.request_id;
 			break;
 		case WORKER_OP_TYPE_DELETE_ENTITY_RESPONSE:
-			Id = Op.op.delete_entity_response.request_id;
+			Id = &Op.op.delete_entity_response.request_id;
 			break;
 		case WORKER_OP_TYPE_ENTITY_QUERY_RESPONSE:
-			Id = Op.op.entity_query_response.request_id;
+			Id = &Op.op.entity_query_response.request_id;
 			break;
 		case WORKER_OP_TYPE_COMMAND_RESPONSE:
-			Id = Op.op.command_response.request_id;
+			Id = &Op.op.command_response.request_id;
 			break;
 		default:
-			Id = 0;
+			Id = nullptr;
 			break;
 		}
 
-		if (Id != 0)
+		if (Id != nullptr)
 		{
-			Id = InternalToUserRequestId.FindAndRemoveChecked(Id);
+			*Id = InternalToUserRequestId.FindAndRemoveChecked(*Id);
 		}
 	}
 

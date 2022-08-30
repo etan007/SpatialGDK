@@ -14,7 +14,7 @@ message DeploymentMap {
     optional uint32 id = 1[default = 9994];
     optional string map_url = 2;
     optional bool accepting_players = 3;
-    optional uint32 session_id = 4;
+    optional int32 session_id = 4;
     optional uint32 schema_hash = 5;
 }
 

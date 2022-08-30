@@ -396,26 +396,28 @@ void ViewDelta::GenerateComponentChangesFromSetData(const Worker_ComponentSetAut
 	// *删除实体上组件集中的所有组件。
 	// *添加op中包含数据的所有组件。
 	// 如果同时删除和添加了一个组件，则这将被解释为视图增量中的组件刷新。否则，将酌情添加或删除组件。
-	if (!ComponentSetData.ComponentSets.Contains(Op.component_set_id))
-		return;
- 
-
-	const TSet<Worker_ComponentId>& Set = ComponentSetData.ComponentSets[Op.component_set_id];
-
-	// If a component on the entity is in the set then generate a remove operation.
-	// 如果实体上的组件在集合中，则生成移除操作。
-	if (const EntityViewElement* Entity = View.Find(Op.entity_id))
+	if (ComponentSetData.ComponentSets.Contains(Op.component_set_id))
 	{
-		for (const ComponentData& Component : Entity->Components)
+		const TSet<Worker_ComponentId>& Set = ComponentSetData.ComponentSets[Op.component_set_id];
+
+		// If a component on the entity is in the set then generate a remove operation.
+		// 如果实体上的组件在集合中，则生成移除操作。
+		if (const EntityViewElement* Entity = View.Find(Op.entity_id))
 		{
-			const Worker_ComponentId ComponentId = Component.GetComponentId();
-			if (Set.Contains(ComponentId))
+			for (const ComponentData& Component : Entity->Components)
 			{
-				Worker_RemoveComponentOp RemoveOp = { Op.entity_id, ComponentId };
-				ComponentChanges.Emplace(RemoveOp);
+				const Worker_ComponentId ComponentId = Component.GetComponentId();
+				if (Set.Contains(ComponentId))
+				{
+					Worker_RemoveComponentOp RemoveOp = { Op.entity_id, ComponentId };
+					ComponentChanges.Emplace(RemoveOp);
+				}
 			}
 		}
 	}
+ 
+
+
 
 	// If the component has data in the authority op then generate an add operation.
 	// 如果组件在权限op中有数据，则生成添加操作。
