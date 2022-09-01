@@ -23,7 +23,7 @@ public:
 #else
 		Path = Path / TEXT("Win32");
 #endif // PLATFORM_64BITS
-		
+
 		FString WorkerFilePath = Path / TEXT("WorkerSDK.dll");
 		WorkerLibraryHandle = FPlatformProcess::GetDllHandle(*WorkerFilePath);
 		if (WorkerLibraryHandle == nullptr)
@@ -36,19 +36,19 @@ public:
 		{
 			BuildDir = FPaths::Combine(SpatialGDKServicesConstants::SpatialOSDirectory, TEXT("build"));
 		}
-		FString CompiledSchemaDir = FPaths::Combine(BuildDir, TEXT("assembly/schema/"));
-		 
+		FString CompiledSchemaDir = FPaths::Combine(BuildDir, TEXT("assembly/schema/schema.json"));
+
 		FString proto_root = FPaths::Combine(SpatialGDKServicesConstants::SpatialOSDirectory, TEXT("schema/"));
 
 		FString g3log_path = FPaths::Combine(SpatialGDKServicesConstants::SpatialOSDirectory, TEXT("g3log/"));
-		
+
 		std::string path(TCHAR_TO_UTF8(*proto_root));
 		std::string json_path(TCHAR_TO_UTF8(*CompiledSchemaDir));
 		std::string log_path(TCHAR_TO_UTF8(*g3log_path));
 		if(!LoadAllSchema(path,json_path,log_path))
 		{
 			UE_LOG(LogTemp, Fatal, TEXT("FSpatialGDKLoader::FSpatialGDKLoader LoadAllSchema path=%s,json_path=%s"),*proto_root,*CompiledSchemaDir);
-			 
+
 		}
 
 #if TRACE_LIB_ACTIVE

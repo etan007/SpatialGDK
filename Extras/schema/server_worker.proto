@@ -22,20 +22,20 @@ message ServerWorker {
     optional string worker_name = 2;
     optional bool ready_to_begin_play = 3;
     optional int64 server_system_entity_id = 4;
-    message command_forward_spawn_player
+    message CommandForwardSpawnPlayer
     {
         optional ForwardSpawnPlayerRequest request = 1;
         optional ForwardSpawnPlayerResponse response = 2;
     }
-    message command_exec_server_command
+    message CommandExecServerCommand
     {
         optional ExecServerCommandPayload request = 1;
         optional Void response = 2;
     }
-    message commands
+   message Commands
     {
-        optional command_forward_spawn_player forward_spawn_player = 1;
-        optional command_exec_server_command exec_server_command = 2;
+        optional CommandForwardSpawnPlayer forward_spawn_player = 1;
+        optional CommandExecServerCommand exec_server_command = 2;
     }
   
 }

@@ -34,14 +34,14 @@ message MigrationDiagnosticResponse
 message MigrationDiagnostic
 {
     optional uint32 id = 1[default = 9969];
-	message command_diagnostic
+	message CommandDiagnostic
 	{
 		optional MigrationDiagnosticRequest request = 1;
 		optional MigrationDiagnosticResponse response = 2;
 	}
-	message commands
+	message Commands
 	{
-       optional command_diagnostic diagnostic = 1;
+       optional CommandDiagnostic diagnostic = 1;
 	}
 	
 }

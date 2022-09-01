@@ -291,7 +291,7 @@ FLocalDeploymentManager::ERuntimeStartResponse FLocalDeploymentManager::StartLoc
 	// --schema_bundle=spatial/build/assembly/schema/schema.sb
 	// --event - tracing - logs - directory = `<Project > / spatial / localdeployment / <timestamp> / `
 	FString schema_root = FPaths::Combine(SpatialGDKServicesConstants::SpatialOSDirectory, TEXT("schema/"));
-	FString schema_json = SpatialGDKServicesConstants::CompiledSchemaDir + TEXT("/");
+	FString schema_json = SpatialGDKServicesConstants::CompiledSchemaDir + TEXT("/schema.json");
 	FString RuntimeArgs = FString::Printf(
 		TEXT("--schema_root=\"%s\" --schema_json=\"%s\" --config=\"%s\" --snapshot=\"%s\" --worker_port=%s --http_port=%s --grpc_port=%s "
 			 "--snapshots_directory=\"%s\" --schema_bundle=\"%s\" --event_tracing_logs_directory=\"%s\" %s"),
@@ -565,9 +565,9 @@ void FLocalDeploymentManager::SetAutoDeploy(bool bInAutoDeploy)
 void SPATIALGDKSERVICES_API FLocalDeploymentManager::TakeSnapshot(UWorld* World, FSpatialSnapshotTakenFunc OnSnapshotTaken)
 {
 	FHttpModule& HttpModule = FModuleManager::LoadModuleChecked<FHttpModule>("HTTP");
- 
+
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> HttpRequest = HttpModule.Get().CreateRequest();
- 
+
 
 	HttpRequest->OnProcessRequestComplete().BindLambda(
 		[World, OnSnapshotTaken](FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded) {

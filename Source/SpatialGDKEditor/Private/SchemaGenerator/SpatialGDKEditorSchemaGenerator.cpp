@@ -44,7 +44,7 @@
 
 #include <WorkerSDK/improbable/c_worker.h>
 #define GDK_CREATE_PACKAGE(PackagePath) CreatePackage((PackagePath));
- 
+
 
 // clang-format off
 #define SAFE_TRYGET(Value, Type, OutParam)                                                                                                 \
@@ -1337,7 +1337,7 @@ bool RunSchemaCompiler(FString& SchemaBundleJsonOutput, FString SchemaInputDir, 
 
 	if (SchemaInputDir == "")
 	{
-		SchemaInputDir = FPaths::Combine(SpatialGDKServicesConstants::SpatialOSDirectory, TEXT("schema"));
+		SchemaInputDir = FPaths::Combine(SpatialGDKServicesConstants::SpatialOSDirectory, TEXT("schema/"));
 	}
 
 	if (BuildDir == "")
@@ -1556,7 +1556,7 @@ bool ExtractInformationFromSchemaJson(const FString& SchemaJsonPath, TMap<uint32
 				ComponentIdToDataDefinitionName.Add(ComponentId, DataDefinition);
 			}
 		}
-		// TODO:SKYCELL-BEGIN ???¡À??¡À?compontsets
+		// TODO:SKYCELL-BEGIN ???Â±??Â±?compontsets
 		/*
 		const TArray<TSharedPtr<FJsonValue>>* ComponentSets;
 		SAFE_TRYGETFIELD((*FileObject), Array, "componentSets", ComponentSets);
@@ -1648,26 +1648,26 @@ bool SpatialGDKGenerateSchema()
 	// Needs to happen before RunSchemaCompiler
 	WriteComponentSetFiles(SchemaDatabase);
 
-	//±àÒëÉú³ÉµÄproto
-	
-    
+	//ç¼–è¯‘ç”Ÿæˆçš„proto
+
+
 	FString SchemaJsonOutput;
 	if (!RunSchemaCompiler(SchemaJsonOutput))
 	{
 		return false;
 	}
-    
+
 	/*if (!ExtractInformationFromSchemaJson(SchemaJsonOutput, SchemaDatabase->ComponentSetIdToComponentIds,
 										  SchemaDatabase->ComponentIdToFieldIdsIndex, SchemaDatabase->FieldIdsArray))
 	{
 		return false;
 	}
-	
+
 	if (!build_schema("",""))
 	{
 		return false;
 	}*/
-	 
+
 	if (!SaveSchemaDatabase(SchemaDatabase)) // This requires RunSchemaCompiler to run first
 	{
 		return false;

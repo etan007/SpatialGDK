@@ -171,7 +171,7 @@ FActorSpecificSubobjectSchemaData GenerateSchemaForStaticallyAttachedSubobject(F
 		Writer.Indent();
 		//Writer.Printf("id = {0};", ComponentId);
 		Writer.Printf("optional uint32 id = 1[default = {0}];", ComponentId);
-		Writer.Printf("data unreal.generated.{0};", *SchemaReplicatedDataName(Group, ComponentClass));
+		Writer.Printf("optional unreal.generated.{0} data = 2", *SchemaReplicatedDataName(Group, ComponentClass));
 		Writer.Outdent().Print("}");
 
 		AddComponentId(ComponentId, SubobjectData.SchemaComponents, PropertyGroupToSchemaComponentType(Group));
@@ -470,7 +470,7 @@ void GenerateSubobjectSchema(FComponentIdGenerator& IdGenerator, UClass* Class, 
 			Writer.Indent();
 			//Writer.Printf("id = {0};", ComponentId);
 			Writer.Printf("optional uint32 id = 1[default = {0}];", ComponentId);
-			Writer.Printf("data {0};", *SchemaReplicatedDataName(Group, Class));
+			Writer.Printf("optional {0} data = 2;", *SchemaReplicatedDataName(Group, Class));
 			Writer.Outdent().Print("}");
 
 			AddComponentId(ComponentId, DynamicSubobjectComponents.SchemaComponents, PropertyGroupToSchemaComponentType(Group));
