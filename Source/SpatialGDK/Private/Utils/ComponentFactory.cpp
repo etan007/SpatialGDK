@@ -80,7 +80,7 @@ uint32 ComponentFactory::FillSchemaObject(Schema_Object* ComponentObject, UObjec
 																			   Parent.Property, NetDeltaStruct)
 							|| bIsInitialData)
 						{
-							AddBytesToSchema(ComponentObject, HandleIterator.Handle, ValueDataWriter);
+							AddBytesToSchema(ComponentObject, HandleIterator.Handle+1, ValueDataWriter);
 						}
 
 						bProcessedFastArrayProperty = true;
@@ -89,7 +89,7 @@ uint32 ComponentFactory::FillSchemaObject(Schema_Object* ComponentObject, UObjec
 
 				if (!bProcessedFastArrayProperty)
 				{
-					AddProperty(ComponentObject, HandleIterator.Handle, Cmd.Property, Data, ClearedIds);
+					AddProperty(ComponentObject, HandleIterator.Handle+1, Cmd.Property, Data, ClearedIds);
 				}
 
 #if USE_NETWORK_PROFILER
@@ -122,10 +122,10 @@ uint32 ComponentFactory::FillSchemaObject(Schema_Object* ComponentObject, UObjec
 	}
 
 	const uint32 BytesEnd = Schema_GetWriteBufferLength(ComponentObject);
-	
+
 
 	return BytesEnd - BytesStart;
-	
+
 	return 0;
 }
 

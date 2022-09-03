@@ -1556,7 +1556,7 @@ bool ExtractInformationFromSchemaJson(const FString& SchemaJsonPath, TMap<uint32
 				ComponentIdToDataDefinitionName.Add(ComponentId, DataDefinition);
 			}
 		}
-		// TODO:SKYCELL-BEGIN ???±??±?compontsets
+		// TODO:IMPROBABLE-BEGIN ???±??±?compontsets
 		/*
 		const TArray<TSharedPtr<FJsonValue>>* ComponentSets;
 		SAFE_TRYGETFIELD((*FileObject), Array, "componentSets", ComponentSets);
@@ -1590,7 +1590,7 @@ bool ExtractInformationFromSchemaJson(const FString& SchemaJsonPath, TMap<uint32
 
 			ComponentRefSetMap.Add(ComponentSetId, MoveTemp(Components));
 		}*/
-		// SKYCELL-END
+		// IMPROBABLE-END
 	}
 
 	TMap<uint32, FComponentIDs> FinalMap;

@@ -16,13 +16,13 @@ struct FWorkerStats
 	UPROPERTY()
 	FString WorkerName;
 	UPROPERTY()
-	float AverageFPS = 0.0f; // SKYCELL-add
+	float AverageFPS = 0.0f; // IMPROBABLE-add
 	UPROPERTY()
-	float ServerMovementCorrections = 0.0f; // SKYCELL-add per second
+	float ServerMovementCorrections = 0.0f; // IMPROBABLE-add per second
 	UPROPERTY()
-	int32 ServerConsiderListSize = 0; // SKYCELL-add
+	int32 ServerConsiderListSize = 0; // IMPROBABLE-add
 	UPROPERTY()
-	uint32 ServerReplicationLimit = 0; // SKYCELL-add
+	uint32 ServerReplicationLimit = 0; // IMPROBABLE-add
 
 	bool operator==(const FWorkerStats& other) const { return (WorkerName.Equals(other.WorkerName)); }
 };

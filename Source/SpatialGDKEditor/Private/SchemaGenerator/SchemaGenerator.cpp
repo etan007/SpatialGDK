@@ -510,6 +510,7 @@ EReplicatedPropertyGroup SchemaComponentTypeToPropertyGroup(ESchemaComponentType
 
 void GenerateActorSchema(FComponentIdGenerator& IdGenerator, UClass* Class, TSharedPtr<FUnrealType> TypeInfo, FString SchemaPath)
 {
+
 	const FActorSchemaData* const SchemaData = ActorClassPathToSchema.Find(Class->GetPathName());
 
 	FCodeWriter Writer;

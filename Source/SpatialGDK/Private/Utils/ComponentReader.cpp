@@ -208,7 +208,7 @@ void ComponentReader::ApplySchemaObject(Schema_Object* ComponentObject, UObject&
 			{
 				// This is mostly copied from ReceivePropertyHelper in RepLayout.cpp
 				auto GetSwappedCmd = [&Cmd, &Cmds, &Parents, bIsAuthServer, &Replicator, &Channel, &Parent]() -> const FRepLayoutCmd& {
- 
+
 					// Only swap Role/RemoteRole for actors
 					if (EnumHasAnyFlags(Replicator->RepLayout->GetFlags(), ERepLayoutFlags::IsActor) && !Channel.GetSkipRoleSwap())
 					{
@@ -224,7 +224,7 @@ void ComponentReader::ApplySchemaObject(Schema_Object* ComponentObject, UObject&
 					}
 
 					return Cmd;
- 
+
 				};
 				// This swaps Role/RemoteRole as we write it
 				const FRepLayoutCmd& SwappedCmd = GetSwappedCmd();
@@ -445,7 +445,7 @@ void ComponentReader::ApplyProperty(Schema_Object* Object, Schema_FieldId FieldI
 	}
 	else if (GDK_PROPERTY(ObjectPropertyBase)* ObjectProperty = GDK_CASTFIELD<GDK_PROPERTY(ObjectPropertyBase)>(Property))
 	{
-		FUnrealObjectRef ObjectRef = IndexObjectRefFromSchema(Object, FieldId, Index);
+		FUnrealObjectRef ObjectRef = IndexObjectRefFromSchema(Object, FieldId);
 		check(ObjectRef != FUnrealObjectRef::UNRESOLVED_OBJECT_REF);
 
 		if (GDK_CASTFIELD<GDK_PROPERTY(SoftObjectProperty)>(Property))

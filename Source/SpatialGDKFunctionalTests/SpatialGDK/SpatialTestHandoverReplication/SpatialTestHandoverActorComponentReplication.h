@@ -26,10 +26,10 @@ struct FHandoverReplicationTestStructInner
 	GENERATED_BODY()
 
 	UPROPERTY()
-	int FirstProperty = 0; // SKYCELL-add
+	int FirstProperty = 0; // IMPROBABLE-add
 
 	UPROPERTY()
-	int SecondProperty = 0; // SKYCELL-add
+	int SecondProperty = 0; // IMPROBABLE-add
 };
 
 USTRUCT()
@@ -38,10 +38,10 @@ struct FHandoverReplicationTestStruct
 	GENERATED_BODY()
 
 	UPROPERTY()
-	int FirstProperty = 0; // SKYCELL-add
+	int FirstProperty = 0; // IMPROBABLE-add
 
 	UPROPERTY()
-	int SecondProperty = 0; // SKYCELL-add
+	int SecondProperty = 0; // IMPROBABLE-add
 
 	UPROPERTY()
 	FHandoverReplicationTestStructInner InnerStruct;

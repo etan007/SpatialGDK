@@ -17,26 +17,26 @@ struct FSpatialPingAverageData
 	GENERATED_BODY()
 
 	UPROPERTY(BlueprintReadWrite, Category = SpatialPing)
-	float LastMeasurementsWindowAvg = 0.0f; // SKYCELL-add
+	float LastMeasurementsWindowAvg = 0.0f; // IMPROBABLE-add
 	UPROPERTY(BlueprintReadWrite, Category = SpatialPing)
-	float LastMeasurementsWindowMin = 0.0f; // SKYCELL-add
+	float LastMeasurementsWindowMin = 0.0f; // IMPROBABLE-add
 	UPROPERTY(BlueprintReadWrite, Category = SpatialPing)
-	float LastMeasurementsWindowMax = 0.0f; // SKYCELL-add
+	float LastMeasurementsWindowMax = 0.0f; // IMPROBABLE-add
 	UPROPERTY(BlueprintReadWrite, Category = SpatialPing)
-	float LastMeasurementsWindow50thPercentile = 0.0f; // SKYCELL-add
+	float LastMeasurementsWindow50thPercentile = 0.0f; // IMPROBABLE-add
 	UPROPERTY(BlueprintReadWrite, Category = SpatialPing)
-	float LastMeasurementsWindow90thPercentile = 0.0f; // SKYCELL-add
+	float LastMeasurementsWindow90thPercentile = 0.0f; // IMPROBABLE-add
 	UPROPERTY(BlueprintReadWrite, Category = SpatialPing)
-	int WindowSize = 0; // SKYCELL-add
+	int WindowSize = 0; // IMPROBABLE-add
 
 	UPROPERTY(BlueprintReadWrite, Category = SpatialPing)
-	float TotalAvg = 0.0f; // SKYCELL-add
+	float TotalAvg = 0.0f; // IMPROBABLE-add
 	UPROPERTY(BlueprintReadWrite, Category = SpatialPing)
-	float TotalMin = 0.0f; // SKYCELL-add
+	float TotalMin = 0.0f; // IMPROBABLE-add
 	UPROPERTY(BlueprintReadWrite, Category = SpatialPing)
-	float TotalMax = 0.0f; // SKYCELL-add
+	float TotalMax = 0.0f; // IMPROBABLE-add
 	UPROPERTY(BlueprintReadWrite, Category = SpatialPing)
-	int TotalNum = 0; // SKYCELL-add
+	int TotalNum = 0; // IMPROBABLE-add
 };
 
 /*

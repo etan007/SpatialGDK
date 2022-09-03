@@ -281,20 +281,20 @@ const Schema_FieldId MIGRATION_DIAGNOSTIC_DESTINATION_WORKER_ID = 7;
 const Schema_FieldId MIGRATION_DIAGNOSTIC_OWNER_ID = 8;
 
 // Worker component field IDs
-const Schema_FieldId WORKER_COMPONENT_WORKER_ID_ID = 1;
-const Schema_FieldId WORKER_COMPONENT_WORKER_TYPE_ID = 2;
+const Schema_FieldId WORKER_COMPONENT_WORKER_ID_ID = 2;
+const Schema_FieldId WORKER_COMPONENT_WORKER_TYPE_ID = 3;
 
 // Partition component field IDs
-const Schema_FieldId PARTITION_COMPONENT_WORKER_ID = 1;
+const Schema_FieldId PARTITION_COMPONENT_WORKER_ID = 2;
 
 // ActorSetMember field IDs
-const Schema_FieldId ACTOR_SET_MEMBER_COMPONENT_LEADER_ENTITY_ID = 1;
+const Schema_FieldId ACTOR_SET_MEMBER_COMPONENT_LEADER_ENTITY_ID = 2;
 
 // ActorGroupMember field IDs
-const Schema_FieldId ACTOR_GROUP_MEMBER_COMPONENT_ACTOR_GROUP_ID = 1;
+const Schema_FieldId ACTOR_GROUP_MEMBER_COMPONENT_ACTOR_GROUP_ID = 2;
 
 // ActorOwnership field IDs
-const Schema_FieldId ACTOR_OWNERSHIP_COMPONENT_OWNER_ACTOR_ID = 1;
+const Schema_FieldId ACTOR_OWNERSHIP_COMPONENT_OWNER_ACTOR_ID = 2;
 
 const float FIRST_COMMAND_RETRY_WAIT_SECONDS = 0.2f;
 const uint32 MAX_NUMBER_COMMAND_ATTEMPTS = 5u;

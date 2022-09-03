@@ -74,12 +74,48 @@ void VisitAllProperties(TSharedPtr<FUnrealType> TypeNode, TFunction<bool(TShared
 // The original code can be found in the Unreal Engine's RepLayout. We use this to ensure we have the correct property at run-time.
 uint32 GenerateChecksum(GDK_PROPERTY(Property) * Property, uint32 ParentChecksum, int32 StaticArrayIndex)
 {
-	uint32 Checksum = 0;
+	/*uint32 Checksum = 0;
 	Checksum = FCrc::StrCrc32(*Property->GetName().ToLower(), ParentChecksum);		  // Evolve checksum on name
 	Checksum = FCrc::StrCrc32(*Property->GetCPPType(nullptr, 0).ToLower(), Checksum); // Evolve by property type
 	Checksum = FCrc::MemCrc32(&StaticArrayIndex, sizeof(StaticArrayIndex),
 							  Checksum); // Evolve by StaticArrayIndex (to make all unrolled static array elements unique)
-	return Checksum;
+	return Checksum;*/
+	// Evolve checksum on name
+	uint32 CompatibleChecksum = FCrc::StrCrc32(*Property->GetName().ToLower(), ParentChecksum);
+
+	// Evolve by property type
+	const FObjectPtrProperty* const ObjectPtrProperty = CastField<const FObjectPtrProperty>(Property);
+
+	FString CPPType;
+	if (ObjectPtrProperty)
+	{
+		// To remain compatible with TObjectPtr, use the underlying pointer type in the checksum since the net-serialized data is compatible.
+		CPPType = ObjectPtrProperty->FObjectProperty::GetCPPType(nullptr, 0).ToLower();
+	}
+	else
+	{
+		CPPType = Property->GetCPPType(nullptr, 0).ToLower();
+	}
+	CompatibleChecksum = FCrc::StrCrc32(*CPPType, CompatibleChecksum);
+	// Evolve by StaticArrayIndex (to make all unrolled static array elements unique)
+	CompatibleChecksum = FCrc::MemCrc32(&StaticArrayIndex, sizeof(StaticArrayIndex), CompatibleChecksum);
+	// Evolve by enum max value bits required
+
+	if (const FEnumProperty* EnumProp = CastField<FEnumProperty>(Property))
+	{
+		const uint64 MaxBits = EnumProp->GetMaxNetSerializeBits();
+
+		CompatibleChecksum = FCrc::MemCrc32(&MaxBits, sizeof(MaxBits), CompatibleChecksum);
+	}
+	else if (const FByteProperty* ByteProp = CastField<FByteProperty>(Property))
+	{
+		const uint64 MaxBits = ByteProp->GetMaxNetSerializeBits();
+
+		CompatibleChecksum = FCrc::MemCrc32(&MaxBits, sizeof(MaxBits), CompatibleChecksum);
+	}
+
+	return CompatibleChecksum;
+
 }
 
 TSharedPtr<FUnrealProperty> CreateUnrealProperty(TSharedPtr<FUnrealType> TypeNode, GDK_PROPERTY(Property) * Property, uint32 ParentChecksum,
@@ -102,6 +138,10 @@ TSharedPtr<FUnrealType> CreateUnrealTypeInfo(UStruct* Type, uint32 ParentChecksu
 	// Struct types will set this to nullptr.
 	UClass* Class = Cast<UClass>(Type);
 
+	if(Type->GetName().Find(TEXT("Control"))>=0)
+	{
+		int a = 1;
+	}
 	// Create type node.
 	TSharedPtr<FUnrealType> TypeNode = MakeShared<FUnrealType>();
 	TypeNode->Type = Type;
@@ -395,6 +435,10 @@ TSharedPtr<FUnrealType> CreateUnrealTypeInfo(UStruct* Type, uint32 ParentChecksu
 		// 简单情况：Cmd 是对象中的根属性。
 		if (Parent.Property == Cmd.Property)
 		{
+			if( Cmd.Property->GetName()==TEXT("RemoteRole") )
+			{
+				int a = 0;
+			}
 			// Make sure we have the correct property via the checksums.
 			// 通过校验和确保我们拥有正确的属性。
 			for (auto& PropertyPair : TypeNode->Properties)
@@ -404,6 +448,17 @@ TSharedPtr<FUnrealType> CreateUnrealTypeInfo(UStruct* Type, uint32 ParentChecksu
 					PropertyNode = PropertyPair.Value;
 				}
 			}
+			/*// 校验和没有找到就直接找名字
+			if(PropertyNode == nullptr)
+			{
+				for (auto& PropertyPair : TypeNode->Properties)
+				{
+					if (PropertyPair.Key == Cmd.Property)
+					{
+						PropertyNode = PropertyPair.Value;
+					}
+				}
+			}*/
 		}
 		else
 		{
@@ -430,7 +485,7 @@ TSharedPtr<FUnrealType> CreateUnrealTypeInfo(UStruct* Type, uint32 ParentChecksu
 		if (!PropertyNode.IsValid()) {
 
 			//checkf(PropertyNode.IsValid(), TEXT("xxx Couldn't find the Cmd property inside the Parent's sub-properties. This shouldn't happen."));
-			continue;  // SKYCELL-ADD
+			continue;  // IMPROBABLE-ADD
 		}
 		checkf(PropertyNode.IsValid(), TEXT("Couldn't find the Cmd property inside the Parent's sub-properties. This shouldn't happen."));
 
@@ -441,7 +496,7 @@ TSharedPtr<FUnrealType> CreateUnrealTypeInfo(UStruct* Type, uint32 ParentChecksu
 		RepDataNode->Condition = Parent.Condition;
 		RepDataNode->RepNotifyCondition = Parent.RepNotifyCondition;
 		RepDataNode->ArrayIndex = PropertyNode->StaticArrayIndex;
- 
+
 		if (Class->IsChildOf(AActor::StaticClass()))
 		{
 			// Uses the same pattern as ComponentReader::ApplySchemaObject and ReceivePropertyHelper

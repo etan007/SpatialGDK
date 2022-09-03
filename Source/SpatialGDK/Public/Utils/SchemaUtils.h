@@ -49,7 +49,7 @@ inline bool GetBoolFromSchema(const Schema_Object* Object, Schema_FieldId Id)
 
 inline void AddBytesToSchema(Schema_Object* Object, Schema_FieldId Id, const uint8* Data, uint32 NumBytes)
 {
-	 
+
 	Schema_AddBytes(Object, Id, Data, sizeof(char) * NumBytes);
 }
 
@@ -94,13 +94,13 @@ inline void AddObjectRefToSchema(Schema_Object* Object, Schema_FieldId Id, const
 
 FUnrealObjectRef GetObjectRefFromSchema(Schema_Object* Object, Schema_FieldId Id);
 
-inline FUnrealObjectRef IndexObjectRefFromSchema(Schema_Object* Object, Schema_FieldId Id, uint32 Index)
+inline FUnrealObjectRef IndexObjectRefFromSchema(Schema_Object* Object, Schema_FieldId Id)
 {
 	using namespace SpatialConstants;
 
 	FUnrealObjectRef ObjectRef;
 
-	Schema_Object* ObjectRefObject = Schema_IndexObject(Object, Id, Index);
+	Schema_Object* ObjectRefObject = Schema_GetObject(Object, Id);
 
 	ObjectRef.Entity = Schema_GetEntityId(ObjectRefObject, UNREAL_OBJECT_REF_ENTITY_ID);
 	ObjectRef.Offset = Schema_GetUint32(ObjectRefObject, UNREAL_OBJECT_REF_OFFSET_ID);
@@ -126,7 +126,7 @@ inline FUnrealObjectRef IndexObjectRefFromSchema(Schema_Object* Object, Schema_F
 
 inline FUnrealObjectRef GetObjectRefFromSchema(Schema_Object* Object, Schema_FieldId Id)
 {
-	return IndexObjectRefFromSchema(Object, Id, 0);
+	return IndexObjectRefFromSchema(Object, Id);
 }
 
 inline void AddStringToEntityMapToSchema(Schema_Object* Object, Schema_FieldId Id, StringToEntityMap& Map)

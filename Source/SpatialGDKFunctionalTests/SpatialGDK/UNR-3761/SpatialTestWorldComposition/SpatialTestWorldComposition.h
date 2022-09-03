@@ -15,10 +15,10 @@ struct FExpectedActor
 	GENERATED_BODY()
 
 	UPROPERTY()
-	FVector ExpectedActorLocation = FVector::Zero(); // SKYCELL-add
+	FVector ExpectedActorLocation = FVector::Zero(); // IMPROBABLE-add
 
 	UPROPERTY()
-	UClass* ExpectedActorClass = nullptr; // SKYCELL-add
+	UClass* ExpectedActorClass = nullptr; // IMPROBABLE-add
 };
 
 UCLASS()

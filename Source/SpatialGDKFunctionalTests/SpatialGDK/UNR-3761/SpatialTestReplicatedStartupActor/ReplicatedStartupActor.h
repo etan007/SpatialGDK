@@ -12,7 +12,7 @@ struct FTestStruct
 	GENERATED_BODY()
 
 	UPROPERTY()
-	int Int = 0; // SKYCELL-add
+	int Int = 0; // IMPROBABLE-add
 };
 
 /**

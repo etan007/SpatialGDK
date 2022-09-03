@@ -24,7 +24,7 @@ struct FLockingToken
 	GENERATED_USTRUCT_BODY()
 
 	UPROPERTY(BlueprintReadOnly, Category = "SpatialGDK|Locking")
-	int64 Token = 0; // SKYCELL-add
+	int64 Token = 0; // IMPROBABLE-add
 };
 
 UENUM(BlueprintType)
