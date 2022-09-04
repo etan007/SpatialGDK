@@ -47,6 +47,7 @@ struct UnrealMetadata : AbstractMutableComponent
 		{
 			bNetStartup = GetBoolFromSchema(ComponentObject, SpatialConstants::UNREAL_METADATA_NET_STARTUP_ID);
 		}
+		//Schema_Debug2Log(ComponentObject);
 	}
 
 	Worker_ComponentData CreateComponentData() const override
@@ -65,7 +66,7 @@ struct UnrealMetadata : AbstractMutableComponent
 		{
 			Schema_AddBool(ComponentObject, SpatialConstants::UNREAL_METADATA_NET_STARTUP_ID, bNetStartup.GetValue());
 		}
-
+		//Schema_Debug2Log(ComponentObject);
 		return Data;
 	}
 

@@ -211,12 +211,13 @@ void EntityFactory::WriteUnrealComponents(TArray<FWorkerComponentData>& Componen
 			   TEXT("Entity being constructed from an actor did not have the UnrealMetadata component. This is forbidden."));
 		UnrealMetadata Metadata(*UnrealMetadataPtr);
 		FString TempPath = Actor->GetFName().ToString();
- 
+
 		GEngine->NetworkRemapPath(NetDriver->GetSpatialOSNetConnection(), TempPath, false /*bIsReading*/);
         // !UE_BUILD_SHIPPING
 		FUnrealObjectRef Remapped = FUnrealObjectRef(0, 0, TempPath, OuterObjectRef, true);
 		if (!Metadata.StablyNamedRef.IsSet() || *Metadata.StablyNamedRef != Remapped)
 		{
+
 			UE_LOG(LogEntityFactory, Error,
 				   TEXT("When constructing an entity, the network remapped path for the stably named object path was not equal to the one "
 						"constructed before. This is unexpected and could lead to bugs further down the line. Actor: %s, EntityId: %lld"),
@@ -371,9 +372,9 @@ TArray<FWorkerComponentData> EntityFactory::CreateTombstoneEntityComponents(AAct
 
 	// No path in SpatialOS should contain a PIE prefix.
 	FString TempPath = Actor->GetFName().ToString();
- 
+
 	GEngine->NetworkRemapPath(NetDriver->GetSpatialOSNetConnection(), TempPath, false /*bIsReading*/);
- 
+
 	const TSchemaOption<FUnrealObjectRef> StablyNamedObjectRef = FUnrealObjectRef(0, 0, TempPath, OuterObjectRef, true);
 
 	TArray<FWorkerComponentData> Components;

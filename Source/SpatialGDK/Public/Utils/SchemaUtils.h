@@ -80,6 +80,7 @@ inline void AddObjectRefToSchema(Schema_Object* Object, Schema_FieldId Id, const
 	if (ObjectRef.Path)
 	{
 		AddStringToSchema(ObjectRefObject, UNREAL_OBJECT_REF_PATH_ID, *ObjectRef.Path);
+		//FString str =  GetStringFromSchema(ObjectRefObject,UNREAL_OBJECT_REF_PATH_ID);
 		Schema_AddBool(ObjectRefObject, UNREAL_OBJECT_REF_NO_LOAD_ON_CLIENT_ID, ObjectRef.bNoLoadOnClient);
 	}
 	if (ObjectRef.Outer)
@@ -101,6 +102,7 @@ inline FUnrealObjectRef IndexObjectRefFromSchema(Schema_Object* Object, Schema_F
 	FUnrealObjectRef ObjectRef;
 
 	Schema_Object* ObjectRefObject = Schema_GetObject(Object, Id);
+	//Schema_Debug2Log(ObjectRefObject);
 
 	ObjectRef.Entity = Schema_GetEntityId(ObjectRefObject, UNREAL_OBJECT_REF_ENTITY_ID);
 	ObjectRef.Offset = Schema_GetUint32(ObjectRefObject, UNREAL_OBJECT_REF_OFFSET_ID);

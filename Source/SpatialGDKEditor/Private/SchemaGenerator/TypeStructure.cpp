@@ -138,10 +138,7 @@ TSharedPtr<FUnrealType> CreateUnrealTypeInfo(UStruct* Type, uint32 ParentChecksu
 	// Struct types will set this to nullptr.
 	UClass* Class = Cast<UClass>(Type);
 
-	if(Type->GetName().Find(TEXT("Control"))>=0)
-	{
-		int a = 1;
-	}
+
 	// Create type node.
 	TSharedPtr<FUnrealType> TypeNode = MakeShared<FUnrealType>();
 	TypeNode->Type = Type;
@@ -435,10 +432,7 @@ TSharedPtr<FUnrealType> CreateUnrealTypeInfo(UStruct* Type, uint32 ParentChecksu
 		// 简单情况：Cmd 是对象中的根属性。
 		if (Parent.Property == Cmd.Property)
 		{
-			if( Cmd.Property->GetName()==TEXT("RemoteRole") )
-			{
-				int a = 0;
-			}
+
 			// Make sure we have the correct property via the checksums.
 			// 通过校验和确保我们拥有正确的属性。
 			for (auto& PropertyPair : TypeNode->Properties)
