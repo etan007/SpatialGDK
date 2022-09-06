@@ -66,7 +66,10 @@ inline TArray<uint8> IndexBytesFromSchema(const Schema_Object* Object, Schema_Fi
 
 inline TArray<uint8> GetBytesFromSchema(const Schema_Object* Object, Schema_FieldId Id)
 {
-	return IndexBytesFromSchema(Object, Id, 0);
+	int32 StringLength = (int32)Schema_GetBytesLength(Object, Id);
+	const uint8_t* Bytes = Schema_GetBytes(Object, Id);
+	return TArray<uint8>((const uint8*)Bytes, StringLength);
+	//return IndexBytesFromSchema(Object, Id, 0);
 }
 
 inline void AddObjectRefToSchema(Schema_Object* Object, Schema_FieldId Id, const FUnrealObjectRef& ObjectRef)
