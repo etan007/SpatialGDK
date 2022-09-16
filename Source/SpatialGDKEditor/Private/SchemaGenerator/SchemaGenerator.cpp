@@ -171,7 +171,7 @@ FActorSpecificSubobjectSchemaData GenerateSchemaForStaticallyAttachedSubobject(F
 		Writer.Indent();
 		//Writer.Printf("id = {0};", ComponentId);
 		Writer.Printf("optional uint32 id = 1[default = {0}];", ComponentId);
-		Writer.Printf("optional unreal.generated.{0} data = 2", *SchemaReplicatedDataName(Group, ComponentClass));
+		Writer.Printf("optional unreal.generated.{0} data = 2;", *SchemaReplicatedDataName(Group, ComponentClass));
 		Writer.Outdent().Print("}");
 
 		AddComponentId(ComponentId, SubobjectData.SchemaComponents, PropertyGroupToSchemaComponentType(Group));
@@ -512,7 +512,11 @@ void GenerateActorSchema(FComponentIdGenerator& IdGenerator, UClass* Class, TSha
 {
 
 	const FActorSchemaData* const SchemaData = ActorClassPathToSchema.Find(Class->GetPathName());
-
+    //if("/Game/Blueprints/ShieldPickup.ShieldPickup_C")
+	if(Class->GetPathName().Find("GDK_PlayerController")>0)
+	{
+		int a = 1;
+	}
 	FCodeWriter Writer;
 
 	Writer.Printf(R"""(

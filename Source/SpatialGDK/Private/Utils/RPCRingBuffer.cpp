@@ -62,7 +62,7 @@ RPCRingBufferDescriptor GetRingBufferDescriptor(ERPCType Type)
 	RPCRingBufferDescriptor Descriptor = {};
 	Descriptor.RingBufferSize = GetRingBufferSize(Type);
 
-	const Schema_FieldId SchemaStart = 1;
+	const Schema_FieldId SchemaStart = 2;
 
 	switch (Type)
 	{
@@ -159,7 +159,7 @@ Worker_ComponentId GetAckAuthComponentSetId(ERPCType Type)
 
 Schema_FieldId GetAckFieldId(ERPCType Type)
 {
-	const Schema_FieldId SchemaStart = 1;
+	const Schema_FieldId SchemaStart = 2;
 
 	switch (Type)
 	{
@@ -203,7 +203,7 @@ Schema_FieldId GetAckFieldId(ERPCType Type)
 Schema_FieldId GetInitiallyPresentMulticastRPCsCountFieldId()
 {
 	// This field directly follows the ring buffer + last sent id.
-	const Schema_FieldId SchemaStart = 1;
+	const Schema_FieldId SchemaStart = 2;
 	// Add 1 to account for the last sent ID field.
 	const uint32 MulticastBufferSize = GetRingBufferSize(ERPCType::NetMulticast) + 1;
 

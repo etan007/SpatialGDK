@@ -1021,6 +1021,10 @@ bool IsSupportedClass(const UClass* SupportedClass)
 
 		return false;
 	}
+	else
+	{
+		UE_LOG(LogSpatialGDKSchemaGenerator, Log, TEXT("[%s] Has a SpatialType  flag."), *GetPathNameSafe(SupportedClass));
+	}
 
 	if (SupportedClass->HasAnyClassFlags(CLASS_NeedsDeferredDependencyLoading))
 	{

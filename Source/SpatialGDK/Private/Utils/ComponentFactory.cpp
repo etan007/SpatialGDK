@@ -40,6 +40,14 @@ uint32 ComponentFactory::FillSchemaObject(Schema_Object* ComponentObject, UObjec
 										  ESchemaComponentType PropertyGroup, bool bIsInitialData,
 										  TArray<Schema_FieldId>* ClearedIds /*= nullptr*/)
 {
+	// TODO:这里有两种结构，一种是顺序属性 一种含data的
+	bool bOnlySecondNameData =  false;
+	if(Schema_IsOnlySecondNameData(ComponentObject))
+	{
+		ComponentObject = Schema_AddObject(ComponentObject, 2);
+		bOnlySecondNameData = true;
+	}
+
 	SCOPE_CYCLE_COUNTER(STAT_FactoryProcessPropertyUpdates);
 
 	const uint32 BytesStart = Schema_GetWriteBufferLength(ComponentObject);
@@ -80,7 +88,7 @@ uint32 ComponentFactory::FillSchemaObject(Schema_Object* ComponentObject, UObjec
 																			   Parent.Property, NetDeltaStruct)
 							|| bIsInitialData)
 						{
-							AddBytesToSchema(ComponentObject, HandleIterator.Handle+1, ValueDataWriter);
+							AddBytesToSchema(ComponentObject, bOnlySecondNameData?HandleIterator.Handle:HandleIterator.Handle+1, ValueDataWriter);
 						}
 
 						bProcessedFastArrayProperty = true;
@@ -89,7 +97,8 @@ uint32 ComponentFactory::FillSchemaObject(Schema_Object* ComponentObject, UObjec
 
 				if (!bProcessedFastArrayProperty)
 				{
-					AddProperty(ComponentObject, HandleIterator.Handle+1, Cmd.Property, Data, ClearedIds);
+
+					AddProperty(ComponentObject, bOnlySecondNameData?HandleIterator.Handle:HandleIterator.Handle+1, Cmd.Property, Data, ClearedIds);
 				}
 
 #if USE_NETWORK_PROFILER
@@ -354,6 +363,8 @@ FWorkerComponentData ComponentFactory::CreateComponentData(Worker_ComponentId Co
 
 	// We're currently ignoring ClearedId fields, which is problematic if the initial replicated state
 	// is different to what the default state is (the client will have the incorrect data). UNR:959
+
+
 	OutBytesWritten += FillSchemaObject(ComponentObject, Object, Changes, PropertyGroup, true);
 
 	return ComponentData;
@@ -461,7 +472,10 @@ FWorkerComponentUpdate ComponentFactory::CreateComponentUpdate(Worker_ComponentI
 	Schema_Object* ComponentObject = Schema_GetComponentUpdateFields(ComponentUpdate.schema_type);
 
 	TArray<Schema_FieldId> ClearedIds;
-
+	if(Schema_IsOnlySecondNameData(ComponentObject))
+	{
+		ComponentObject = Schema_AddObject(ComponentObject, 2);
+	}
 	uint32 BytesWritten = FillSchemaObject(ComponentObject, Object, Changes, PropertyGroup, false, &ClearedIds);
 
 	for (Schema_FieldId Id : ClearedIds)
