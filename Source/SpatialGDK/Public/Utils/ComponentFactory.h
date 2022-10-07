@@ -48,7 +48,7 @@ private:
 							ESchemaComponentType PropertyGroup, bool bIsInitialData, TArray<Schema_FieldId>* ClearedIds = nullptr);
 
 	void AddProperty(Schema_Object* Object, Schema_FieldId FieldId, GDK_PROPERTY(Property) * Property, const uint8* Data,
-					 TArray<Schema_FieldId>* ClearedIds);
+					 TArray<Schema_FieldId>* ClearedIds,bool is_repeated = false,int index = -1);
 
 	USpatialNetDriver* NetDriver;
 	USpatialPackageMapClient* PackageMap;

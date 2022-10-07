@@ -103,7 +103,7 @@ void FSpatialNetDriverRPC::OnUpdateWritten(TArray<UpdateToSend>& OutUpdates, Wor
 		}
 		else
 		{
-			Schema_MergeComponentUpdateIntoUpdate(InUpdate, Update.schema_type);
+			Schema_MergeComponentUpdateIntoUpdate(InUpdate, Update.schema_type,ComponentId);
 			Schema_DestroyComponentUpdate(InUpdate);
 		}
 	}

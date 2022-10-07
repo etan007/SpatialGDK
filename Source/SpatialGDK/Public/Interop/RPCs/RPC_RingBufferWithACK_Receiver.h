@@ -77,6 +77,7 @@ public:
 	{
 		if (ComponentsToRead.Contains(Ctx.ComponentId))
 		{
+			bool isserver = GWorld->GetWorld()->IsServer();
 			ReceiverState& State = ReceiverStates.FindChecked(Ctx.EntityId);
 			ReadRPCs(Ctx, State);
 		}

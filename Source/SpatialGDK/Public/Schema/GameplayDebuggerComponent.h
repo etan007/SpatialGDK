@@ -55,13 +55,13 @@ struct GameplayDebuggerComponent
 private:
 	void ReadFromSchema(Schema_Object* ComponentObject)
 	{
-		DelegatedVirtualWorkerId = Schema_GetInt32(ComponentObject, 1);
-		bTrackPlayer = !!Schema_GetBool(ComponentObject, 2);
+		DelegatedVirtualWorkerId = Schema_GetUint32(ComponentObject, 2);
+		bTrackPlayer = !!Schema_GetBool(ComponentObject, 3);
 	}
 
 	void WriteToSchema(Schema_Object* ComponentObject) const
 	{
-		Schema_AddInt32(ComponentObject, 2, DelegatedVirtualWorkerId);
+		Schema_AddUint32(ComponentObject, 2, DelegatedVirtualWorkerId);
 		Schema_AddBool(ComponentObject, 3, bTrackPlayer);
 	}
 };

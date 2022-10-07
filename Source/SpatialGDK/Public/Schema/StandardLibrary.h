@@ -291,10 +291,10 @@ struct AuthorityDelegation : AbstractMutableComponent
 		Data.component_id = ComponentId;
 		Data.schema_type = Schema_CreateComponentData(ComponentId);
 		Schema_Object* ComponentObject = Schema_GetComponentDataFields(Data.schema_type);
-        int index = 0;
+       // int index = 0;
 		for (const auto& KVPair : Delegations)
 		{
-			Schema_Object* KVPairObject = Schema_AddObject_Index(ComponentObject, 2,index++);
+			Schema_Object* KVPairObject = Schema_AddObject_Index(ComponentObject, 2);
 			Schema_AddUint32(KVPairObject, SCHEMA_MAP_KEY_FIELD_ID, KVPair.Key);
 			Schema_AddUint64(KVPairObject, SCHEMA_MAP_VALUE_FIELD_ID, KVPair.Value);
 		}
@@ -311,7 +311,7 @@ struct AuthorityDelegation : AbstractMutableComponent
 
 		for (const auto& KVPair : Delegations)
 		{
-			Schema_Object* KVPairObject = Schema_AddObject(ComponentObject, 1);
+			Schema_Object* KVPairObject = Schema_AddObject_Index(ComponentObject, 2);
 			Schema_AddUint32(KVPairObject, SCHEMA_MAP_KEY_FIELD_ID, KVPair.Key);
 			Schema_AddUint64(KVPairObject, SCHEMA_MAP_VALUE_FIELD_ID, KVPair.Value);
 		}

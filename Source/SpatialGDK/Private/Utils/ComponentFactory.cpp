@@ -139,7 +139,7 @@ uint32 ComponentFactory::FillSchemaObject(Schema_Object* ComponentObject, UObjec
 }
 
 void ComponentFactory::AddProperty(Schema_Object* Object, Schema_FieldId FieldId, GDK_PROPERTY(Property) * Property, const uint8* Data,
-								   TArray<Schema_FieldId>* ClearedIds)
+								   TArray<Schema_FieldId>* ClearedIds,bool is_repeated,int index)
 {
 	if (GDK_PROPERTY(StructProperty)* StructProperty = GDK_CASTFIELD<GDK_PROPERTY(StructProperty)>(Property))
 	{
@@ -170,52 +170,147 @@ void ComponentFactory::AddProperty(Schema_Object* Object, Schema_FieldId FieldId
 
 			RepLayout_SerializePropertiesForStruct(*RepLayout, ValueDataWriter, PackageMap, const_cast<uint8*>(Data), bHasUnmapped);
 		}
+        if(is_repeated)
+        {
+        	AddBytesIndexToSchema(Object, FieldId, ValueDataWriter,index);
+        }
+        else
+        {
+        	AddBytesToSchema(Object, FieldId, ValueDataWriter);
+        }
 
-		AddBytesToSchema(Object, FieldId, ValueDataWriter);
 	}
 	else if (GDK_PROPERTY(BoolProperty)* BoolProperty = GDK_CASTFIELD<GDK_PROPERTY(BoolProperty)>(Property))
 	{
-		Schema_AddBool(Object, FieldId, (uint8)BoolProperty->GetPropertyValue(Data));
+		if(is_repeated)
+		{
+			Schema_AddBool_Index(Object, FieldId, (uint8)BoolProperty->GetPropertyValue(Data),index);
+		}
+		else
+		{
+			Schema_AddBool(Object, FieldId, (uint8)BoolProperty->GetPropertyValue(Data));
+		}
+
 	}
 	else if (GDK_PROPERTY(FloatProperty)* FloatProperty = GDK_CASTFIELD<GDK_PROPERTY(FloatProperty)>(Property))
 	{
-		Schema_AddFloat(Object, FieldId, FloatProperty->GetPropertyValue(Data));
+		if(is_repeated)
+		{
+			Schema_AddFloat_Index(Object, FieldId, FloatProperty->GetPropertyValue(Data),index);
+		}
+		else
+		{
+			Schema_AddFloat(Object, FieldId, FloatProperty->GetPropertyValue(Data));
+		}
+
 	}
 	else if (GDK_PROPERTY(DoubleProperty)* DoubleProperty = GDK_CASTFIELD<GDK_PROPERTY(DoubleProperty)>(Property))
 	{
-		Schema_AddDouble(Object, FieldId, DoubleProperty->GetPropertyValue(Data));
+		if(is_repeated)
+		{
+			Schema_AddDouble_Index(Object, FieldId, DoubleProperty->GetPropertyValue(Data),index);
+		}
+		else
+		{
+			Schema_AddDouble(Object, FieldId, DoubleProperty->GetPropertyValue(Data));
+		}
+
 	}
 	else if (GDK_PROPERTY(Int8Property)* Int8Property = GDK_CASTFIELD<GDK_PROPERTY(Int8Property)>(Property))
 	{
-		Schema_AddInt32(Object, FieldId, (int32)Int8Property->GetPropertyValue(Data));
+		if(is_repeated)
+		{
+			Schema_AddInt32_Index(Object, FieldId, (int32)Int8Property->GetPropertyValue(Data),index);
+		}
+		else
+		{
+			Schema_AddInt32(Object, FieldId, (int32)Int8Property->GetPropertyValue(Data));
+		}
+
 	}
 	else if (GDK_PROPERTY(Int16Property)* Int16Property = GDK_CASTFIELD<GDK_PROPERTY(Int16Property)>(Property))
 	{
-		Schema_AddInt32(Object, FieldId, (int32)Int16Property->GetPropertyValue(Data));
+		if(is_repeated)
+		{
+			Schema_AddInt32_Index(Object, FieldId, (int32)Int16Property->GetPropertyValue(Data),index);
+		}
+		else
+		{
+			Schema_AddInt32(Object, FieldId, (int32)Int16Property->GetPropertyValue(Data));
+		}
+
 	}
 	else if (GDK_PROPERTY(IntProperty)* IntProperty = GDK_CASTFIELD<GDK_PROPERTY(IntProperty)>(Property))
 	{
-		Schema_AddInt32(Object, FieldId, IntProperty->GetPropertyValue(Data));
+		if(is_repeated)
+		{
+			Schema_AddInt32_Index(Object, FieldId, IntProperty->GetPropertyValue(Data),index);
+		}
+		else
+		{
+			Schema_AddInt32(Object, FieldId, IntProperty->GetPropertyValue(Data));
+		}
+
 	}
 	else if (GDK_PROPERTY(Int64Property)* Int64Property = GDK_CASTFIELD<GDK_PROPERTY(Int64Property)>(Property))
 	{
-		Schema_AddInt64(Object, FieldId, Int64Property->GetPropertyValue(Data));
+		if(is_repeated)
+		{
+			Schema_AddInt64_Index(Object, FieldId, Int64Property->GetPropertyValue(Data),index);
+		}
+		else
+		{
+			Schema_AddInt64(Object, FieldId, Int64Property->GetPropertyValue(Data));
+		}
+
 	}
 	else if (GDK_PROPERTY(ByteProperty)* ByteProperty = GDK_CASTFIELD<GDK_PROPERTY(ByteProperty)>(Property))
 	{
-		Schema_AddUint32(Object, FieldId, (uint32)ByteProperty->GetPropertyValue(Data));
+		if(is_repeated)
+		{
+			Schema_AddUint32_Index(Object, FieldId, (uint32)ByteProperty->GetPropertyValue(Data),index);
+		}
+		else
+		{
+			Schema_AddUint32(Object, FieldId, (uint32)ByteProperty->GetPropertyValue(Data));
+		}
+
 	}
 	else if (GDK_PROPERTY(UInt16Property)* UInt16PropertyPtr = GDK_CASTFIELD<GDK_PROPERTY(UInt16Property)>(Property))
 	{
-		Schema_AddUint32(Object, FieldId, (uint32)UInt16PropertyPtr->GetPropertyValue(Data));
+		if(is_repeated)
+		{
+			Schema_AddUint32_Index(Object, FieldId, (uint32)UInt16PropertyPtr->GetPropertyValue(Data),index);
+		}
+		else
+		{
+			Schema_AddUint32(Object, FieldId, (uint32)UInt16PropertyPtr->GetPropertyValue(Data));
+		}
+
 	}
 	else if (GDK_PROPERTY(UInt32Property)* UInt32PropertyPtr = GDK_CASTFIELD<GDK_PROPERTY(UInt32Property)>(Property))
 	{
-		Schema_AddUint32(Object, FieldId, UInt32PropertyPtr->GetPropertyValue(Data));
+		if(is_repeated)
+		{
+			Schema_AddUint32_Index(Object, FieldId, UInt32PropertyPtr->GetPropertyValue(Data),index);
+		}
+		else
+		{
+			Schema_AddUint32(Object, FieldId, UInt32PropertyPtr->GetPropertyValue(Data));
+		}
+
 	}
 	else if (GDK_PROPERTY(UInt64Property)* UInt64PropertyPtr = GDK_CASTFIELD<GDK_PROPERTY(UInt64Property)>(Property))
 	{
-		Schema_AddUint64(Object, FieldId, UInt64PropertyPtr->GetPropertyValue(Data));
+		if(is_repeated)
+		{
+			Schema_AddUint64_Index(Object, FieldId, UInt64PropertyPtr->GetPropertyValue(Data),index);
+		}
+		else
+		{
+			Schema_AddUint64(Object, FieldId, UInt64PropertyPtr->GetPropertyValue(Data));
+		}
+
 	}
 	else if (GDK_PROPERTY(ObjectPropertyBase)* ObjectProperty = GDK_CASTFIELD<GDK_PROPERTY(ObjectPropertyBase)>(Property))
 	{
@@ -223,7 +318,7 @@ void ComponentFactory::AddProperty(Schema_Object* Object, Schema_FieldId FieldId
 		{
 			const FSoftObjectPtr* ObjectPtr = reinterpret_cast<const FSoftObjectPtr*>(Data);
 
-			AddObjectRefToSchema(Object, FieldId, FUnrealObjectRef::FromSoftObjectPath(ObjectPtr->ToSoftObjectPath()));
+			AddObjectRefToSchema(Object, FieldId, FUnrealObjectRef::FromSoftObjectPath(ObjectPtr->ToSoftObjectPath()),is_repeated);
 		}
 		else
 		{
@@ -233,7 +328,7 @@ void ComponentFactory::AddProperty(Schema_Object* Object, Schema_FieldId FieldId
 			{
 				bInterestHasChanged = true;
 			}
-			AddObjectRefToSchema(Object, FieldId, FUnrealObjectRef::FromObjectPtr(ObjectValue, PackageMap));
+			AddObjectRefToSchema(Object, FieldId, FUnrealObjectRef::FromObjectPtr(ObjectValue, PackageMap),is_repeated);
 		}
 	}
 	else if (GDK_PROPERTY(NameProperty)* NameProperty = GDK_CASTFIELD<GDK_PROPERTY(NameProperty)>(Property))
@@ -253,7 +348,7 @@ void ComponentFactory::AddProperty(Schema_Object* Object, Schema_FieldId FieldId
 		FScriptArrayHelper ArrayHelper(ArrayProperty, Data);
 		for (int i = 0; i < ArrayHelper.Num(); i++)
 		{
-			AddProperty(Object, FieldId, ArrayProperty->Inner, ArrayHelper.GetRawPtr(i), ClearedIds);
+			AddProperty(Object, FieldId, ArrayProperty->Inner, ArrayHelper.GetRawPtr(i), ClearedIds,true);
 		}
 
 		if (ArrayHelper.Num() > 0 || (ArrayHelper.Num() == 0 && ClearedIds))
@@ -472,10 +567,10 @@ FWorkerComponentUpdate ComponentFactory::CreateComponentUpdate(Worker_ComponentI
 	Schema_Object* ComponentObject = Schema_GetComponentUpdateFields(ComponentUpdate.schema_type);
 
 	TArray<Schema_FieldId> ClearedIds;
-	if(Schema_IsOnlySecondNameData(ComponentObject))
+	/*if(Schema_IsOnlySecondNameData(ComponentObject))
 	{
 		ComponentObject = Schema_AddObject(ComponentObject, 2);
-	}
+	}*/
 	uint32 BytesWritten = FillSchemaObject(ComponentObject, Object, Changes, PropertyGroup, false, &ClearedIds);
 
 	for (Schema_FieldId Id : ClearedIds)

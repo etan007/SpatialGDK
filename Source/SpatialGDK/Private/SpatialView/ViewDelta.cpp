@@ -237,10 +237,11 @@ ComponentChange ViewDelta::CalculateAdd(ReceivedComponentChange* Start, Received
 {
 	// There must be at least one component add; anything before it can be ignored.
 	ReceivedComponentChange* It = std::find_if(Start, End, [](const ReceivedComponentChange& Op) {
-		return Op.Type == ReceivedComponentChange::ADD;
+						 return Op.Type == ReceivedComponentChange::ADD || Op.Type == ReceivedComponentChange::UPDATE;
 	});
 
 	Schema_ComponentData* Data = It->ComponentAdded;
+
 	++It;
 
 	while (It != End)
@@ -281,7 +282,7 @@ ComponentChange ViewDelta::CalculateCompleteUpdate(ReceivedComponentChange* Star
 			}
 			if (Events)
 			{
-				Schema_MergeComponentUpdateIntoUpdate(It->ComponentUpdate, Events);
+				Schema_MergeComponentUpdateIntoUpdate(It->ComponentUpdate, Events,It->ComponentId);
 			}
 			else
 			{
@@ -322,7 +323,7 @@ ComponentChange ViewDelta::CalculateUpdate(ReceivedComponentChange* Start, Recei
 		case ReceivedComponentChange::ADD:
 			return CalculateCompleteUpdate(It + 1, End, It->ComponentAdded, Update, Component);
 		case ReceivedComponentChange::UPDATE:
-			Schema_MergeComponentUpdateIntoUpdate(It->ComponentUpdate, Update);
+			Schema_MergeComponentUpdateIntoUpdate(It->ComponentUpdate, Update,It->ComponentId);
 			break;
 		case ReceivedComponentChange::REMOVE:
 			return CalculateCompleteUpdate(It + 1, End, nullptr, nullptr, Component);
@@ -350,6 +351,10 @@ void ViewDelta::ProcessOpList(const OpList& Ops, const EntityView& View, const F
 			// Ignore critical sections.
 			break;
 		case WORKER_OP_TYPE_ADD_ENTITY:
+			if(!GWorld->GetWorld()->IsServer())
+			{
+				int a = 1;
+			}
 			EntityChanges.Push(ReceivedEntityChange{ Op.op.add_entity.entity_id, true });
 			break;
 		case WORKER_OP_TYPE_REMOVE_ENTITY:
@@ -366,6 +371,10 @@ void ViewDelta::ProcessOpList(const OpList& Ops, const EntityView& View, const F
 			WorkerMessages.Push(Op);
 			break;
 		case WORKER_OP_TYPE_ADD_COMPONENT:
+			if(!GWorld->GetWorld()->IsServer())
+			{
+				int a = 1;
+			}
 			ComponentChanges.Emplace(Op.op.add_component);
 			break;
 		case WORKER_OP_TYPE_REMOVE_COMPONENT:
@@ -415,7 +424,7 @@ void ViewDelta::GenerateComponentChangesFromSetData(const Worker_ComponentSetAut
 			}
 		}
 	}
- 
+
 
 
 

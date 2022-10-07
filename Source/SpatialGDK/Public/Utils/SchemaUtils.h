@@ -52,10 +52,19 @@ inline void AddBytesToSchema(Schema_Object* Object, Schema_FieldId Id, const uin
 
 	Schema_AddBytes(Object, Id, Data, sizeof(char) * NumBytes);
 }
+inline void AddBytesIndexToSchema(Schema_Object* Object, Schema_FieldId Id, const uint8* Data, uint32 NumBytes,int index)
+{
+
+	Schema_AddBytes_Index(Object, Id, Data, sizeof(char) * NumBytes,index);
+}
 
 inline void AddBytesToSchema(Schema_Object* Object, Schema_FieldId Id, FBitWriter& Writer)
 {
 	AddBytesToSchema(Object, Id, Writer.GetData(), Writer.GetNumBytes());
+}
+inline void AddBytesIndexToSchema(Schema_Object* Object, Schema_FieldId Id, FBitWriter& Writer,int index)
+{
+	AddBytesIndexToSchema(Object, Id, Writer.GetData(), Writer.GetNumBytes(),index);
 }
 
 inline TArray<uint8> IndexBytesFromSchema(const Schema_Object* Object, Schema_FieldId Id, uint32 Index)
@@ -72,11 +81,11 @@ inline TArray<uint8> GetBytesFromSchema(const Schema_Object* Object, Schema_Fiel
 	//return IndexBytesFromSchema(Object, Id, 0);
 }
 
-inline void AddObjectRefToSchema(Schema_Object* Object, Schema_FieldId Id, const FUnrealObjectRef& ObjectRef)
+inline void AddObjectRefToSchema(Schema_Object* Object, Schema_FieldId Id, const FUnrealObjectRef& ObjectRef,bool is_repeat = false)
 {
 	using namespace SpatialConstants;
 
-	Schema_Object* ObjectRefObject = Schema_AddObject(Object, Id);
+	Schema_Object* ObjectRefObject = is_repeat?Schema_AddObject_Index(Object, Id):Schema_AddObject(Object, Id);
 
 	Schema_AddEntityId(ObjectRefObject, UNREAL_OBJECT_REF_ENTITY_ID, ObjectRef.Entity);
 	Schema_AddUint32(ObjectRefObject, UNREAL_OBJECT_REF_OFFSET_ID, ObjectRef.Offset);
@@ -175,7 +184,7 @@ inline FRotator IndexRotatorFromSchema(Schema_Object* Object, Schema_FieldId Id,
 {
 	FRotator Rotator;
 
-	Schema_Object* RotatorObject = Schema_IndexObject(Object, Id, Index);
+	Schema_Object* RotatorObject = Schema_GetObject(Object, Id);
 
 	Rotator.Pitch = Schema_GetFloat(RotatorObject, 1);
 	Rotator.Yaw = Schema_GetFloat(RotatorObject, 2);
@@ -202,8 +211,8 @@ inline FVector IndexVectorFromSchema(Schema_Object* Object, Schema_FieldId Id, u
 {
 	FVector Vector;
 
-	Schema_Object* VectorObject = Schema_IndexObject(Object, Id, Index);
-
+	//Schema_Object* VectorObject = Schema_IndexObject(Object, Id, Index);
+	Schema_Object* VectorObject = Schema_GetObject(Object, Id);
 	Vector.X = Schema_GetFloat(VectorObject, 1);
 	Vector.Y = Schema_GetFloat(VectorObject, 2);
 	Vector.Z = Schema_GetFloat(VectorObject, 3);

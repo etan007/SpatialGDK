@@ -39,7 +39,7 @@ bool ComponentUpdate::Merge(ComponentUpdate Other)
 	check(Other.Update.IsValid());
 	// Calling GetUnderlying instead of Release
 	// as we still need to manually destroy Other.
-	return Schema_MergeComponentUpdateIntoUpdate(Other.GetUnderlying(), Update.Get()) != 0;
+	return Schema_MergeComponentUpdateIntoUpdate(Other.GetUnderlying(), Update.Get(),GetComponentId()) != 0;
 }
 
 Schema_Object* ComponentUpdate::GetFields() const

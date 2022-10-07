@@ -39,10 +39,10 @@ struct SpawnData : AbstractMutableComponent
 	{
 		Schema_Object* ComponentObject = Schema_GetComponentDataFields(Data);
 
-		Location = GetVectorFromSchema(ComponentObject, 1);
-		Rotation = GetRotatorFromSchema(ComponentObject, 2);
-		Scale = GetVectorFromSchema(ComponentObject, 3);
-		Velocity = GetVectorFromSchema(ComponentObject, 4);
+		Location = GetVectorFromSchema(ComponentObject, 2);
+		Rotation = GetRotatorFromSchema(ComponentObject, 3);
+		Scale = GetVectorFromSchema(ComponentObject, 4);
+		Velocity = GetVectorFromSchema(ComponentObject, 5);
 	}
 
 	Worker_ComponentData CreateComponentData() const override
