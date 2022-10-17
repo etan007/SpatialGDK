@@ -160,7 +160,11 @@ void ComponentReader::ApplySchemaObject(Schema_Object* ComponentObject, UObject&
 		// Can't apply this schema object. Error printed from PreReceiveSpatialUpdate.
 		return;
 	}
-
+	bool isData = false;
+    if(Schema_IsOnlySecondNameData(ComponentObject) )
+    {
+    	isData = true;
+    }
 	TUniquePtr<FRepState>& RepState = Replicator->RepState;
 	TArray<FRepLayoutCmd>& Cmds = Replicator->RepLayout->Cmds;
 	TArray<FHandleToCmdIndex>& BaseHandleToCmdIndex = Replicator->RepLayout->BaseHandleToCmdIndex;
@@ -190,7 +194,7 @@ void ComponentReader::ApplySchemaObject(Schema_Object* ComponentObject, UObject&
 		for (uint32 FieldId : UpdatedIds)
 		{
 			// FieldId is the same as rep handle
-			if (FieldId == 0 || (int)FieldId - 1 >= BaseHandleToCmdIndex.Num())
+			if (FieldId <= 1 || (int)FieldId - 2 >= BaseHandleToCmdIndex.Num())
 			{
 				UE_LOG(LogSpatialComponentReader, Error,
 					   TEXT("ApplySchemaObject: Encountered an invalid field Id while applying schema. Object: %s, Field: %d, Entity: "
@@ -199,7 +203,7 @@ void ComponentReader::ApplySchemaObject(Schema_Object* ComponentObject, UObject&
 				continue;
 			}
 
-			int32 CmdIndex = BaseHandleToCmdIndex[FieldId - 1].CmdIndex;
+			int32 CmdIndex = BaseHandleToCmdIndex[FieldId - 2].CmdIndex;
 			const FRepLayoutCmd& Cmd = Cmds[CmdIndex];
 			const FRepParentCmd& Parent = Parents[Cmd.ParentIndex];
 			int32 ShadowOffset = Cmd.ShadowOffset;
@@ -293,14 +297,16 @@ void ComponentReader::ApplySchemaObject(Schema_Object* ComponentObject, UObject&
 					}
 					else
 					{
-						ApplyArray(ComponentObject, FieldId, RootObjectReferencesMap, ArrayProperty, Data, SwappedCmd.Offset, ShadowOffset,
+						ApplyArray(ComponentObject, isData?FieldId:FieldId, RootObjectReferencesMap, ArrayProperty, Data, SwappedCmd.Offset, ShadowOffset,
 								   Cmd.ParentIndex, bOutReferencesChanged);
 					}
 				}
 				else
 				{
-					ApplyProperty(ComponentObject, FieldId, RootObjectReferencesMap, 0, Cmd.Property, Data, SwappedCmd.Offset, ShadowOffset,
+
+					ApplyProperty(ComponentObject,isData?FieldId:FieldId, RootObjectReferencesMap, 0, Cmd.Property, Data, SwappedCmd.Offset, ShadowOffset,
 								  Cmd.ParentIndex, bOutReferencesChanged);
+
 				}
 
 				if (Cmd.Property->GetFName() == NAME_RemoteRole)

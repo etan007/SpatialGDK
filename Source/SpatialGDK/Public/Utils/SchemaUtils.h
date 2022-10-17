@@ -115,7 +115,10 @@ inline FUnrealObjectRef IndexObjectRefFromSchema(Schema_Object* Object, Schema_F
 
 	Schema_Object* ObjectRefObject = Schema_GetObject(Object, Id);
 	//Schema_Debug2Log(ObjectRefObject);
-
+    if(ObjectRefObject == nullptr)
+    {
+	    return ObjectRef;
+    }
 	ObjectRef.Entity = Schema_GetEntityId(ObjectRefObject, UNREAL_OBJECT_REF_ENTITY_ID);
 	ObjectRef.Offset = Schema_GetUint32(ObjectRefObject, UNREAL_OBJECT_REF_OFFSET_ID);
 	if (Schema_GetObjectCount(ObjectRefObject, UNREAL_OBJECT_REF_PATH_ID) > 0)

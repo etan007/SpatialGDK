@@ -133,9 +133,9 @@ void USpatialClassInfoManager::CreateClassInfoForClass(UClass* Class)
 {
 	// Remove PIE prefix on class if it exists to properly look up the class.
 	FString ClassPath = Class->GetPathName();
- 
+
 	GEngine->NetworkRemapPath(NetDriver->GetSpatialOSNetConnection(), ClassPath, false /*bIsReading*/);
- 
+
 
 	if (!bHandoverActive.IsSet())
 	{
@@ -487,7 +487,17 @@ ESchemaComponentType USpatialClassInfoManager::GetCategoryByComponentId(Worker_C
 
 const TArray<Schema_FieldId>& USpatialClassInfoManager::GetFieldIdsByComponentId(Worker_ComponentId ComponentId)
 {
-	return SchemaDatabase->FieldIdsArray[SchemaDatabase->ComponentIdToFieldIdsIndex[ComponentId]].FieldIds;
+	static TArray<Schema_FieldId> fileds;
+	Schema_Fields* sf =  Schema_FieldIdsByComponentId(ComponentId);
+	if(sf)
+	{
+		fileds.Reset();
+		for(uint32_t i=1;i<sf->filed_count;i++)
+			fileds.Add(*(sf->filed_id+i));
+		Schema_DestorySchemaFileds(sf);
+	}
+	return fileds;
+	//return SchemaDatabase->FieldIdsArray[SchemaDatabase->ComponentIdToFieldIdsIndex[ComponentId]].FieldIds;
 }
 
 const FRPCInfo& USpatialClassInfoManager::GetRPCInfo(UObject* Object, UFunction* Function)

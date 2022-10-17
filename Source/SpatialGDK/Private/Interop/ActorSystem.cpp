@@ -729,6 +729,13 @@ void ActorSystem::DestroySubObject(const FUnrealObjectRef& ObjectRef, UObject& O
 
 void ActorSystem::EntityAdded(const Worker_EntityId EntityId)
 {
+	if(!GWorld->GetWorld()->IsServer())
+	{
+		if(EntityId == 10019)
+		{
+			int aaa =1;
+		}
+	}
 	PopulateDataStore(EntityId);
 	ReceiveActor(EntityId);
 }
@@ -955,7 +962,12 @@ void ActorSystem::ApplyComponentData(USpatialActorChannel& Channel, UObject& Tar
 		if (ComponentType == SCHEMA_Data && TargetObject.IsA<UActorComponent>())
 		{
 			Schema_Object* ComponentObject = Schema_GetComponentDataFields(Data);
-			bool bReplicates = !!Schema_IndexBool(ComponentObject, SpatialConstants::ACTOR_COMPONENT_REPLICATES_ID, 0);
+			if(Schema_IsOnlySecondNameData(ComponentObject))
+			{
+				ComponentObject = Schema_GetObject(ComponentObject,2);
+			}
+			//bool bReplicates = !!Schema_IndexBool(ComponentObject, SpatialConstants::ACTOR_COMPONENT_REPLICATES_ID, 0);
+			bool bReplicates = !!Schema_GetBool(ComponentObject, SpatialConstants::ACTOR_COMPONENT_REPLICATES_ID);
 			if (!bReplicates)
 			{
 				return;

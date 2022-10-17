@@ -417,6 +417,7 @@ void GenerateSubobjectSchema(FComponentIdGenerator& IdGenerator, UClass* Class, 
 		{
 			WriteSchemaRepField(Writer, RepProp.Value, RepProp.Value->ReplicationData->Handle);
 		}
+
 		Writer.Outdent().Print("}");
 	}
 
@@ -546,7 +547,7 @@ void GenerateActorSchema(FComponentIdGenerator& IdGenerator, UClass* Class, TSha
 		// If this class is an Actor, it MUST have bTearOff at field ID 3.
 		if (Group == REP_MultiClient && Class->IsChildOf<AActor>())
 		{
-			TSharedPtr<FUnrealProperty> ExpectedReplicatesPropData = RepData[Group].FindRef(SpatialConstants::ACTOR_TEAROFF_ID);
+			TSharedPtr<FUnrealProperty> ExpectedReplicatesPropData = RepData[Group].FindRef(SpatialConstants::ACTOR_TEAROFF_ID-1);
 			const GDK_PROPERTY(Property)* ReplicatesProp = AActor::StaticClass()->FindPropertyByName("bTearOff");
 
 			if (!(ExpectedReplicatesPropData.IsValid() && ExpectedReplicatesPropData->Property == ReplicatesProp))
@@ -554,7 +555,7 @@ void GenerateActorSchema(FComponentIdGenerator& IdGenerator, UClass* Class, TSha
 				UE_LOG(LogSchemaGenerator, Error,
 					   TEXT("Did not find Actor->bTearOff at field %d for class %s. Modifying the base Actor class is currently not "
 							"supported."),
-					   SpatialConstants::ACTOR_TEAROFF_ID, *Class->GetName());
+					   SpatialConstants::ACTOR_TEAROFF_ID-1, *Class->GetName());
 			}
 		}
 
@@ -577,12 +578,36 @@ void GenerateActorSchema(FComponentIdGenerator& IdGenerator, UClass* Class, TSha
 		Writer.Printf("optional uint32 id = 1[default = {0}];", ComponentId);
 		AddComponentId(ComponentId, ActorSchemaData.SchemaComponents, PropertyGroupToSchemaComponentType(Group));
 
-		int FieldCounter = 1;
-		for (auto& RepProp : RepData[Group])
-		{
-			FieldCounter++;
-			WriteSchemaRepField(Writer, RepProp.Value, RepProp.Value->ReplicationData->Handle + 1);
-		}
+        if(Group == REP_MultiClient)
+        {
+	        TMap<uint16,const TSharedPtr<FUnrealProperty>> map_rep;
+        	for(EReplicatedPropertyGroup Group2 : GetAllReplicatedPropertyGroups())
+        	{
+        		for (auto& RepProp : RepData[Group2])
+        		{
+        			map_rep.Emplace( RepProp.Value->ReplicationData->Handle + 1,RepProp.Value);
+        			//WriteSchemaRepField(Writer, RepProp.Value, RepProp.Value->ReplicationData->Handle + 1);
+        		}
+        	}
+
+        	map_rep.KeySort([](uint16 A, uint16 B) {
+				return A < B;
+			});
+        	for(auto iter:map_rep)
+        	{
+        		WriteSchemaRepField(Writer, iter.Value, iter.Key);
+        	}
+        }
+        else
+        {
+        	for (auto& RepProp : RepData[Group])
+        	{
+
+        		WriteSchemaRepField(Writer, RepProp.Value, RepProp.Value->ReplicationData->Handle + 1);
+        	}
+        }
+
+
 
 		Writer.Outdent().Print("}");
 	}

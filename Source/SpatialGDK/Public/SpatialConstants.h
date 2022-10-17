@@ -168,7 +168,7 @@ const Schema_FieldId SNAPSHOT_VERSION_NUMBER_ID = 2;
 const Schema_FieldId STARTUP_ACTOR_MANAGER_CAN_BEGIN_PLAY_ID = 2;
 
 const Schema_FieldId ACTOR_COMPONENT_REPLICATES_ID = 1;
-const Schema_FieldId ACTOR_TEAROFF_ID = 3;
+const Schema_FieldId ACTOR_TEAROFF_ID = 4;
 
 const Schema_FieldId SHUTDOWN_MULTI_PROCESS_REQUEST_ID = 1;
 const Schema_FieldId SHUTDOWN_ADDITIONAL_SERVERS_EVENT_ID = 1;
