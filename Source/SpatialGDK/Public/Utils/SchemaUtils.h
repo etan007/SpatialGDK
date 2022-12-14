@@ -107,13 +107,13 @@ inline void AddObjectRefToSchema(Schema_Object* Object, Schema_FieldId Id, const
 
 FUnrealObjectRef GetObjectRefFromSchema(Schema_Object* Object, Schema_FieldId Id);
 
-inline FUnrealObjectRef IndexObjectRefFromSchema(Schema_Object* Object, Schema_FieldId Id)
+inline FUnrealObjectRef IndexObjectRefFromSchema(Schema_Object* Object, Schema_FieldId Id,uint32 Index)
 {
 	using namespace SpatialConstants;
 
 	FUnrealObjectRef ObjectRef;
 
-	Schema_Object* ObjectRefObject = Schema_GetObject(Object, Id);
+	Schema_Object* ObjectRefObject = Schema_IndexObject(Object, Id, Index);
 	//Schema_Debug2Log(ObjectRefObject);
     if(ObjectRefObject == nullptr)
     {
@@ -143,7 +143,7 @@ inline FUnrealObjectRef IndexObjectRefFromSchema(Schema_Object* Object, Schema_F
 
 inline FUnrealObjectRef GetObjectRefFromSchema(Schema_Object* Object, Schema_FieldId Id)
 {
-	return IndexObjectRefFromSchema(Object, Id);
+	return IndexObjectRefFromSchema(Object, Id,0);
 }
 
 inline void AddStringToEntityMapToSchema(Schema_Object* Object, Schema_FieldId Id, StringToEntityMap& Map)

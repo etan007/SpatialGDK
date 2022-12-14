@@ -161,8 +161,20 @@ void ComponentReader::ApplySchemaObject(Schema_Object* ComponentObject, UObject&
 		return;
 	}
 	bool isData = false;
+	TArray<Schema_FieldId> UpdatedIds2 = UpdatedIds;
     if(Schema_IsOnlySecondNameData(ComponentObject) )
     {
+    	ComponentObject = Schema_GetObject(ComponentObject,2);
+    	Schema_Fields* sf =  Schema_FieldIds(ComponentObject);
+    	if(sf)
+    	{
+    		TArray<Schema_FieldId> fileds;
+    		fileds.Reset();
+    		for(uint32_t i=0;i<sf->filed_count;i++)
+    			fileds.Add(*(sf->filed_id+i));
+    		Schema_DestorySchemaFileds(sf);
+    		UpdatedIds2 = fileds;
+    	}
     	isData = true;
     }
 	TUniquePtr<FRepState>& RepState = Replicator->RepState;
@@ -191,10 +203,17 @@ void ComponentReader::ApplySchemaObject(Schema_Object* ComponentObject, UObject&
 			CauseSpanIds = EventTracer->GetAndConsumeSpansForComponent(EntityComponentId(EntityId, ComponentId));
 		}
 
-		for (uint32 FieldId : UpdatedIds)
+		for (uint32 FieldId : UpdatedIds2)
 		{
 			// FieldId is the same as rep handle
-			if (FieldId <= 1 || (int)FieldId - 2 >= BaseHandleToCmdIndex.Num())
+			int real_index = FieldId - 2 ;
+			if(isData)
+			{
+				real_index = FieldId - 1;
+			}
+            if(real_index<0)
+            	continue;
+			if (FieldId < 1 || real_index >= BaseHandleToCmdIndex.Num())
 			{
 				UE_LOG(LogSpatialComponentReader, Error,
 					   TEXT("ApplySchemaObject: Encountered an invalid field Id while applying schema. Object: %s, Field: %d, Entity: "
@@ -203,7 +222,7 @@ void ComponentReader::ApplySchemaObject(Schema_Object* ComponentObject, UObject&
 				continue;
 			}
 
-			int32 CmdIndex = BaseHandleToCmdIndex[FieldId - 2].CmdIndex;
+			int32 CmdIndex = BaseHandleToCmdIndex[real_index].CmdIndex;
 			const FRepLayoutCmd& Cmd = Cmds[CmdIndex];
 			const FRepParentCmd& Parent = Parents[Cmd.ParentIndex];
 			int32 ShadowOffset = Cmd.ShadowOffset;
@@ -451,7 +470,7 @@ void ComponentReader::ApplyProperty(Schema_Object* Object, Schema_FieldId FieldI
 	}
 	else if (GDK_PROPERTY(ObjectPropertyBase)* ObjectProperty = GDK_CASTFIELD<GDK_PROPERTY(ObjectPropertyBase)>(Property))
 	{
-		FUnrealObjectRef ObjectRef = IndexObjectRefFromSchema(Object, FieldId);
+		FUnrealObjectRef ObjectRef = IndexObjectRefFromSchema(Object, FieldId,Index);
 		check(ObjectRef != FUnrealObjectRef::UNRESOLVED_OBJECT_REF);
 
 		if (GDK_CASTFIELD<GDK_PROPERTY(SoftObjectProperty)>(Property))

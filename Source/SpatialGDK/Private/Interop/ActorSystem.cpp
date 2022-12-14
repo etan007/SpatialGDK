@@ -729,10 +729,12 @@ void ActorSystem::DestroySubObject(const FUnrealObjectRef& ObjectRef, UObject& O
 
 void ActorSystem::EntityAdded(const Worker_EntityId EntityId)
 {
-	if(!GWorld->GetWorld()->IsServer())
+	//if(!GWorld->GetWorld()->IsServer())
 	{
 		if(EntityId == 10019)
 		{
+			bool bserver = GWorld->GetWorld()->IsServer();
+			bool bsss = NetDriver->IsServer();
 			int aaa =1;
 		}
 	}

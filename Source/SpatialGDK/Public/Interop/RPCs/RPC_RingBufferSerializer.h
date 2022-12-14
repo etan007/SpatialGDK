@@ -45,13 +45,15 @@ public:
 		return {};
 	}
 
-	void ReadRPC(const RPCReadingContext& Ctx, uint32 Slot, Payload& OutPayload)
+	bool ReadRPC(const RPCReadingContext& Ctx, uint32 Slot, Payload& OutPayload)
 	{
 		Schema_Object* PayloadObject = Schema_GetObject(Ctx.Fields, FirstRingBufferSlotFieldId + Slot);
+		if(!PayloadObject) return false;
 		if (ensure(PayloadObject))
 		{
 			OutPayload.ReadFromSchema(PayloadObject);
 		}
+		return true;
 	}
 
 	void WriteRPC(RPCWritingContext::EntityWrite& Ctx, uint32 Slot, const Payload& InPayload)

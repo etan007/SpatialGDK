@@ -158,7 +158,7 @@ protected:
 			{
 				uint32 Slot = (RPCId - 1) % NumberOfSlots;
 				PayloadType NewPayload;
-				Serializer.ReadRPC(Ctx, Slot, NewPayload);
+				if(Serializer.ReadRPC(Ctx, Slot, NewPayload))
 				this->QueueReceivedRPC(Ctx.EntityId, MoveTemp(NewPayload), RPCId);
 			}
 			State.LastRead = RPCCount;

@@ -67,11 +67,17 @@ void FReceivedOpEventHandler::ProcessOpLists(const OpList& Ops)
 			//EventTracer->AuthorityChange(Op.op.component_set_authority_change, FSpatialGDKSpanId(Op.span_id));
 			break;
 		case WORKER_OP_TYPE_COMPONENT_UPDATE:
-			if(!GWorld->GetWorld()->IsServer())
 			{
-				int a = 1;
+				auto cid = Op.op.component_update.update.component_id;
+				if(Op.op.component_update.entity_id == 10020 )
+				{
+					UE_LOG(LogReceivedOpEvent, Log, TEXT("%s,component_update EntityId %lld, component: %d"),GWorld->GetWorld()->IsServer()?TEXT("Server"):TEXT("Client"),
+					  Op.op.component_update.entity_id, Op.op.component_update.update.component_id);
+
+				}
+				//EventTracer->UpdateComponent(Op.op.component_update, FSpatialGDKSpanId(Op.span_id));
 			}
-			//EventTracer->UpdateComponent(Op.op.component_update, FSpatialGDKSpanId(Op.span_id));
+
 			break;
 		case WORKER_OP_TYPE_COMMAND_REQUEST:
 			//EventTracer->CommandRequest(Op.op.command_request, FSpatialGDKSpanId(Op.span_id));

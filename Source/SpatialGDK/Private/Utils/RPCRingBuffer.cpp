@@ -106,8 +106,8 @@ RPCRingBufferDescriptor GetRingBufferDescriptor(ERPCType Type)
 	case ERPCType::CrossServer:
 	{
 		const uint32 BufferSize = GetRingBufferSize(ERPCType::CrossServer);
-		Descriptor.SchemaFieldStart = 1;
-		Descriptor.LastSentRPCFieldId = 1 + 2 * BufferSize;
+		Descriptor.SchemaFieldStart = 2;
+		Descriptor.LastSentRPCFieldId = 2 + 2 * BufferSize;
 		break;
 	}
 	default:

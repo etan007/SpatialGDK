@@ -578,7 +578,7 @@ void GenerateActorSchema(FComponentIdGenerator& IdGenerator, UClass* Class, TSha
 		Writer.Printf("optional uint32 id = 1[default = {0}];", ComponentId);
 		AddComponentId(ComponentId, ActorSchemaData.SchemaComponents, PropertyGroupToSchemaComponentType(Group));
 
-        if(Group == REP_MultiClient)
+        /*if(Group == REP_MultiClient)
         {
 	        TMap<uint16,const TSharedPtr<FUnrealProperty>> map_rep;
         	for(EReplicatedPropertyGroup Group2 : GetAllReplicatedPropertyGroups())
@@ -605,9 +605,13 @@ void GenerateActorSchema(FComponentIdGenerator& IdGenerator, UClass* Class, TSha
 
         		WriteSchemaRepField(Writer, RepProp.Value, RepProp.Value->ReplicationData->Handle + 1);
         	}
-        }
+        }*/
 
+		for (auto& RepProp : RepData[Group])
+		{
 
+			WriteSchemaRepField(Writer, RepProp.Value, RepProp.Value->ReplicationData->Handle + 1);
+		}
 
 		Writer.Outdent().Print("}");
 	}

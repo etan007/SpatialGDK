@@ -70,9 +70,10 @@ public:
 
 	TOptional<uint64> ReadACKCount(const RPCReadingContext& Ctx) { return GetACKComponent(Ctx.EntityId).ACKCount; }
 
-	void ReadRPC(const RPCReadingContext& Ctx, uint32 Slot, Payload& OutPayload)
+	bool ReadRPC(const RPCReadingContext& Ctx, uint32 Slot, Payload& OutPayload)
 	{
 		OutPayload = GetBufferComponent(Ctx.EntityId).Buffer[Slot];
+		return true;
 	}
 
 	void WriteRPC(RPCWritingContext::EntityWrite& Ctx, uint32 Slot, const Payload& InPayload)

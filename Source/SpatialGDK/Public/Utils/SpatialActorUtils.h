@@ -148,7 +148,7 @@ static FSubobjectToOffsetMap CreateStaticOffsetMapFromActor(AActor& Actor, const
 		UObject* Subobject = StaticFindObjectFast(UObject::StaticClass(), &Actor, SubobjectOffsetToInfoPair.Value->SubobjectName);
 		const ObjectOffset Offset = SubobjectOffsetToInfoPair.Key;
 
-		if (Subobject != nullptr && IsValid(Subobject) == false && Subobject->IsSupportedForNetworking())
+		if (Subobject != nullptr && Subobject->IsPendingKill() == false && Subobject->IsSupportedForNetworking())
 		{
 			SubobjectNameToOffset.Add(Subobject, Offset);
 		}

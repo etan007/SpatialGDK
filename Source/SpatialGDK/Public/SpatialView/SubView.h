@@ -11,7 +11,7 @@ using FRefreshCallback = TFunction<void(const Worker_EntityId)>;
 using FDispatcherRefreshCallback = TFunction<TArray<SpatialGDK::CallbackId>(const FRefreshCallback)>;
 using FComponentChangeRefreshPredicate = TFunction<bool(SpatialGDK::FEntityComponentChange)>;
 using FAuthorityChangeRefreshPredicate = TFunction<bool(Worker_EntityId)>;
-
+DECLARE_LOG_CATEGORY_EXTERN(LogSubView, Log, All);
 namespace SpatialGDK
 {
 class FSubView

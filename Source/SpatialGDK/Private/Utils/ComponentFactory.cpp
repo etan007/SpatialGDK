@@ -41,6 +41,7 @@ uint32 ComponentFactory::FillSchemaObject(Schema_Object* ComponentObject, UObjec
 										  TArray<Schema_FieldId>* ClearedIds /*= nullptr*/)
 {
 	// TODO:这里有两种结构，一种是顺序属性 一种含data的
+	Schema_Object* old_obj = ComponentObject;
 	bool bOnlySecondNameData =  false;
 	if(Schema_IsOnlySecondNameData(ComponentObject))
 	{
@@ -50,7 +51,7 @@ uint32 ComponentFactory::FillSchemaObject(Schema_Object* ComponentObject, UObjec
 
 	SCOPE_CYCLE_COUNTER(STAT_FactoryProcessPropertyUpdates);
 
-	const uint32 BytesStart = Schema_GetWriteBufferLength(ComponentObject);
+	const uint32 BytesStart = Schema_GetWriteBufferLength(old_obj);
 
 	// Populate the replicated data component updates from the replicated property changelist.
 	if (Changes.RepChanged.Num() > 0)
@@ -130,7 +131,7 @@ uint32 ComponentFactory::FillSchemaObject(Schema_Object* ComponentObject, UObjec
 		}
 	}
 
-	const uint32 BytesEnd = Schema_GetWriteBufferLength(ComponentObject);
+	const uint32 BytesEnd = Schema_GetWriteBufferLength(old_obj);
 
 
 	return BytesEnd - BytesStart;

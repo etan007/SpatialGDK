@@ -26,14 +26,14 @@ struct Partition : Component
 	{
 		Schema_Object* ComponentObject = Schema_GetComponentDataFields(Data);
 
-		WorkerConnectionId = Schema_GetUint64(ComponentObject, 1);
+		WorkerConnectionId = Schema_GetUint64(ComponentObject, 2);
 	}
 
 	void ApplyComponentUpdate(const Worker_ComponentUpdate& Update)
 	{
 		Schema_Object* ComponentObject = Schema_GetComponentUpdateFields(Update.schema_type);
 
-		WorkerConnectionId = Schema_GetUint64(ComponentObject, 1);
+		WorkerConnectionId = Schema_GetUint64(ComponentObject, 2);
 	}
 
 	Worker_EntityId_Key WorkerConnectionId;
