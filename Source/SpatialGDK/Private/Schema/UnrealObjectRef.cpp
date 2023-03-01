@@ -84,7 +84,18 @@ FUnrealObjectRef FUnrealObjectRef::FromObjectPtr(UObject* ObjectValue, USpatialP
 		FNetworkGUID NetGUID;
 		if (ObjectValue->IsSupportedForNetworking())
 		{
+
 			NetGUID = PackageMap->GetNetGUIDFromObject(ObjectValue);
+			if(ObjectValue->GetName().Find(_T("BP_FPS"))>=0)
+			{
+				if(GWorld->IsServer())
+				{
+					int aaa = 1;
+					UE_LOG(LogUnrealObjectRef, Warning, TEXT("FUnrealObjectRef::FromObjectPtr: server %s,PackageMap addr=%llu"),
+					   *ObjectValue->GetName(),PackageMap);
+				}
+
+			}
 
 			if (!NetGUID.IsValid())
 			{

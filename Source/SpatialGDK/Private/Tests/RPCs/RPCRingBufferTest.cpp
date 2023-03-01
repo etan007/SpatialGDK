@@ -66,7 +66,10 @@ public:
 
 	Worker_ComponentId GetACKComponentId() { return ACKComponentId; }
 
-	TOptional<uint64> ReadRPCCount(const RPCReadingContext& Ctx) { return GetBufferComponent(Ctx.EntityId).CountWritten; }
+	TOptional<uint64> ReadRPCCount(const RPCReadingContext& Ctx)
+	{
+		return GetBufferComponent(Ctx.EntityId).CountWritten;
+	}
 
 	TOptional<uint64> ReadACKCount(const RPCReadingContext& Ctx) { return GetACKComponent(Ctx.EntityId).ACKCount; }
 

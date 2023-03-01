@@ -69,12 +69,14 @@ public:
 	virtual uint32 Write(RPCWritingContext& Ctx, Worker_EntityId EntityId, TArrayView<const Payload> RPCs,
 						 const RPCCallbacks::RPCWritten& WrittenCallback) override
 	{
+
 		BufferStateData& NextSlot = BufferState.FindOrAdd(EntityId);
 		int32 AvailableSlots = FMath::Max(0, int32(NumberOfSlots) - int32(NextSlot.CountWritten - NextSlot.LastACK));
 
 		int32 RPCsToWrite = FMath::Min(RPCs.Num(), AvailableSlots);
 		if (RPCsToWrite > 0)
 		{
+
 			auto EntityWrite = Ctx.WriteTo(EntityId, Serializer.GetComponentId());
 			for (int32 i = 0; i < RPCsToWrite; ++i)
 			{
@@ -99,6 +101,7 @@ private:
 
 	SerializerType Serializer;
 	int32 NumberOfSlots;
+
 };
 
 } // namespace SpatialGDK

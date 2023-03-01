@@ -79,7 +79,8 @@ void FSpatialNetDriverRPC::OnDataWritten(TArray<FWorkerComponentData>& OutArray,
 			Data.schema_type = Schema_CreateComponentData(ComponentId);
 			ExistingData = &OutArray.Add_GetRef(Data);
 		}
-		Schema_ApplyComponentUpdateToData(InData, ExistingData->schema_type);
+		std::string funstr = GWorld->GetWorld()->IsServer()?"Server:OnDataWritten":"Client:OnDataWritten";
+		Schema_ApplyComponentUpdateToData(InData, ExistingData->schema_type,funstr.c_str());
 		Schema_DestroyComponentUpdate(InData);
 	}
 }

@@ -65,12 +65,21 @@ public:
 		State.LastExecuted = ACKCount ? ACKCount.GetValue() : 0;
 		State.LastRead = State.LastExecuted;
 		State.LastWrittenACK = State.LastExecuted;
+
+		uint64 rcount = ACKCount ? ACKCount.GetValue() : 0;
+		if(State.r_LastWrittenACK > rcount)
+		{
+			int aaa = 1;
+		}
 	}
 
 	virtual void OnRemoved(Worker_EntityId EntityId) override
 	{
 		ReceiverStates.Remove(EntityId);
 		this->ReceivedRPCs.Remove(EntityId);
+		{
+			int aaa = 1;
+		}
 	}
 
 	virtual void OnUpdate(const RPCReadingContext& Ctx) override
@@ -78,6 +87,10 @@ public:
 		if (ComponentsToRead.Contains(Ctx.ComponentId))
 		{
 			bool isserver = GWorld->GetWorld()->IsServer();
+			if(isserver && Ctx.EntityId == 24)
+			{
+				int aaa = 1;
+			}
 			ReceiverState& State = ReceiverStates.FindChecked(Ctx.EntityId);
 			ReadRPCs(Ctx, State);
 		}
@@ -146,16 +159,25 @@ protected:
 		uint64 LastRead;
 		uint64 LastWrittenACK;
 		uint64 LastExecuted;
+		uint64 r_LastWrittenACK;
+		uint64 r_LasAcktExecuted;
 	};
 
 	void ReadRPCs(const RPCReadingContext& Ctx, ReceiverState& State)
 	{
+
+
 		TOptional<uint64> NewRPCCount = Serializer.ReadRPCCount(Ctx);
 		if (NewRPCCount.IsSet() && NewRPCCount.GetValue() != State.LastRead)
 		{
 			uint64 RPCCount = NewRPCCount.GetValue();
 			for (uint64 RPCId = State.LastRead + 1; RPCId <= RPCCount; ++RPCId)
 			{
+				bool isserver = GWorld->GetWorld()->IsServer();
+				if(isserver)
+				{
+					int aaa = 1;
+				}
 				uint32 Slot = (RPCId - 1) % NumberOfSlots;
 				PayloadType NewPayload;
 				if(Serializer.ReadRPC(Ctx, Slot, NewPayload))

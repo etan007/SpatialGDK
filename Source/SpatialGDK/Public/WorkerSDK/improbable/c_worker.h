@@ -106,10 +106,7 @@
 	/* clang-format on */
 
 
-typedef enum EGameplayDebuggerServerTrackingMode
-{
-	Player = 1
-}EGameplayDebuggerServerTrackingMode;
+ 
 	/**
 	 * Enum defining the severities of log messages that can be sent to SpatialOS and received from the
 	 * SDK.

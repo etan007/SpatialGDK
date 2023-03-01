@@ -496,9 +496,9 @@ int64 USpatialActorChannel::ReplicateActor()
 	// Group actors by exact class, one level below parent native class.
 	SCOPE_CYCLE_UOBJECT(ReplicateActor, Actor);
 
- 
+
 	const bool bReplay = ActorWorld && ActorWorld->GetDemoNetDriver() == Connection->GetDriver();
- 
+
 
 	//////////////////////////////////////////////////////////////////////////
 	// Begin - error and stat duplication from DataChannel::ReplicateActor()
@@ -568,9 +568,9 @@ int64 USpatialActorChannel::ReplicateActor()
 	}
 
 	RepFlags.bNetSimulated = (Actor->GetRemoteRole() == ROLE_SimulatedProxy);
- 
+
 	RepFlags.bRepPhysics = Actor->GetReplicatedMovement().bRepPhysics;
- 
+
 	RepFlags.bReplay = bReplay;
 
 	UE_LOG(LogNetTraffic, Log, TEXT("Replicate %s, bNetInitial: %d, bNetOwner: %d"), *Actor->GetName(), RepFlags.bNetInitial,
@@ -614,7 +614,7 @@ int64 USpatialActorChannel::ReplicateActor()
 	// Update the replicated property change list.
 	FRepChangelistState* ChangelistState = ActorReplicator->ChangelistMgr->GetRepChangelistState();
 
- 
+
 	const ERepLayoutResult UpdateResult =
 		ActorReplicator->RepLayout->UpdateChangelistMgr(ActorReplicator->RepState->GetSendingRepState(), *ActorReplicator->ChangelistMgr,
 														Actor, Connection->Driver->ReplicationFrame, RepFlags, bForceCompareProperties);
@@ -629,7 +629,7 @@ int64 USpatialActorChannel::ReplicateActor()
 		// Connection->SetPendingCloseDueToReplicationFailure();
 		return 0;
 	}
- 
+
 	FSendingRepState* SendingRepState = ActorReplicator->RepState->GetSendingRepState();
 
 	const int32 PossibleNewHistoryIndex = SendingRepState->HistoryEnd % MaxSendingChangeHistory;
@@ -848,7 +848,7 @@ bool USpatialActorChannel::ReplicateSubobject(UObject* Object, const FReplicatio
 
 	FRepChangelistState* ChangelistState = Replicator.ChangelistMgr->GetRepChangelistState();
 
- 
+
 	const ERepLayoutResult UpdateResult =
 		Replicator.RepLayout->UpdateChangelistMgr(Replicator.RepState->GetSendingRepState(), *Replicator.ChangelistMgr, Object,
 												  Replicator.Connection->Driver->ReplicationFrame, RepFlags, bForceCompareProperties);
@@ -863,7 +863,7 @@ bool USpatialActorChannel::ReplicateSubobject(UObject* Object, const FReplicatio
 		// Connection->SetPendingCloseDueToReplicationFailure();
 		return false;
 	}
- 
+
 
 	FSendingRepState* SendingRepState = Replicator.RepState->GetSendingRepState();
 
@@ -1063,6 +1063,7 @@ void USpatialActorChannel::UpdateSpatialPosition()
 			return;
 		}
 	}
+
 
 	if (!SatisfiesSpatialPositionUpdateRequirements())
 	{
@@ -1268,9 +1269,22 @@ bool USpatialActorChannel::SatisfiesSpatialPositionUpdateRequirements()
 	// If the Actor did not travel at all, then we consider its position to be up to date and we early out.
 	if (FMath::IsNearlyZero(DistanceTravelledSinceLastUpdateSquared))
 	{
+		if (APlayerController* PlayerController = Cast<APlayerController>(Actor))
+		{
+			if (APawn* Pawn = PlayerController->GetPawn())
+			{
+				int aaa = 1;
+			}
+		}
 		return false;
 	}
-
+if (APlayerController* PlayerController = Cast<APlayerController>(Actor))
+		{
+			if (APawn* Pawn = PlayerController->GetPawn())
+			{
+				int aaa = 1;
+			}
+		}
 	const float TimeSinceLastPositionUpdate = NetDriver->GetElapsedTime() - TimeWhenPositionLastUpdated;
 	const USpatialGDKSettings* SpatialGDKSettings = GetDefault<USpatialGDKSettings>();
 	const float SpatialMinimumPositionThresholdSquared = FMath::Square(SpatialGDKSettings->PositionUpdateLowerThresholdCentimeters);

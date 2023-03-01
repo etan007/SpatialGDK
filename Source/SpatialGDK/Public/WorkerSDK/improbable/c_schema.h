@@ -239,7 +239,7 @@ struct Schema_Fields
   * Returns 1 if success, 0 if there was a failure. Call
   * `Schema_GetError(Schema_GetComponentDataFields(target_data))` to get the error message.
   */
- WORKERSDK_API uint8_t Schema_ApplyComponentUpdateToData(const Schema_ComponentUpdate* update,Schema_ComponentData* target_data);
+ WORKERSDK_API uint8_t Schema_ApplyComponentUpdateToData(const Schema_ComponentUpdate* update,Schema_ComponentData* target_data,const char* func);
  /**
   * Merges a component update 'update' into another component update object 'target_update'. This is
   * semantically equivalent to combining two component updates into a single component update such

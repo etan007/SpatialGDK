@@ -159,6 +159,7 @@ bool USpatialPackageMapClient::ResolveEntityActorAndSubobjects(const Worker_Enti
 	if (!NetGUID.IsValid())
 	{
 		NetGUID = SpatialGuidCache->AssignNewEntityActorNetGUID(Actor, EntityId);
+		NetGUID =  GetNetGUIDFromObject(Actor);
 	}
 
 	if (GetEntityIdFromObject(Actor) != EntityId)
@@ -467,7 +468,7 @@ FNetworkGUID FSpatialNetGUIDCache::AssignNewEntityActorNetGUID(AActor* Actor, Wo
 			NetGUIDToUnrealObjectRef.Emplace(SubobjectNetGUID, EntityIdSubobjectRef);
 		}
 
-		RegisterObjectRef(SubobjectNetGUID, EntityIdSubobjectRef);
+ 		RegisterObjectRef(SubobjectNetGUID, EntityIdSubobjectRef);
 
 		UE_LOG(LogSpatialPackageMap, Verbose,
 			   TEXT("Registered new object ref for subobject %s inside actor %s. NetGUID: %s, object ref: %s"), *Subobject->GetName(),
@@ -696,9 +697,9 @@ void FSpatialNetGUIDCache::NetworkRemapObjectRefPaths(FUnrealObjectRef& ObjectRe
 		if (Iterator->Path.IsSet())
 		{
 			FString TempPath(*Iterator->Path);
- 
+
 			GEngine->NetworkRemapPath(Cast<USpatialNetDriver>(Driver)->GetSpatialOSNetConnection(), TempPath, bReading);
- 
+
 			Iterator->Path = TempPath;
 		}
 		if (!Iterator->Outer.IsSet())
@@ -738,7 +739,7 @@ FNetworkGUID FSpatialNetGUIDCache::RegisterNetGUIDFromPathForStaticObject(const 
 	// Put the PIE prefix back (if applicable) so that the correct object can be found.
 	FString TempPath = PathName;
 	GEngine->NetworkRemapPath(Cast<USpatialNetDriver>(Driver)->GetSpatialOSNetConnection(), TempPath, true /*bIsReading*/);
- 
+
 
 	// This function should only be called for stably named object references, not dynamic ones.
 	FNetGuidCacheObject CacheObject;

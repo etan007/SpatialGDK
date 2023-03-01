@@ -38,8 +38,8 @@ bool ComponentData::ApplyUpdate(const ComponentUpdate& Update)
 {
 	check(Update.GetComponentId() == GetComponentId());
 	check(Update.GetUnderlying() != nullptr);
-
-	const bool bUpdateResult = Schema_ApplyComponentUpdateToData(Update.GetUnderlying(), Data.Get()) != 0;
+	std::string funstr = GWorld->GetWorld()->IsServer()?"Server:ApplyUpdate":"Client:ApplyUpdate";
+	const bool bUpdateResult = Schema_ApplyComponentUpdateToData(Update.GetUnderlying(), Data.Get(),funstr.c_str()) != 0;
 	// Copy the component to prevent unbounded memory growth from appending the update to it.
 	Data = OwningComponentDataPtr(Schema_CopyComponentData(Data.Get()));
 	return bUpdateResult;

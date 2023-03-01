@@ -48,7 +48,8 @@ public:
 	bool ReadRPC(const RPCReadingContext& Ctx, uint32 Slot, Payload& OutPayload)
 	{
 		Schema_Object* PayloadObject = Schema_GetObject(Ctx.Fields, FirstRingBufferSlotFieldId + Slot);
-		if(!PayloadObject) return false;
+		if(!PayloadObject)
+			return false;
 		if (ensure(PayloadObject))
 		{
 			OutPayload.ReadFromSchema(PayloadObject);
@@ -62,7 +63,16 @@ public:
 		InPayload.WriteToSchema(NewField);
 	}
 
-	void WriteRPCCount(RPCWritingContext::EntityWrite& Ctx, uint64 Count) { Schema_AddUint64(Ctx.GetFieldsToWrite(), CountFieldId, Count); }
+	void WriteRPCCount(RPCWritingContext::EntityWrite& Ctx, uint64 Count)
+	{
+		bool isserver = GWorld->GetWorld()->IsServer();
+		if(!isserver)
+		{
+			int aaa = 1;
+		}
+
+		Schema_AddUint64(Ctx.GetFieldsToWrite(), CountFieldId, Count);
+	}
 
 	void WriteACKCount(RPCWritingContext::EntityWrite& Ctx, uint64 Count)
 	{

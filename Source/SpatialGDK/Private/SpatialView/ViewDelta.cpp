@@ -252,7 +252,10 @@ ComponentChange ViewDelta::CalculateAdd(ReceivedComponentChange* Start, Received
 			Data = It->ComponentAdded;
 			break;
 		case ReceivedComponentChange::UPDATE:
-			Schema_ApplyComponentUpdateToData(It->ComponentUpdate, Data);
+			{
+				std::string funstr = GWorld->GetWorld()->IsServer()?"Server:CalculateAdd":"Client:CalculateAdd";
+				Schema_ApplyComponentUpdateToData(It->ComponentUpdate, Data,funstr.c_str());
+			}
 			break;
 		case ReceivedComponentChange::REMOVE:
 			break;
@@ -278,7 +281,8 @@ ComponentChange ViewDelta::CalculateCompleteUpdate(ReceivedComponentChange* Star
 		case ReceivedComponentChange::UPDATE:
 			if (Data)
 			{
-				Schema_ApplyComponentUpdateToData(It->ComponentUpdate, Data);
+				std::string funstr = GWorld->GetWorld()->IsServer()?"Server:CalculateCompleteUpdate":"Client:CalculateCompleteUpdate";
+				Schema_ApplyComponentUpdateToData(It->ComponentUpdate, Data,funstr.c_str());
 			}
 			if (Events)
 			{
@@ -330,8 +334,8 @@ ComponentChange ViewDelta::CalculateUpdate(ReceivedComponentChange* Start, Recei
 		}
 		++It;
 	}
-
-	Schema_ApplyComponentUpdateToData(Update, Component.GetUnderlying());
+	std::string funstr = GWorld->GetWorld()->IsServer()?"Server:CalculateUpdate":"Client:CalculateUpdate";
+	Schema_ApplyComponentUpdateToData(Update, Component.GetUnderlying(),funstr.c_str());
 	Component = Component.DeepCopy();
 	return ComponentChange(Start->ComponentId, Update);
 }
