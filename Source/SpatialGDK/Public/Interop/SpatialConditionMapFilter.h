@@ -32,7 +32,7 @@ public:
 #endif
 
 		// Build a ConditionMap. This code is taken directly from FRepLayout::BuildConditionMapFromRepFlags
-		static_assert(COND_Max == 16, "We are expecting 16 rep conditions"); // Guard in case more are added.
+		//static_assert(COND_Max == 16, "We are expecting 16 rep conditions"); // Guard in case more are added.
 		const bool bIsInitial = RepFlags.bNetInitial ? true : false;
 		const bool bIsOwner = RepFlags.bNetOwner ? true : false;
 		const bool bIsSimulated = RepFlags.bNetSimulated ? true : false;

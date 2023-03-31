@@ -91,12 +91,12 @@ void SSpatialGDKCloudDeploymentConfiguration::Construct(const FArguments& InArgs
 	ChildSlot
 		[SNew(SBorder)
 			 .HAlign(HAlign_Fill)
-			 .BorderImage(FEditorStyle::GetBrush("ChildWindow.Background"))
+			 .BorderImage(FAppStyle::GetBrush("ChildWindow.Background"))
 			 .Padding(4.0f)
 				 [SNew(SVerticalBox)
 				  + SVerticalBox::Slot().FillHeight(1.0f).Padding(0.0f, 6.0f, 0.0f, 0.0f)
 						[SNew(SBorder)
-							 .BorderImage(FEditorStyle::GetBrush("ToolPanel.GroupBorder"))
+							 .BorderImage(FAppStyle::GetBrush("ToolPanel.GroupBorder"))
 							 .Padding(4.0f)[SNew(SVerticalBox)
 											+ SVerticalBox::Slot().AutoHeight().Padding(
 												1.0f)[SNew(SVerticalBox)
@@ -199,9 +199,9 @@ void SSpatialGDKCloudDeploymentConfiguration::Construct(const FArguments& InArgs
 																						  "The relative path to the snapshot file.")))]
 															 + SHorizontalBox::Slot().FillWidth(1.0f)
 																   [SNew(SFilePathPicker)
-																		.BrowseButtonImage(FEditorStyle::GetBrush("PropertyWindow.Button_"
+																		.BrowseButtonImage(FAppStyle::GetBrush("PropertyWindow.Button_"
 																												  "Ellipsis"))
-																		.BrowseButtonStyle(FEditorStyle::Get(), "HoverHintOnly")
+																		.BrowseButtonStyle(FAppStyle::Get(), "HoverHintOnly")
 																		.BrowseButtonToolTip(LOCTEXT("SnapshotFilePicker_Tooltip",
 																									 "Path to the snapshot file."))
 																		.BrowseDirectory(
@@ -241,9 +241,9 @@ void SSpatialGDKCloudDeploymentConfiguration::Construct(const FArguments& InArgs
 																						  "file.")))]
 															 + SHorizontalBox::Slot().FillWidth(1.0f)
 																   [SNew(SFilePathPicker)
-																		.BrowseButtonImage(FEditorStyle::GetBrush("PropertyWindow.Button_"
+																		.BrowseButtonImage(FAppStyle::GetBrush("PropertyWindow.Button_"
 																												  "Ellipsis"))
-																		.BrowseButtonStyle(FEditorStyle::Get(), "HoverHintOnly")
+																		.BrowseButtonStyle(FAppStyle::Get(), "HoverHintOnly")
 																		.BrowseButtonToolTip(LOCTEXT("LaunchConfigFilePicker_Tooltip",
 																									 "Path to the launch configuration "
 																									 "file."))
@@ -697,7 +697,7 @@ void SSpatialGDKCloudDeploymentConfiguration::OnDeploymentTagsCommitted(const FT
 TSharedRef<SWidget> SSpatialGDKCloudDeploymentConfiguration::OnGetPrimaryDeploymentRegionCode()
 {
 	FMenuBuilder MenuBuilder(true, NULL);
-	UEnum* pEnum = FindObject<UEnum>(ANY_PACKAGE, TEXT("ERegionCode"), true);
+	UEnum* pEnum = FindObject<UEnum>(nullptr, TEXT("ERegionCode"), true);
 
 	if (pEnum != nullptr)
 	{
@@ -743,7 +743,7 @@ void SSpatialGDKCloudDeploymentConfiguration::OnDeploymentClusterCommited(const 
 TSharedRef<SWidget> SSpatialGDKCloudDeploymentConfiguration::OnGetSimulatedPlayerDeploymentRegionCode()
 {
 	FMenuBuilder MenuBuilder(true, NULL);
-	UEnum* pEnum = FindObject<UEnum>(ANY_PACKAGE, TEXT("ERegionCode"), true);
+	UEnum* pEnum = FindObject<UEnum>(nullptr, TEXT("ERegionCode"), true);
 
 	if (pEnum != nullptr)
 	{

@@ -37,7 +37,7 @@ public:
 	USpatialNetDriverGameplayDebuggerContext() = default;
 
 #if WITH_GAMEPLAY_DEBUGGER
-	virtual ~USpatialNetDriverGameplayDebuggerContext();
+	//virtual ~USpatialNetDriverGameplayDebuggerContext();
 
 	static void Enable(const SpatialGDK::FSubView& InSubView, USpatialNetDriver& InNetDriver);
 	static void Disable(USpatialNetDriver& NetDriver);

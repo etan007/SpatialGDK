@@ -1,9 +1,9 @@
-﻿// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 
 #include "SpatialGDKLogParser.h"
 
 #include "Algo/AllOf.h"
-#include "Dialogs/CustomDialog.h"
+#include "DiaLog/SCustomDialog.h"
 #include "Editor.h"
 #include "Internationalization/Regex.h"
 #include "Logging/MessageLog.h"
@@ -17,6 +17,7 @@ const TCHAR MessageLogCategoryName[] = TEXT("MissingSchemaMessageLog");
 
 static void ShowMissingSchemaDialog(const TSet<FString>& MissingSchemaPaths)
 {
+
 	struct Local
 	{
 		static void OnHyperlinkClicked(const FString& InBlueprint, TSharedPtr<SCustomDialog> InDialog)
@@ -90,11 +91,15 @@ static void ShowMissingSchemaDialog(const TSet<FString>& MissingSchemaPaths)
 	const FText DialogTitle = LOCTEXT("MissingSchemaDialogTitle", "Missing Schema");
 
 	const FText OKText = LOCTEXT("MissingSchemaDialogOk", "OK");
-
-	CustomDialog = SNew(SCustomDialog).Title(DialogTitle).DialogContent(DialogContents).Buttons({ SCustomDialog::FButton(OKText) });
-
+	// SKYCELL-BEGIN
+	//CustomDialog = SNew(SCustomDialog).Title(DialogTitle).DialogContent(DialogContents).Buttons({ SCustomDialog::FButton(OKText) });
+	CustomDialog = SNew(SCustomDialog).Title(DialogTitle).Content()[DialogContents].Buttons({ SCustomDialog::FButton(OKText) });
 	CustomDialog->ShowModal();
+	// SKYCELL-END
+
 }
+
+
 
 class FMissingSchemaLogParser : public FOutputDevice
 {
@@ -146,6 +151,7 @@ public:
 
 FSpatialGDKLogParser::FSpatialGDKLogParser()
 {
+
 	FMessageLogModule& MessageLogModule = FModuleManager::LoadModuleChecked<FMessageLogModule>("MessageLog");
 	MessageLogModule.RegisterLogListing(MessageLogCategoryName, LOCTEXT("MissingSchemaMessageLogLabel", "Missing Schema"));
 
@@ -160,10 +166,12 @@ FSpatialGDKLogParser::FSpatialGDKLogParser()
 		FOutputDeviceRedirector::Get()->RemoveOutputDevice(MissingSchemaErrorParser.Get());
 		MissingSchemaErrorParser.Reset();
 	});
+
 }
 
 FSpatialGDKLogParser::~FSpatialGDKLogParser()
 {
+
 	if (PreBeginPIEDelegateHandle.IsValid())
 	{
 		FEditorDelegates::PreBeginPIE.Remove(PreBeginPIEDelegateHandle);
@@ -180,6 +188,7 @@ FSpatialGDKLogParser::~FSpatialGDKLogParser()
 	{
 		MissingSchemaErrorParser->bShouldReportErrors = false;
 	}
+
 }
 
 #undef LOCTEXT_NAMESPACE

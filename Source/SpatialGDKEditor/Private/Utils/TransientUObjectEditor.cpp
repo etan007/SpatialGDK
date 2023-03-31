@@ -109,9 +109,7 @@ UTransientUObjectEditor* UTransientUObjectEditor::LaunchTransientUObjectEditor(c
 										   .OnClicked(FOnClicked::CreateStatic(&ExecuteEditorCommand, ObjectInstance, Function))]];
 		}
 	}
-
-	TSharedRef<SWindow> NewSlateWindow = SNew(SWindow).Title(
-		EditorName)[SNew(SBorder).BorderImage(FEditorStyle::GetBrush(TEXT("PropertyWindow.WindowBorder")))[VBoxBuilder]];
+	TSharedRef<SWindow> NewSlateWindow = SNew(SWindow).Title(EditorName)[SNew(SBorder).BorderImage(FAppStyle::GetBrush(TEXT("PropertyWindow.WindowBorder")))[VBoxBuilder]];
 
 	if (!ParentWindow.IsValid() && FModuleManager::Get().IsModuleLoaded("MainFrame"))
 	{

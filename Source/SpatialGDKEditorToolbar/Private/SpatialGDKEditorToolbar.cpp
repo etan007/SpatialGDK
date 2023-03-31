@@ -384,18 +384,18 @@ void FSpatialGDKEditorToolbarModule::AddToolbarExtension(FToolBarBuilder& Builde
 	Builder.AddToolBarButton(FSpatialGDKEditorToolbarCommands::Get().StopSpatialDeployment);
 	Builder.AddComboButton(FUIAction(), FOnGetContent::CreateRaw(this, &FSpatialGDKEditorToolbarModule::CreateStartDropDownMenuContent),
 						   LOCTEXT("StartDropDownMenu_Label", "SpatialOS Network Options"), TAttribute<FText>(),
-						   FSlateIcon(FEditorStyle::GetStyleSetName(), "GDK.Start"), true);
+						   FSlateIcon(FAppStyle::GetAppStyleSetName(), "GDK.Start"), true);
 	Builder.AddToolBarButton(FSpatialGDKEditorToolbarCommands::Get().LaunchInspectorWebPageAction);
 #if PLATFORM_WINDOWS
 	Builder.AddToolBarButton(FSpatialGDKEditorToolbarCommands::Get().OpenCloudDeploymentWindowAction);
 	Builder.AddComboButton(FUIAction(), FOnGetContent::CreateRaw(this, &FSpatialGDKEditorToolbarModule::CreateLaunchDeploymentMenuContent),
 						   LOCTEXT("GDKDeploymentCombo_Label", "Deployment Tools"), TAttribute<FText>(),
-						   FSlateIcon(FEditorStyle::GetStyleSetName(), "GDK.Cloud"), true);
+						   FSlateIcon(FAppStyle::GetAppStyleSetName(), "GDK.Cloud"), true);
 #endif
 	Builder.AddToolBarButton(FSpatialGDKEditorToolbarCommands::Get().CreateSpatialGDKSchema);
 	Builder.AddComboButton(FUIAction(), FOnGetContent::CreateRaw(this, &FSpatialGDKEditorToolbarModule::CreateGenerateSchemaMenuContent),
 						   LOCTEXT("GDKSchemaCombo_Label", "Schema Generation Options"), TAttribute<FText>(),
-						   FSlateIcon(FEditorStyle::GetStyleSetName(), "GDK.Schema"), true);
+						   FSlateIcon(FAppStyle::GetAppStyleSetName(), "GDK.Schema"), true);
 	Builder.AddToolBarButton(FSpatialGDKEditorToolbarCommands::Get().CreateSpatialGDKSnapshot);
 }
 
@@ -535,7 +535,7 @@ TSharedRef<SWidget> FSpatialGDKEditorToolbarModule::CreateBetterEditableTextWidg
 								  .Text(Text)
 								  .SelectAllTextWhenFocused(true)
 								  .IsEnabled_Static(IsEnabled)
-								  .Font(FEditorStyle::GetFontStyle(TEXT("SourceControl.LoginWindow.Font")))];
+								  .Font(FAppStyle::GetFontStyle(TEXT("SourceControl.LoginWindow.Font")))];
 }
 
 void FSpatialGDKEditorToolbarModule::CreateSnapshotButtonClicked()

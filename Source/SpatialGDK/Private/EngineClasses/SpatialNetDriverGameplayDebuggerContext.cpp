@@ -21,10 +21,10 @@
 DEFINE_LOG_CATEGORY_STATIC(LogSpatialNetDriverGameplayDebuggerContext, Log, All);
 
 #if WITH_GAMEPLAY_DEBUGGER
-USpatialNetDriverGameplayDebuggerContext::~USpatialNetDriverGameplayDebuggerContext()
-{
-	Reset();
-}
+//USpatialNetDriverGameplayDebuggerContext::~USpatialNetDriverGameplayDebuggerContext()
+//{
+//	Reset();
+//}
 
 void USpatialNetDriverGameplayDebuggerContext::Enable(const SpatialGDK::FSubView& InSubView, USpatialNetDriver& NetDriver)
 {

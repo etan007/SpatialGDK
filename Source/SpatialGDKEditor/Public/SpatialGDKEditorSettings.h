@@ -589,7 +589,7 @@ public:
 			return NSLOCTEXT("SpatialGDKEditorSettings", "InvalidRegion", "Invalid");
 		}
 
-		UEnum* Region = FindObject<UEnum>(ANY_PACKAGE, TEXT("ERegionCode"), true);
+		UEnum* Region = FindObject<UEnum>(nullptr, TEXT("ERegionCode"), true);
 
 		return Region->GetDisplayNameTextByValue(static_cast<int64>(PrimaryDeploymentRegionCode.GetValue()));
 	}
@@ -613,7 +613,7 @@ public:
 			return NSLOCTEXT("SpatialGDKEditorSettings", "InvalidRegion", "Invalid");
 		}
 
-		UEnum* Region = FindObject<UEnum>(ANY_PACKAGE, TEXT("ERegionCode"), true);
+		UEnum* Region = FindObject<UEnum>(nullptr, TEXT("ERegionCode"), true);
 
 		return Region->GetDisplayNameTextByValue(static_cast<int64>(SimulatedPlayerDeploymentRegionCode.GetValue()));
 	}

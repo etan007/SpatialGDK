@@ -168,10 +168,23 @@ void FSpatialGDKEditor::GenerateSchema(ESchemaGenerationMethod Method, TFunction
 		OptionalParams += FString::Printf(TEXT(" -targetplatform=%s"), *PlatformName);
 
 		FString ProjectPath = FPaths::ConvertRelativePathToFull(FPaths::GetProjectFilePath());
-		FString UATCommandLine = FString::Printf(TEXT("-ScriptsForProject=\"%s\" CookAndGenerateSchema -nocompile -nocompileeditor -server "
+		/* FString UATCommandLine =
+			FString::Printf(TEXT("-ScriptsForProject=\"%s\" CookAndGenerateSchema -nocompile -nocompileeditor -server "
 													  "-noclient %s -nop4 -project=\"%s\" -cook -skipstage -unrealexe=\"%s\" %s -utf8output"),
 												 *ProjectPath, FApp::IsEngineInstalled() ? TEXT(" -installed") : TEXT(""), *ProjectPath,
-												 *FUnrealEdMisc::Get().GetExecutableForCommandlets(), *OptionalParams);
+												 *FUnrealEdMisc::Get().GetExecutableForCommandlets(), *OptionalParams);*/
+
+		FString ProjectTarget(TEXT("GDKShooterServer"));
+
+		 
+
+		 //BuildCookRun
+		 FString UATCommandLine =
+			FString::Printf(TEXT("-ScriptsForProject=\"%s\" Turnkey -command=VerifySdk -platform=%s -UpdateIfNeeded -project=\"%s\" "
+				                 "CookAndGenerateSchema -nop4 -utf8output -nocompileeditor -skipbuildeditor -cook -server "
+				                 "-project=\"%s\" -target=%s  -unrealexe=\"%s\"  -platform=%s -skipstage"),
+			*ProjectPath, *PlatformName, *ProjectPath, *ProjectPath, *ProjectTarget,
+							*FUnrealEdMisc::Get().GetExecutableForCommandlets(),  * PlatformName);
 
 		bSchemaGeneratorRunning = true;
 		TFunction<void(FString, double)> Callback = [this, ResultCallback = MoveTemp(ResultCallback)](const FString& UATResult, double) {
@@ -179,9 +192,9 @@ void FSpatialGDKEditor::GenerateSchema(ESchemaGenerationMethod Method, TFunction
 			bSchemaGeneratorRunning = false;
 		};
 		IUATHelperModule::Get().CreateUatTask(UATCommandLine, FText::FromString(PlatformName),
-											  LOCTEXT("CookAndGenerateSchemaTaskName", "Cook and generate project schema"),
-											  LOCTEXT("CookAndGenerateSchemaTaskShortName", "Generating schema"),
-											  FEditorStyle::GetBrush(TEXT("MainFrame.PackageProject")), MoveTemp(Callback));
+											  LOCTEXT("CookAndGenerateSchemaTaskName", "1Cook and generate project schema"),
+											  LOCTEXT("CookAndGenerateSchemaTaskShortName", "2Generating schema"),
+											  FAppStyle::GetBrush(TEXT("MainFrame.PackageProject")),NULL, MoveTemp(Callback));
 
 		return;
 	}

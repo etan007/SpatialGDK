@@ -163,7 +163,7 @@ void ULaunchConfigurationEditor::OpenModalWindow(TSharedPtr<SWindow> InParentWin
 		SNew(SWindow)
 			.Title(LOCTEXT("LaunchConfigurationEditor_Title", "Launch Configuration Editor"))
 			.ClientSize(
-				FVector2D(600, 400))[SNew(SBorder).BorderImage(FEditorStyle::GetBrush(TEXT("PropertyWindow.WindowBorder")))[VBoxBuilder]];
+				FVector2D(600, 400))[SNew(SBorder).BorderImage(FAppStyle::GetBrush(TEXT("PropertyWindow.WindowBorder")))[VBoxBuilder]];
 
 	if (!InParentWindow.IsValid() && FModuleManager::Get().IsModuleLoaded("MainFrame"))
 	{
