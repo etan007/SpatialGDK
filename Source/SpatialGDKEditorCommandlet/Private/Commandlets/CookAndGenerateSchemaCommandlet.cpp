@@ -112,7 +112,8 @@ int32 UCookAndGenerateSchemaCommandlet::Main(const FString& CmdLineParams)
 	FString CoreSDKSchemaCopyDir =
 		FPaths::Combine(SpatialGDKServicesConstants::SpatialOSDirectory, TEXT("build/dependencies/schema/standard_library"));
 	SpatialGDKEditor::Schema::CopyWellKnownSchemaFiles(GDKSchemaCopyDir, CoreSDKSchemaCopyDir);
-	const bool bDeleteExistingSchema = Switches.Contains(TEXT("DeleteExistingGeneratedSchema"));
+	//const bool bDeleteExistingSchema = Switches.Contains(TEXT("DeleteExistingGeneratedSchema"));
+	const bool bDeleteExistingSchema = false;
 	SpatialGDKEditor::Schema::RefreshSchemaFiles(GetDefault<USpatialGDKEditorSettings>()->GetGeneratedSchemaOutputFolder(),
 												 bDeleteExistingSchema);
 

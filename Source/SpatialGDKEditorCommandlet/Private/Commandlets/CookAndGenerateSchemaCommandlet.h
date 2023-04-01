@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Commandlets/CookCommandlet.h"
+#include "Commandlets/Commandlet.h"
 #include "CoreMinimal.h"
 #include "CookAndGenerateSchemaCommandlet.generated.h"
 
@@ -31,7 +31,7 @@ struct FObjectListener;
  *  3. BuildCookRun other platforms
  */
 UCLASS()
-class SPATIALGDKEDITORCOMMANDLET_API UCookAndGenerateSchemaCommandlet : public UCookCommandlet
+class SPATIALGDKEDITORCOMMANDLET_API UCookAndGenerateSchemaCommandlet : public UCommandlet
 {
 	GENERATED_BODY()
 
