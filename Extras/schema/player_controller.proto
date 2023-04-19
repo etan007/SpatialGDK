@@ -2,5 +2,5 @@ syntax = "proto2";
 package unreal;
 
 message PlayerController {
-     optional uint32 id = 1[default = 9991];
+     optional uint32 msg_cid = 1[default = 9991];
 }

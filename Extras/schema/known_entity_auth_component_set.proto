@@ -8,7 +8,7 @@ import "unreal/gdk/virtual_worker_translation.proto";
 //import "unreal/gdk/server_worker.proto";
 
 message KnownEntityAuthComponentSet {
-  optional uint32 id = 1[default = 9905];
+  optional uint32 msg_cid = 1[default = 9905];
   /*components = [
 	improbable.Position,
 	improbable.Metadata,

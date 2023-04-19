@@ -29,7 +29,7 @@ void FReceivedOpEventHandler::ProcessOpLists(const OpList& Ops)
 			//EventTracer->AddEntity(Op.op.add_entity, FSpatialGDKSpanId(Op.span_id));
 			break;
 		case WORKER_OP_TYPE_REMOVE_ENTITY:
-			EventTracer->RemoveEntity(Op.op.remove_entity, FSpatialGDKSpanId(Op.span_id));
+			//EventTracer->RemoveEntity(Op.op.remove_entity, FSpatialGDKSpanId(Op.span_id));
 			break;
 		case WORKER_OP_TYPE_ADD_COMPONENT:
 			//if(!GWorld->GetWorld()->IsServer())
@@ -69,9 +69,10 @@ void FReceivedOpEventHandler::ProcessOpLists(const OpList& Ops)
 		case WORKER_OP_TYPE_COMPONENT_UPDATE:
 			{
 				auto cid = Op.op.component_update.update.component_id;
-				if(Op.op.component_update.entity_id >= 24 && Op.op.component_update.entity_id <= 25)
+				//if(Op.op.component_update.entity_id >= 18 && Op.op.component_update.entity_id <= 18)
 				{
-					if(Op.op.component_update.update.component_id == 9977 || Op.op.component_update.update.component_id == 9978)
+					//if(Op.op.component_update.update.component_id == 9977 || Op.op.component_update.update.component_id == 9978)
+					if(Op.op.component_update.update.component_id == 25314 || Op.op.component_update.update.component_id == 25315)
 					UE_LOG(LogReceivedOpEvent, Log, TEXT("%s,component_update EntityId %lld, component: %d"),GWorld->GetWorld()->IsServer()?TEXT("Server"):TEXT("Client"),
 					  Op.op.component_update.entity_id, Op.op.component_update.update.component_id);
 

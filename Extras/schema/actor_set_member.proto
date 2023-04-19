@@ -4,6 +4,6 @@ package unreal;
 // a leader entity; the Strategy Worker keeps all entities with the same leader entity
 // in the same partition.
 message ActorSetMember {
-	optional uint32 id = 1[default = 9965];
+	optional uint32 msg_cid = 1[default = 9965];
 	optional int64 leader_entity = 2;
 }

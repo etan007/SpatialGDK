@@ -174,7 +174,7 @@ void FSpatialGDKEditor::GenerateSchema(ESchemaGenerationMethod Method, TFunction
 												 *ProjectPath, FApp::IsEngineInstalled() ? TEXT(" -installed") : TEXT(""), *ProjectPath,
 												 *FUnrealEdMisc::Get().GetExecutableForCommandlets(), *OptionalParams);*/
 
-		FString ProjectTarget(TEXT("GDKShooterServer"));
+		//FString ProjectTarget(TEXT("GDKShooterServer"));
 
 		 
 
@@ -182,8 +182,8 @@ void FSpatialGDKEditor::GenerateSchema(ESchemaGenerationMethod Method, TFunction
 		 FString UATCommandLine =
 			FString::Printf(TEXT("-ScriptsForProject=\"%s\" Turnkey -command=VerifySdk -platform=%s -UpdateIfNeeded -project=\"%s\" "
 				                 "CookAndGenerateSchema -nop4 -utf8output -nocompileeditor -skipbuildeditor -cook -server "
-				                 "-project=\"%s\" -target=%s  -unrealexe=\"%s\"  -platform=%s -skipstage"),
-			*ProjectPath, *PlatformName, *ProjectPath, *ProjectPath, *ProjectTarget,
+				                 "-project=\"%s\"    -unrealexe=\"%s\"  -platform=%s -skipstage"),
+			*ProjectPath, *PlatformName, *ProjectPath, *ProjectPath,
 							*FUnrealEdMisc::Get().GetExecutableForCommandlets(),  * PlatformName);
 
 		bSchemaGeneratorRunning = true;

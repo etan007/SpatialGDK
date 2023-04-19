@@ -15,10 +15,10 @@ enum Status {
 
 message Session {
   
-    optional uint32 id = 1[default = 1000];
+    optional uint32 msg_cid = 1[default = 1000];
     optional Status status = 2;
 }
 
 message Deployment {
-    optional uint32 id = 1[default = 1001];
+    optional uint32 msg_cid = 1[default = 1001];
 }

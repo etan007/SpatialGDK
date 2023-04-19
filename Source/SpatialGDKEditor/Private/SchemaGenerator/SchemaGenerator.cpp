@@ -14,6 +14,7 @@
 #include "Utils/ComponentIdGenerator.h"
 #include "Utils/DataTypeUtilities.h"
 #include "Utils/GDKPropertyMacros.h"
+#include "SpatialGDKServicesConstants.h"
 
 using namespace SpatialGDKEditor::Schema;
 
@@ -170,7 +171,7 @@ FActorSpecificSubobjectSchemaData GenerateSchemaForStaticallyAttachedSubobject(F
 		Writer.Printf("message {0} {", *ComponentName);
 		Writer.Indent();
 		//Writer.Printf("id = {0};", ComponentId);
-		Writer.Printf("optional uint32 id = 1[default = {0}];", ComponentId);
+		Writer.Printf("optional uint32 msg_cid = 1[default = {0}];", ComponentId);
 		Writer.Printf("optional unreal.generated.{0} data = 2;", *SchemaReplicatedDataName(Group, ComponentClass));
 		Writer.Outdent().Print("}");
 
@@ -300,7 +301,7 @@ void GenerateRPCEndpoint(FCodeWriter& Writer, FString EndpointName, Worker_Compo
 	Writer.PrintNewLine();
 	Writer.Printf("message {0} {", *ComponentName).Indent();
 	//Writer.Printf("id = {0};", ComponentId);
-	Writer.Printf("optional uint32 id = 1[default = {0}];", ComponentId);
+	Writer.Printf("optional uint32 msg_cid = 1[default = {0}];", ComponentId);
 	Schema_FieldId FieldId = 2;
 	for (ERPCType SentRPCType : SentRPCTypes)
 	{
@@ -470,7 +471,7 @@ void GenerateSubobjectSchema(FComponentIdGenerator& IdGenerator, UClass* Class, 
 			Writer.Printf("message {0} {", *ComponentName);
 			Writer.Indent();
 			//Writer.Printf("id = {0};", ComponentId);
-			Writer.Printf("optional uint32 id = 1[default = {0}];", ComponentId);
+			Writer.Printf("optional uint32 msg_cid = 1[default = {0}];", ComponentId);
 			Writer.Printf("optional {0} data = 2;", *SchemaReplicatedDataName(Group, Class));
 			Writer.Outdent().Print("}");
 
@@ -514,7 +515,7 @@ void GenerateActorSchema(FComponentIdGenerator& IdGenerator, UClass* Class, TSha
 
 	const FActorSchemaData* const SchemaData = ActorClassPathToSchema.Find(Class->GetPathName());
     //if("/Game/Blueprints/ShieldPickup.ShieldPickup_C")
-	if(Class->GetPathName().Find("GDK_PlayerController")>0)
+	if(Class->GetPathName().Find("WXPlayer")>0)
 	{
 		int a = 1;
 	}
@@ -575,7 +576,7 @@ void GenerateActorSchema(FComponentIdGenerator& IdGenerator, UClass* Class, TSha
 		Writer.Printf("message {0} {", *ComponentName);
 		Writer.Indent();
 		//Writer.Printf("id = {0};", ComponentId);
-		Writer.Printf("optional uint32 id = 1[default = {0}];", ComponentId);
+		Writer.Printf("optional uint32 msg_cid = 1[default = {0}];", ComponentId);
 		AddComponentId(ComponentId, ActorSchemaData.SchemaComponents, PropertyGroupToSchemaComponentType(Group));
 
         /*if(Group == REP_MultiClient)
@@ -679,3 +680,5 @@ void AddComponentId(const Worker_ComponentId ComponentId, ComponentIdPerType& Sc
 {
 	SchemaComponents[ComponentType] = ComponentId;
 }
+
+

@@ -80,5 +80,7 @@ SPATIALGDKEDITOR_API void WriteClientAuthorityComponentSet(const FString& Schema
 SPATIALGDKEDITOR_API void WriteComponentSetBySchemaType(const USchemaDatabase* SchemaDatabase, ESchemaComponentType SchemaType,
 														const FString& SchemaOutputPath);
 
+SPATIALGDKEDITOR_API bool build_schema();
+
 } // namespace Schema
 } // namespace SpatialGDKEditor

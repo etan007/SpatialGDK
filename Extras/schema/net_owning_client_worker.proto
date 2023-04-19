@@ -4,7 +4,7 @@ package unreal;
 // The NetOwningClientWorker component should be present on all entities
 // representing Actors or subobjects which can have owning connections.
 message NetOwningClientWorker {
-    optional uint32 id = 1[default = 9971];
+    optional uint32 msg_cid = 1[default = 9971];
     // The partition_entity_id is an optional entity ID string that is set
     // when the relevant Actor or subobject becomes net-owned by a client 
     // connection. This entity ID is the partition entity ID that the client 

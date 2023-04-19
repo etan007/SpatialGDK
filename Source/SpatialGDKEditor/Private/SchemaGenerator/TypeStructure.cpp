@@ -58,6 +58,7 @@ void VisitAllProperties(TSharedPtr<FUnrealType> TypeNode, TFunction<bool(TShared
 {
 	for (auto& PropertyPair : TypeNode->Properties)
 	{
+		
 		bool bShouldRecurseFurther = Visitor(PropertyPair.Value);
 		if (bShouldRecurseFurther && PropertyPair.Value->Type.IsValid())
 		{
@@ -341,6 +342,7 @@ TSharedPtr<FUnrealType> CreateUnrealTypeInfo(UStruct* Type, uint32 ParentChecksu
 	{
 		return TypeNode;
 	}
+	
 
 	if (Class->IsChildOf<AActor>())
 	{
@@ -372,7 +374,10 @@ TSharedPtr<FUnrealType> CreateUnrealTypeInfo(UStruct* Type, uint32 ParentChecksu
 			TypeNode->NoPropertySubobjects.Add(Subobject);
 		}
 	}
-
+	if (Class->GetName() == TEXT("WXCharacter"))
+	{
+		int aaa = 1;
+	}
 	// Set up replicated properties by reading the rep layout and matching the properties with the ones in the type node.
 	// Based on inspection in InitFromObjectClass, the RepLayout will always replicate object properties using NetGUIDs, regardless of
 	// ownership. However, the rep layout will recurse into structs and allocate rep handles for their properties, unless the condition
@@ -476,11 +481,11 @@ TSharedPtr<FUnrealType> CreateUnrealTypeInfo(UStruct* Type, uint32 ParentChecksu
 				});
 			}
 		}
-		if (!PropertyNode.IsValid()) {
+		/*if (!PropertyNode.IsValid()) {
 
-			//checkf(PropertyNode.IsValid(), TEXT("xxx Couldn't find the Cmd property inside the Parent's sub-properties. This shouldn't happen."));
+			checkf(PropertyNode.IsValid(), TEXT("xxx Couldn't find the Cmd property inside the Parent's sub-properties. This shouldn't happen."));
 			continue;  // IMPROBABLE-ADD
-		}
+		}*/
 		checkf(PropertyNode.IsValid(), TEXT("Couldn't find the Cmd property inside the Parent's sub-properties. This shouldn't happen."));
 
 		// We now have the right property node. Fill in the rep data.
@@ -624,10 +629,13 @@ FSubobjects GetAllSubobjects(TSharedPtr<FUnrealType> TypeInfo)
 
 	for (const FUnrealSubobject& NonPropertySubobject : TypeInfo->NoPropertySubobjects)
 	{
+		
 		if (NonPropertySubobject.Type->Object->IsSupportedForNetworking())
 		{
 			AddSubobject(NonPropertySubobject.Type);
 		}
+
+		
 	}
 
 	return Subobjects;

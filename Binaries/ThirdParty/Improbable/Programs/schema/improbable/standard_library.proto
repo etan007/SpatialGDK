@@ -31,7 +31,7 @@ message WorkerRequirementSet {
 // The EntityAcl component defines what sorts of workers can read and write each entity in the
 // simulation. This component is REQUIRED (every entity must be created with it).
 message EntityAcl {
-   optional uint32 id = 1[default = 50];
+   optional uint32 msg_cid = 1[default = 50];
   // The read ACL defined the kinds of workers that may check out the entity. Note that a worker
   // is currently required to satisfy this constraint even if it is authoritative on some component
   // on this entity; i.e. an entity will _never_ be checked out on any worker that does not match
@@ -50,7 +50,7 @@ message EntityAcl {
 // the entity. This component is optional.
 message Metadata {
  
-  optional uint32 id = 1[default = 53];
+  optional uint32 msg_cid = 1[default = 53];
   // The entity type is a string describing what kind of thing the entity represents
   // in the simulation. It is used by the Inspector to colour or filter entities
   // based on their entity type, for example "car" or "player".
@@ -80,7 +80,7 @@ message EdgeLength {
 // authority delegation.
 message Position {
  
-  optional uint32 id = 1[default = 54];
+  optional uint32 msg_cid = 1[default = 54];
   optional Coordinates coords = 2;
 }
 
@@ -89,7 +89,7 @@ message Position {
 // snapshot is taken.
 message Persistence {
  
-   optional uint32 id = 1[default = 55];
+   optional uint32 msg_cid = 1[default = 55];
 }
 
 
@@ -176,7 +176,7 @@ message ComponentInterest {
 // If a Worker is authoritative over a Component ID present in the map, it will be provided with updates for Entities
 // which match the corresponding queries.
 message Interest {
-  optional uint32 id = 1[default = 58];
+  optional uint32 msg_cid = 1[default = 58];
  
   map<uint32, ComponentInterest> component_interest = 2;
 }
@@ -184,11 +184,11 @@ message Interest {
 message ShardedMap {}
 
 message AuthorityDelegation{
-  optional uint32 id = 1[default = 65];
+  optional uint32 msg_cid = 1[default = 65];
   map<uint32, uint64> delegations = 2;
 }
 
 message Partition{
-  optional uint32 id = 1[default = 66];
+  optional uint32 msg_cid = 1[default = 66];
   optional uint64 worker_connection_id = 2;
 }

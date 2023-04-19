@@ -89,7 +89,9 @@ uint32 ComponentFactory::FillSchemaObject(Schema_Object* ComponentObject, UObjec
 																			   Parent.Property, NetDeltaStruct)
 							|| bIsInitialData)
 						{
-							AddBytesToSchema(ComponentObject, bOnlySecondNameData?HandleIterator.Handle:HandleIterator.Handle+1, ValueDataWriter);
+							//AddBytesToSchema(ComponentObject, bOnlySecondNameData?HandleIterator.Handle:HandleIterator.Handle+1, ValueDataWriter); // SKY-RCELL
+							AddBytesIndexToSchema(ComponentObject, bOnlySecondNameData ? HandleIterator.Handle : HandleIterator.Handle + 1,
+												  ValueDataWriter, Parent.ArrayIndex);
 						}
 
 						bProcessedFastArrayProperty = true;

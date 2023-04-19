@@ -1,7 +1,7 @@
 syntax = "proto2";
 package unreal;
 message AuthorityIntent {
-     optional uint32 id = 1[default = 9980];
+     optional uint32 msg_cid = 1[default = 9980];
      // Id assigned to the Unreal server worker which should be authoritative for this entity.
      // 0 is reserved as an invalid/unset value.
      optional uint32 virtual_worker_id = 2;

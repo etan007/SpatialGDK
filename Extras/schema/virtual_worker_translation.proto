@@ -14,6 +14,6 @@ message VirtualWorkerMapping {
 }
 
 message VirtualWorkerTranslation {
-     optional uint32 id = 1[default = 9979];
+     optional uint32 msg_cid = 1[default = 9979];
      repeated VirtualWorkerMapping virtual_worker_mapping = 2;
 }

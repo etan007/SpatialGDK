@@ -5,7 +5,7 @@ import "unreal/gdk/core_types.proto";
 import "unreal/gdk/rpc_payload.proto";
 
 message UnrealServerToServerCommandEndpoint {
-    optional uint32 id = 1[default = 9973];
+    optional uint32 msg_cid = 1[default = 9973];
     message CommandServerToServerRpcCommand
     {
         optional UnrealRPCPayload request = 1;

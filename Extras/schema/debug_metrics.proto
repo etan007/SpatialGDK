@@ -16,7 +16,7 @@ message ExecServerCommandPayload {
 
 
 message DebugMetrics {
-    optional uint32 id = 1[default = 9984];
+    optional uint32 msg_cid = 1[default = 9984];
     message CommandStartRpcMetrics
     {
         optional Void request = 1;

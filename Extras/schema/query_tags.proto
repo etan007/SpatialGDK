@@ -4,25 +4,25 @@ package unreal;
 // System query tags for entity completeness
 
 message ActorAuthTag {
-    optional uint32 id = 1[default = 2001];
+    optional uint32 msg_cid = 1[default = 2001];
 }
 
 message ActorTag {
-    optional uint32 id = 1[default = 2002];
+    optional uint32 msg_cid = 1[default = 2002];
 }
 
 message ActorOwnerOnlyDataTag {
-    optional uint32 id = 1[default = 2003];
+    optional uint32 msg_cid = 1[default = 2003];
 }
 
 message LBTag {
-    optional uint32 id = 1[default = 2005];
+    optional uint32 msg_cid = 1[default = 2005];
 }
 
 message GDKKnownEntityTag {
-    optional uint32 id = 1[default = 2007];
+    optional uint32 msg_cid = 1[default = 2007];
 }
 
 message RoutingWorkerEntityTag {
-    optional uint32 id = 1[default = 2009];
+    optional uint32 msg_cid = 1[default = 2009];
 }

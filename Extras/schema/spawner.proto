@@ -12,7 +12,7 @@ message SpawnPlayerRequest {
 message SpawnPlayerResponse { }
 
 message PlayerSpawner {
-    optional uint32 id = 1[default = 9998];
+    optional uint32 msg_cid = 1[default = 9998];
     message CommandSpawnPlayer
     {
         optional SpawnPlayerRequest request = 1;

@@ -23,7 +23,7 @@ message Void
 }
 
 message System {
-   optional uint32 id = 1[default = 59];
+   optional uint32 msg_cid = 1[default = 59];
 }
 
 // Represents data relevant to the connection between the Runtime and the worker.
@@ -65,7 +65,7 @@ message ClaimPartitionRequest
 // The Worker component indicates that the system entity it is on represents a worker.
 // It carries metadata identifying that worker.
 message Worker {
-  optional uint32 id = 1[default = 60];
+  optional uint32 msg_cid = 1[default = 60];
   optional string worker_id = 2;
   optional string worker_type = 3;
   optional Connection connection = 4;
@@ -110,7 +110,7 @@ message PlayerIdentity {
 // These are identified by the Runtime as workers that have connected with a player identity token.
 // The contents of this token are exposed in this component.
 message PlayerClient {
-  optional uint32 id = 1[default = 61];
+  optional uint32 msg_cid = 1[default = 61];
   optional PlayerIdentity player_identity = 2;
 }
 

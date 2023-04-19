@@ -4,7 +4,7 @@ package unreal;
 import "unreal/gdk/core_types.proto";
 
 message UnrealMetadata {
-    optional uint32 id = 1[default = 9996];
+    optional uint32 msg_cid = 1[default = 9996];
     optional UnrealObjectRef stably_named_ref = 2; // Exists when entity represents a stably named Actor (RF_WasLoaded)
     optional string class_path = 3;
     optional bool net_startup = 4; // Exists only when entity has a stably_named_ref

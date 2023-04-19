@@ -2,6 +2,6 @@ syntax = "proto2";
 package unreal;
 
 message ActorOwnership {
-	optional uint32 id = 1[default = 9959];
+	optional uint32 msg_cid = 1[default = 9959];
 	optional int64 leader_entity = 2;
 }

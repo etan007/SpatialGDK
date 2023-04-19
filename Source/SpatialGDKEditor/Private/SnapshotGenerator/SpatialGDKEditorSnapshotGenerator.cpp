@@ -27,6 +27,8 @@
 #include <WorkerSDK/improbable/c_schema.h>
 #include <WorkerSDK/improbable/c_worker.h>
 
+#include "SpatialGDKEditorSchemaGenerator.h"
+
 using namespace SpatialGDK;
 
 DEFINE_LOG_CATEGORY(LogSpatialGDKSnapshot);
@@ -362,11 +364,16 @@ bool FillSnapshot(Worker_SnapshotOutputStream* OutputStream, UWorld* World)
 
 bool SpatialGDKGenerateSnapshot(UWorld* World, FString SnapshotPath)
 {
+
 	if (!ValidateAndCreateSnapshotGenerationPath(SnapshotPath))
 	{
 		return false;
 	}
-
+	if (!SpatialGDKEditor::Schema::build_schema())
+	{
+		return false;
+	}
+	
 	UE_LOG(LogSpatialGDKSnapshot, Display, TEXT("Saving snapshot to: %s"), *SnapshotPath);
 
 	Worker_ComponentVtable DefaultVtable{};

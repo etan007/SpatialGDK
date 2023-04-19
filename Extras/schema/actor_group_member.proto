@@ -4,6 +4,6 @@ package unreal;
 // Actor Groups are based off of class hierarchy.
 // Intended use is for the Strategy Worker.
 message ActorGroupMember {
-	optional uint32 id = 1[default = 9964];
+	optional uint32 msg_cid = 1[default = 9964];
 	optional uint32 actor_group_id = 2;
 }

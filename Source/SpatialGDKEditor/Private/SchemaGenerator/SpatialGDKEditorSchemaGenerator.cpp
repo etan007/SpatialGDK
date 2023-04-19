@@ -199,10 +199,9 @@ void CheckIdentifierNameValidity(TSharedPtr<FUnrealType> TypeInfo, bool& bOutSuc
 		{
 			bOutSuccess = false;
 		}
-
+		// SKY-TEMP-BEGIN don't check for name collisions
 		if (TSharedPtr<FUnrealType>* ExistingSubobject = SchemaSubobjectNames.Find(NextSchemaSubobjectName))
-		{
-			UE_LOG(LogSpatialGDKSchemaGenerator, Error,
+		{			UE_LOG(LogSpatialGDKSchemaGenerator, Error,
 				   TEXT("Subobject name collision after removing non-alphanumeric characters, schema not generated. Name '%s' collides for "
 						"'%s' and '%s'"),
 				   *NextSchemaSubobjectName, *ExistingSubobject->Get()->Object->GetPathName(), *SubobjectTypeInfo->Object->GetPathName());
@@ -212,6 +211,7 @@ void CheckIdentifierNameValidity(TSharedPtr<FUnrealType> TypeInfo, bool& bOutSuc
 		{
 			SchemaSubobjectNames.Add(NextSchemaSubobjectName, SubobjectTypeInfo);
 		}
+		// SKY-TEMP-END
 	}
 }
 
@@ -342,7 +342,7 @@ void WriteLevelComponent(FCodeWriter& Writer, const FString& LevelName, Worker_C
 	Writer.Printf("// {0}", *ClassPath);
 	Writer.Printf("message {0} {", *ComponentName);
 	Writer.Indent();
-	Writer.Printf("optional uint32 id = 1[default = {0}];", ComponentId);
+	Writer.Printf("optional uint32 msg_cid = 1[default = {0}];", ComponentId);
 	Writer.Outdent().Print("}");
 }
 
@@ -467,7 +467,7 @@ void GenerateSchemaForNCDs(const FString& SchemaOutputPath)
 		Writer.Printf("// distance {0}", NCDComponent.Key);
 		Writer.Printf("message {0} {", *SchemaComponentName);
 		Writer.Indent();
-		Writer.Printf("optional uint32 id = 1[default = {0}];", ComponentId);
+		Writer.Printf("optional uint32 msg_cid = 1[default = {0}];", ComponentId);
 		Writer.Outdent().Print("}");
 	}
 
@@ -607,7 +607,7 @@ void WriteServerAuthorityComponentSet(const USchemaDatabase* SchemaDatabase, con
 
 	Writer.PrintNewLine();
 	Writer.Printf("message {0} {", SpatialConstants::SERVER_AUTH_COMPONENT_SET_NAME).Indent();
-	Writer.Printf("optional uint32 id = 1[default = {0}];", SpatialConstants::SERVER_AUTH_COMPONENT_SET_ID);
+	Writer.Printf("optional uint32 msg_cid = 1[default = {0}];", SpatialConstants::SERVER_AUTH_COMPONENT_SET_ID);
 	Writer.Printf("message Components{").Indent();
 
 	// Write all components.
@@ -704,7 +704,7 @@ void WriteRoutingWorkerAuthorityComponentSet(const FString& SchemaOutputPath)
 
 	Writer.PrintNewLine();
 	Writer.Printf("message {0} {", SpatialConstants::ROUTING_WORKER_COMPONENT_SET_NAME).Indent();
-	Writer.Printf("optional uint32 id = 1[default = {0}];", SpatialConstants::ROUTING_WORKER_AUTH_COMPONENT_SET_ID);
+	Writer.Printf("optional uint32 msg_cid = 1[default = {0}];", SpatialConstants::ROUTING_WORKER_AUTH_COMPONENT_SET_ID);
 	Writer.Printf("message Components{").Indent();
 
 	int nIndex = 1;
@@ -739,7 +739,7 @@ void WriteClientAuthorityComponentSet(const FString& SchemaOutputPath)
 
 	Writer.PrintNewLine();
 	Writer.Printf("message {0} {", SpatialConstants::CLIENT_AUTH_COMPONENT_SET_NAME).Indent();
-	Writer.Printf("optional uint32 id = 1[default = {0}];", SpatialConstants::CLIENT_AUTH_COMPONENT_SET_ID);
+	Writer.Printf("optional uint32 msg_cid = 1[default = {0}];", SpatialConstants::CLIENT_AUTH_COMPONENT_SET_ID);
 	Writer.Printf("message Components{").Indent();
     int nIndex = 1;
 	// Write all import components.
@@ -801,7 +801,7 @@ void WriteComponentSetBySchemaType(const USchemaDatabase* SchemaDatabase, ESchem
 	Writer.PrintNewLine();
 	Writer.Printf("message {0} {", GetComponentSetNameBySchemaType(SchemaType)).Indent();
 	//Writer.Printf("id = {0};", GetComponentSetIdBySchemaType(SchemaType));
-	Writer.Printf("optional uint32 id = 1[default = {0}];", GetComponentSetIdBySchemaType(SchemaType));
+	Writer.Printf("optional uint32 msg_cid = 1[default = {0}];", GetComponentSetIdBySchemaType(SchemaType));
 	Writer.Printf("message Components{").Indent();
 
 	FString SchemaTypeString = GetReplicatedPropertyGroupName(SchemaComponentTypeToPropertyGroup(SchemaType));
@@ -1144,6 +1144,16 @@ void ResetSchemaGeneratorState()
 	NextAvailableComponentId = SpatialConstants::STARTING_GENERATED_COMPONENT_ID;
 	SchemaGeneratedClasses.Empty();
 	NetCullDistanceToComponentId.Empty();
+	// 清空json内容
+	FString BuildDir;
+	if (BuildDir == TEXT(""))
+	{
+		BuildDir = FPaths::Combine(SpatialGDKServicesConstants::SpatialOSDirectory, TEXT("build"));
+	}
+	FString CompiledSchemaDir = FPaths::Combine(BuildDir, TEXT("assembly/schema/schema.json"));
+	std::string json_path(TCHAR_TO_UTF8(*CompiledSchemaDir));
+	ResetAllSchema(json_path);
+	
 }
 
 void ResetSchemaGeneratorStateAndCleanupFolders()
@@ -1676,6 +1686,11 @@ bool SpatialGDKGenerateSchema()
 	{
 		return false;
 	}
+	if(!build_schema())
+	{
+		UE_LOG(LogSpatialGDKSchemaGenerator, Error, TEXT("build schema failed"));
+		return false;
+	}
 
 	return true;
 }
@@ -1698,6 +1713,10 @@ bool SpatialGDKGenerateSchemaForClasses(TSet<UClass*> Classes, FString SchemaOut
 		}
 
 		SchemaGeneratedClasses.Add(Class);
+		if (Class->GetName() == TEXT("WXCharacter"))
+		{
+			int aaa = 1;
+		}
 		// Parent and static array index start at 0 for checksum calculations.
 		TSharedPtr<FUnrealType> TypeInfo = CreateUnrealTypeInfo(Class, 0, 0);
 		TypeInfos.Add(TypeInfo);
@@ -1790,6 +1809,31 @@ void SpatialGDKSanitizeGeneratedSchema()
 
 	SanitizeClassMap(ActorClassPathToSchema, ValidClassNames);
 	SanitizeClassMap(SubobjectClassPathToSchema, ValidClassNames);
+}
+
+bool build_schema()
+{
+	//先加载所有协议
+	FString BuildDir;
+	if (BuildDir == TEXT(""))
+	{
+		BuildDir = FPaths::Combine(SpatialGDKServicesConstants::SpatialOSDirectory, TEXT("build"));
+	}
+	FString CompiledSchemaDir = FPaths::Combine(BuildDir, TEXT("assembly/schema/schema.json"));
+    
+	FString proto_root = FPaths::Combine(SpatialGDKServicesConstants::SpatialOSDirectory, TEXT("schema/"));
+    
+	FString g3log_path = FPaths::Combine(SpatialGDKServicesConstants::SpatialOSDirectory, TEXT("g3log/"));
+    
+	std::string path(TCHAR_TO_UTF8(*proto_root));
+	std::string json_path(TCHAR_TO_UTF8(*CompiledSchemaDir));
+	std::string log_path(TCHAR_TO_UTF8(*g3log_path));
+	if(!LoadAllSchema(path,json_path,log_path))
+	{
+		UE_LOG(LogTemp, Fatal, TEXT("FSpatialGDKLoader::FSpatialGDKLoader LoadAllSchema path=%s,json_path=%s"),*proto_root,*CompiledSchemaDir);
+		return false;
+	}
+	return true;
 }
 
 } // namespace Schema

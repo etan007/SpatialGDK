@@ -33,7 +33,7 @@ message MigrationDiagnosticResponse
 
 message MigrationDiagnostic
 {
-    optional uint32 id = 1[default = 9969];
+    optional uint32 msg_cid = 1[default = 9969];
 	message CommandDiagnostic
 	{
 		optional MigrationDiagnosticRequest request = 1;

@@ -2368,6 +2368,8 @@ typedef struct Worker_TcpNetworkParameters {
 
    WORKERSDK_API bool LoadAllSchema(const std::string& path,const std::string& json_path,const std::string &log_path);
 
+   WORKERSDK_API bool ResetAllSchema(const std::string& json_path); 
+
 #endif /* WORKER_SDK_C_INCLUDE_IMPROBABLE_C_WORKER_H */
 
  

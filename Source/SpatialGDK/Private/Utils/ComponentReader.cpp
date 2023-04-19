@@ -283,7 +283,8 @@ void ComponentReader::ApplySchemaObject(Schema_Object* ComponentObject, UObject&
 					{
 						SCOPE_CYCLE_COUNTER(STAT_ReaderApplyFastArrayUpdate);
 
-						TArray<uint8> ValueData = GetBytesFromSchema(ComponentObject, FieldId);
+						// TArray<uint8> ValueData = GetBytesFromSchema(ComponentObject, FieldId); 
+						TArray<uint8> ValueData = IndexBytesFromSchema(ComponentObject, FieldId, Parent.ArrayIndex); // SKY-CELL
 						int64 CountBits = ValueData.Num() * 8;
 						TSet<FUnrealObjectRef> NewMappedRefs;
 						TSet<FUnrealObjectRef> NewUnresolvedRefs;

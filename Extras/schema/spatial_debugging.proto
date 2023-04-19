@@ -3,7 +3,7 @@ package unreal;
 
 message SpatialDebugging {
   
-     optional uint32 id = 1[default = 9975];
+     optional uint32 msg_cid = 1[default = 9975];
 
      // Id assigned to the Unreal server worker which is authoritative for this entity.
      // 0 is reserved as an invalid/unset value.

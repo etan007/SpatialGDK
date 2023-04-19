@@ -5,5 +5,5 @@ package unreal;
 // saved to snapshots, so that we can query for Partition entities when loading from a snapshot and reconcile
 // the saved AuthorityDelegation and VirtualWorkerTranslation component data.
 message PartitionShadow {
-   optional uint32 id = 1[default = 9967];
+   optional uint32 msg_cid = 1[default = 9967];
 }

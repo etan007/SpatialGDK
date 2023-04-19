@@ -11,7 +11,7 @@ message ShutdownAdditionalServersEvent {
 }
 
 message DeploymentMap {
-    optional uint32 id = 1[default = 9994];
+    optional uint32 msg_cid = 1[default = 9994];
     optional string map_url = 2;
     optional bool accepting_players = 3;
     optional int32 session_id = 4;
@@ -19,18 +19,18 @@ message DeploymentMap {
 }
 
 message SnapshotVersion {
-    optional uint32 id = 1[default = 9990];
+    optional uint32 msg_cid = 1[default = 9990];
     optional uint64 version = 2;
 }
 
 message StartupActorManager {
-    optional uint32 id = 1[default = 9993];
+    optional uint32 msg_cid = 1[default = 9993];
     optional bool can_begin_play = 2;
 }
 
 message GSMShutdown {
  
-    optional uint32 id = 1[default = 9992];
+    optional uint32 msg_cid = 1[default = 9992];
     message CommandBeginShutdownMultiprocess
     {
         optional ShutdownMultiProcessRequest request = 1;

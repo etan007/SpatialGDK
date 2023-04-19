@@ -2,5 +2,5 @@ syntax = "proto2";
 package unreal;
 
 message Tombstone {
-    optional uint32 id = 1[default = 9982];
+    optional uint32 msg_cid = 1[default = 9982];
 }

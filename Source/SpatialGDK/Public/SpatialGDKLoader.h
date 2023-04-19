@@ -23,7 +23,6 @@ public:
 #else
 		Path = Path / TEXT("Win32");
 #endif // PLATFORM_64BITS
-
 		FString WorkerFilePath = Path / TEXT("WorkerSDK.dll");
 		WorkerLibraryHandle = FPlatformProcess::GetDllHandle(*WorkerFilePath);
 		if (WorkerLibraryHandle == nullptr)
@@ -32,7 +31,7 @@ public:
 		}
 		//先加载所有协议
 		FString BuildDir;
-		if (BuildDir == "")
+		if (BuildDir == TEXT(""))
 		{
 			BuildDir = FPaths::Combine(SpatialGDKServicesConstants::SpatialOSDirectory, TEXT("build"));
 		}

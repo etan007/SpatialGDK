@@ -187,6 +187,13 @@ int32 UCookAndGenerateSchemaCommandlet::Main(const FString& CmdLineParams)
 		UE_LOG(LogCookAndGenerateSchemaCommandlet, Error, TEXT("Failed to save schema database."));
 		return 0;
 	}
+	if (!build_schema())
+	{
+		UE_LOG(LogCookAndGenerateSchemaCommandlet, Error, TEXT("Failed build_schema."));
+		return false;
+	}
+ 
+    		
 
 	return CookResult;
 }
