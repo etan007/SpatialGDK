@@ -96,7 +96,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI,
 			  meta = (ToolTip = "Key to open configuration UI for the debugger at runtime"))
-	FKey ConfigUIToggleKey = EKeys::F9;
+	FKey ConfigUIToggleKey = EKeys::F7;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI, meta = (ToolTip = "Key to select actor when debugging in game"))
 	FKey SelectActorKey = EKeys::RightMouseButton;

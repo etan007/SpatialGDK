@@ -1,4 +1,4 @@
-# Guide: writing good release notes
+﻿# Guide: writing good release notes
 
 * [Guiding principles](#guiding-principles)
 * [Helpful stuff](#helpful-stuff)

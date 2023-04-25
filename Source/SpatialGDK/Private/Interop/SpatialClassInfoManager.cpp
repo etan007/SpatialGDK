@@ -551,7 +551,6 @@ const FClassInfo* USpatialClassInfoManager::GetClassInfoForNewSubobject(const UO
 	const FClassInfo* Info = nullptr;
 
 	const FClassInfo& SubobjectInfo = GetOrCreateClassInfoByClass(Object->GetClass());
-
 	// Find the first ClassInfo relating to a dynamic subobject
 	// which has not been used on this entity.
 	for (const auto& DynamicSubobjectInfo : SubobjectInfo.DynamicSubobjectInfo)
@@ -563,6 +562,7 @@ const FClassInfo* USpatialClassInfoManager::GetClassInfoForNewSubobject(const UO
 			break;
 		}
 	}
+ 
 
 	// If all ClassInfos are used up, we error.
 	if (Info == nullptr)

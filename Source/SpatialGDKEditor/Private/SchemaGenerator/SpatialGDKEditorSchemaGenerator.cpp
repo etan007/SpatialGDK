@@ -1,4 +1,4 @@
-// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
+﻿// Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 
 #include "SpatialGDKEditorSchemaGenerator.h"
 
@@ -613,11 +613,18 @@ void WriteServerAuthorityComponentSet(const USchemaDatabase* SchemaDatabase, con
 	// Write all components.
 	{
 		int nIndex = 1;
+		auto check_pbindex = [](int32& index)
+		{
+			index++;
+			if(index == 19000)
+				index = 20000;
+		};
 		// Well-known SpatialOS and handwritten GDK components.
 		for (const auto& WellKnownComponent : SpatialConstants::ServerAuthorityWellKnownComponents)
 		{
 			Writer.Printf("optional {0} cpts_x{1} = {2};", WellKnownComponent.Value,nIndex,nIndex);
-			nIndex++;
+			//nIndex++;
+			check_pbindex(nIndex);
 		}
 
 		// NCDs.
@@ -625,7 +632,8 @@ void WriteServerAuthorityComponentSet(const USchemaDatabase* SchemaDatabase, con
 		{
 			const FString NcdComponentName = FString::Printf(TEXT("NetCullDistanceSquared%lld"), static_cast<uint64>(NCDComponent.Key));
 			Writer.Printf("optional unreal.ncdcomponents.{0} cpts_x{1} = {2};", NcdComponentName,nIndex,nIndex);
-			nIndex++;
+			//nIndex++;
+			check_pbindex(nIndex);
 		}
 
 		for (const auto& GeneratedActorClass : SchemaDatabase->ActorClassPathToSchema)
@@ -638,7 +646,8 @@ void WriteServerAuthorityComponentSet(const USchemaDatabase* SchemaDatabase, con
 				{
 					Writer.Printf("optional unreal.generated.{0}.{1}{2} cpts_x{3} = {4};", ActorClassName.ToLower(), ActorClassName,
 								  GetReplicatedPropertyGroupName(SchemaComponentTypeToPropertyGroup(SchemaType)),nIndex,nIndex);
-					nIndex++;
+					//nIndex++;
+					check_pbindex(nIndex);
 				}
 			});
 
@@ -652,7 +661,8 @@ void WriteServerAuthorityComponentSet(const USchemaDatabase* SchemaDatabase, con
 					{
 						Writer.Printf("optional unreal.generated.{0}.subobjects.{1}{2} cpts_x{3} = {4};", ActorClassName.ToLower(), ActorSubObjectName,
 									  GetReplicatedPropertyGroupName(SchemaComponentTypeToPropertyGroup(SchemaType)),nIndex,nIndex);
-						nIndex++;
+						//nIndex++;
+						check_pbindex(nIndex);
 					}
 				});
 			}
@@ -673,7 +683,8 @@ void WriteServerAuthorityComponentSet(const USchemaDatabase* SchemaDatabase, con
 					{
 						Writer.Printf("optional unreal.generated.{0}{1}Dynamic{2} cpts_x{3} = {4};", SubObjectClassName,
 									  GetReplicatedPropertyGroupName(SchemaComponentTypeToPropertyGroup(SchemaType)), SubObjectNumber + 1,nIndex,nIndex);
-						nIndex++;
+						//nIndex++;
+						check_pbindex(nIndex);
 					}
 				});
 			}
@@ -809,6 +820,12 @@ void WriteComponentSetBySchemaType(const USchemaDatabase* SchemaDatabase, ESchem
 	// Write all components.
 	{
 		int nIndex = 1;
+		auto check_pbindex = [](int32& index)
+		{
+			index++;
+			if(index == 19000)
+				index = 20000;
+		};
 		for (const auto& GeneratedActorClass : SchemaDatabase->ActorClassPathToSchema)
 		{
 			// Actor components.
@@ -816,7 +833,8 @@ void WriteComponentSetBySchemaType(const USchemaDatabase* SchemaDatabase, ESchem
 			if (GeneratedActorClass.Value.SchemaComponents[SchemaType] != 0)
 			{
 				Writer.Printf("optional unreal.generated.{0}.{1}{2} cpts_x{3} = {4};", ActorClassName.ToLower(), ActorClassName, SchemaTypeString,nIndex,nIndex);
-				nIndex++;
+				//nIndex++;
+				check_pbindex(nIndex);
 			}
 			// Actor static subobjects.
 			for (const auto& ActorSubObjectData : GeneratedActorClass.Value.SubobjectData)
@@ -826,7 +844,8 @@ void WriteComponentSetBySchemaType(const USchemaDatabase* SchemaDatabase, ESchem
 				{
 					Writer.Printf("optional unreal.generated.{0}.subobjects.{1}{2} cpts_x{3} = {4};", ActorClassName.ToLower(), ActorSubObjectName,
 								  SchemaTypeString,nIndex,nIndex);
-					nIndex++;
+					//nIndex++;
+					check_pbindex(nIndex);
 				}
 			}
 		}
@@ -841,8 +860,10 @@ void WriteComponentSetBySchemaType(const USchemaDatabase* SchemaDatabase, ESchem
 					GeneratedSubObjectClass.Value.DynamicSubobjectComponents[SubObjectNumber];
 				if (SubObjectSchemaData.SchemaComponents[SchemaType] != 0)
 				{
+		 
 					Writer.Printf("optional unreal.generated.{0}{1}Dynamic{2} cpts_x{3} = {4};", SubObjectClassName, SchemaTypeString, SubObjectNumber + 1,nIndex,nIndex);
-					nIndex++;
+					//nIndex++;
+					check_pbindex(nIndex);
 				}
 			}
 		}

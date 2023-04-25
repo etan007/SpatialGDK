@@ -1,4 +1,4 @@
-# Introduction
+﻿# Introduction
 [Clang-format](https://clang.llvm.org/docs/ClangFormat.html) is a tool to automatically format C/C++/Objective-C code.
 
 The GDK has a clang-format config file defined in `SpatialGDK/Source/.clang-format` which we run on all `.h/.cpp` files in the `SpatialGDK/Source` folder.
