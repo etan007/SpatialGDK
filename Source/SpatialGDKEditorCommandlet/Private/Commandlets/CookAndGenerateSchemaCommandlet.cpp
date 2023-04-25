@@ -93,13 +93,13 @@ int32 UCookAndGenerateSchemaCommandlet::Main(const FString& CmdLineParams)
 
 	UE_LOG(LogCookAndGenerateSchemaCommandlet, Display, TEXT("Starting Cook Command."));
 
-	/*const FString AdditionalCookParam(TEXT(" -cookloadonly"));
+	const FString AdditionalCookParam(TEXT(" -cookloadonly "));
 	FString NewCmdLine = CmdLineParams;
 	NewCmdLine.Append(AdditionalCookParam);
 	FCommandLine::Append(*AdditionalCookParam);
 
-	int32 CookResult = Super::Main(NewCmdLine);*/
-	int32 CookResult = 0;
+	int32 CookResult = Super::Main(NewCmdLine);
+	//int32 CookResult = 0;
 	UE_LOG(LogCookAndGenerateSchemaCommandlet, Display, TEXT("Cook Command Completed."));
 
 	UE_LOG(LogCookAndGenerateSchemaCommandlet, Display, TEXT("Discovered %d Classes during cook."), ReferencedClasses.Num());
