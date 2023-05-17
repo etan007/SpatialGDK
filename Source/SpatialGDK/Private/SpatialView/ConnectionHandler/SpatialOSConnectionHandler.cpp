@@ -11,6 +11,8 @@
 #include <improbable/c_trace.h>
 #include <improbable/c_worker.h>
 
+DEFINE_LOG_CATEGORY(LogSpatialOSConnectionHandler);
+
 namespace SpatialGDK
 {
 SpatialOSConnectionHandler::SpatialOSConnectionHandler(Worker_Connection* Connection, TSharedPtr<SpatialEventTracer> EventTracer)
@@ -36,6 +38,7 @@ OpList SpatialOSConnectionHandler::GetNextOpList()
 	{
 		Worker_Op& Op = Ops.Ops[i];
 		Worker_RequestId* Id;
+		Worker_ComponentId cid = 0;
 		switch (static_cast<Worker_OpType>(Op.op_type))
 		{
 		case WORKER_OP_TYPE_RESERVE_ENTITY_IDS_RESPONSE:
@@ -52,6 +55,7 @@ OpList SpatialOSConnectionHandler::GetNextOpList()
 			break;
 		case WORKER_OP_TYPE_COMMAND_RESPONSE:
 			Id = &Op.op.command_response.request_id;
+			cid = Op.op.command_response.response.component_id;
 			break;
 		default:
 			Id = nullptr;
@@ -60,6 +64,9 @@ OpList SpatialOSConnectionHandler::GetNextOpList()
 
 		if (Id != nullptr)
 		{
+			UE_LOG(LogSpatialOSConnectionHandler, Log, TEXT("GetNextOpList work_id=%s,WorkerSystemEntityId=%lld,Id=%lld,worker_optype=%d cid=%d"),
+				*GetWorkerId(), GetWorkerSystemEntityId(), *Id, Op.op_type,cid);
+
 			*Id = InternalToUserRequestId.FindAndRemoveChecked(*Id);
 		}
 	}
@@ -104,6 +111,9 @@ void SpatialOSConnectionHandler::SendMessages(TUniquePtr<MessagesToSend> Message
 		const uint32* Timeout = Request.TimeoutMillis.IsSet() ? &Request.TimeoutMillis.GetValue() : nullptr;
 		const Worker_RequestId Id = Worker_Connection_SendReserveEntityIdsRequest(Connection.Get(), Request.NumberOfEntityIds, Timeout);
 		InternalToUserRequestId.Emplace(Id, Request.RequestId);
+
+		UE_LOG(LogSpatialOSConnectionHandler, Log, TEXT("aaa Worker_Connection_SendReserveEntityIdsRequest work_id=%s,WorkerSystemEntityId=%lld,Id=%lld,RequestId=%lld "),
+				*GetWorkerId(), GetWorkerSystemEntityId(), Id, Request.RequestId);
 	}
 
 	for (auto& Request : Messages->CreateEntityRequests)
@@ -122,6 +132,9 @@ void SpatialOSConnectionHandler::SendMessages(TUniquePtr<MessagesToSend> Message
 		const Worker_RequestId Id =
 			Worker_Connection_SendCreateEntityRequest(Connection.Get(), Components.Num(), Components.GetData(), EntityId, Timeout);
 		InternalToUserRequestId.Emplace(Id, Request.RequestId);
+
+		UE_LOG(LogSpatialOSConnectionHandler, Log, TEXT("aaa Worker_Connection_SendCreateEntityRequest EntityId=%lld,work_id=%s,WorkerSystemEntityId=%lld,Id=%lld,RequestId=%lld "),
+				EntityId?*EntityId:0,*GetWorkerId(), GetWorkerSystemEntityId(), Id, Request.RequestId);
 	}
 
 	for (auto& Request : Messages->DeleteEntityRequests)
@@ -130,6 +143,9 @@ void SpatialOSConnectionHandler::SendMessages(TUniquePtr<MessagesToSend> Message
 		const uint32* Timeout = Request.TimeoutMillis.IsSet() ? &Request.TimeoutMillis.GetValue() : nullptr;
 		const Worker_RequestId Id = Worker_Connection_SendDeleteEntityRequest(Connection.Get(), Request.EntityId, Timeout);
 		InternalToUserRequestId.Emplace(Id, Request.RequestId);
+
+		UE_LOG(LogSpatialOSConnectionHandler, Log, TEXT("aaa Worker_Connection_SendDeleteEntityRequest work_id=%s,WorkerSystemEntityId=%lld,Id=%lld,RequestId=%lld "),
+				*GetWorkerId(), GetWorkerSystemEntityId(), Id, Request.RequestId);
 	}
 
 	for (auto& Request : Messages->EntityQueryRequests)
@@ -138,6 +154,9 @@ void SpatialOSConnectionHandler::SendMessages(TUniquePtr<MessagesToSend> Message
 		Worker_EntityQuery Query = Request.Query.GetWorkerQuery();
 		const Worker_RequestId Id = Worker_Connection_SendEntityQueryRequest(Connection.Get(), &Query, Timeout);
 		InternalToUserRequestId.Emplace(Id, Request.RequestId);
+		
+		UE_LOG(LogSpatialOSConnectionHandler, Log, TEXT("aaa Worker_Connection_SendEntityQueryRequest work_id=%s,WorkerSystemEntityId=%lld,Id=%lld,RequestId=%lld "),
+				*GetWorkerId(), GetWorkerSystemEntityId(), Id, Request.RequestId);
 	}
 
 	for (auto& Request : Messages->EntityCommandRequests)
@@ -148,6 +167,8 @@ void SpatialOSConnectionHandler::SendMessages(TUniquePtr<MessagesToSend> Message
 									MoveTemp(Request.Request).Release(), nullptr };
 		const Worker_RequestId Id = Worker_Connection_SendCommandRequest(Connection.Get(), Request.EntityId, &r, Timeout, &CommandParams);
 		InternalToUserRequestId.Emplace(Id, Request.RequestId);
+		UE_LOG(LogSpatialOSConnectionHandler, Log, TEXT("aaa Worker_Connection_SendCommandRequest work_id=%s,WorkerSystemEntityId=%lld,Id=%lld,RequestId=%lld "),
+				*GetWorkerId(), GetWorkerSystemEntityId(), Id, Request.RequestId);
 	}
 
 	for (auto& Response : Messages->EntityCommandResponses)
@@ -156,6 +177,10 @@ void SpatialOSConnectionHandler::SendMessages(TUniquePtr<MessagesToSend> Message
 		Worker_CommandResponse r = { nullptr, Response.Response.GetComponentId(), Response.Response.GetCommandIndex(),
 									 MoveTemp(Response.Response).Release(), nullptr };
 		Worker_Connection_SendCommandResponse(Connection.Get(), Response.RequestId, &r);
+		
+		UE_LOG(LogSpatialOSConnectionHandler, Log, TEXT("Worker_Connection_SendCommandResponse work_id=%s,WorkerSystemEntityId=%lld,RequestId=%lld "),
+				*GetWorkerId(), GetWorkerSystemEntityId(), Response.RequestId);
+		
 	}
 
 	for (auto& Failure : Messages->EntityCommandFailures)

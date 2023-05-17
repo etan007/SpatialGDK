@@ -1,7 +1,8 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 
 #include "SpatialView/ReceivedOpEventHandler.h"
-
+#include "SpatialGDK/Public/EngineClasses/SpatialNetDriver.h"
+#include "Interop/Connection/SpatialWorkerConnection.h"
 DECLARE_LOG_CATEGORY_EXTERN(LogReceivedOpEvent, Log, All);
 DEFINE_LOG_CATEGORY(LogReceivedOpEvent);
 namespace SpatialGDK
@@ -16,15 +17,19 @@ void FReceivedOpEventHandler::ProcessOpLists(const OpList& Ops)
 	for (uint32 i = 0; i < Ops.Count; ++i)
 	{
 		Worker_Op& Op = Ops.Ops[i];
-
+		Worker_EntityId work_system_id = 0;
+		USpatialNetDriver* SpatialNetDriver = Cast<USpatialNetDriver>(GWorld->GetWorld()->GetNetDriver());
+		if(SpatialNetDriver)
+			work_system_id = SpatialNetDriver->Connection->GetWorkerSystemEntityId();
 		switch (static_cast<Worker_OpType>(Op.op_type))
 		{
 		case WORKER_OP_TYPE_ADD_ENTITY:
 			//if(!GWorld->GetWorld()->IsServer())
 			{
 				int a = 1;
-				UE_LOG(LogReceivedOpEvent, Log, TEXT("%s,AddEntity EntityId %lld"),GWorld->GetWorld()->IsServer()?TEXT("Server"):TEXT("Client"),
-				  Op.op.add_component.entity_id);
+				UE_LOG(LogReceivedOpEvent, Log, TEXT("work_system_id %lld,%s,AddEntity EntityId %lld"),
+						   work_system_id, GWorld->GetWorld()->IsServer()?TEXT("Server"):TEXT("Client"),
+						   Op.op.add_component.entity_id);
 			}
 			//EventTracer->AddEntity(Op.op.add_entity, FSpatialGDKSpanId(Op.span_id));
 			break;
@@ -35,8 +40,10 @@ void FReceivedOpEventHandler::ProcessOpLists(const OpList& Ops)
 			//if(!GWorld->GetWorld()->IsServer())
 			{
 				int a = 1;
-				UE_LOG(LogReceivedOpEvent, Log, TEXT("%s,AddComponent EntityId %lld, add_component: %d"),GWorld->GetWorld()->IsServer()?TEXT("Server"):TEXT("Client"),
-					  Op.op.add_component.entity_id, Op.op.add_component.data.component_id);
+				UE_LOG(LogReceivedOpEvent, Log,
+						   TEXT("work_system_id %lld, %s,AddComponent EntityId %lld, add_component: %d"),
+						   work_system_id, GWorld->GetWorld()->IsServer()?TEXT("Server"):TEXT("Client"),
+						   Op.op.add_component.entity_id, Op.op.add_component.data.component_id);
 			}
 			//EventTracer->AddComponent(Op.op.add_component, FSpatialGDKSpanId(Op.span_id));
 			break;
@@ -60,8 +67,13 @@ void FReceivedOpEventHandler::ProcessOpLists(const OpList& Ops)
 					str_cids += wstr.c_str();
 					//str_cids += UTF8_TO_TCHAR(str.c_str());
 				}
-				UE_LOG(LogReceivedOpEvent, Log, TEXT("%s,SET_AUTHORITY_CHANGE EntityId %lld, component_set_id: %d,authority:%d,cids:%s"),GWorld->GetWorld()->IsServer()?TEXT("Server"):TEXT("Client"),
-					  Op.op.component_set_authority_change.entity_id,Op.op.component_set_authority_change.component_set_id, Op.op.component_set_authority_change.authority,*str_cids);
+				UE_LOG(LogReceivedOpEvent, Log,
+						   TEXT(
+							   "work_system_id %lld,%s,SET_AUTHORITY_CHANGE EntityId %lld, component_set_id: %d,authority:%d,cids:%s"
+						   ), work_system_id, GWorld->GetWorld()->IsServer()?TEXT("Server"):TEXT("Client"),
+						   Op.op.component_set_authority_change.entity_id,
+						   Op.op.component_set_authority_change.component_set_id,
+						   Op.op.component_set_authority_change.authority, *str_cids);
 
 			}
 			//EventTracer->AuthorityChange(Op.op.component_set_authority_change, FSpatialGDKSpanId(Op.span_id));
