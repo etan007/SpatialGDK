@@ -34,6 +34,12 @@ void FReceivedOpEventHandler::ProcessOpLists(const OpList& Ops)
 			//EventTracer->AddEntity(Op.op.add_entity, FSpatialGDKSpanId(Op.span_id));
 			break;
 		case WORKER_OP_TYPE_REMOVE_ENTITY:
+			{
+				int a = 1;
+				UE_LOG(LogReceivedOpEvent, Log, TEXT("work_system_id %lld,%s,RemoveEntity EntityId %lld"),
+					   work_system_id, GWorld->GetWorld()->IsServer()?TEXT("Server"):TEXT("Client"),
+					   Op.op.remove_entity.entity_id);
+			}
 			//EventTracer->RemoveEntity(Op.op.remove_entity, FSpatialGDKSpanId(Op.span_id));
 			break;
 		case WORKER_OP_TYPE_ADD_COMPONENT:
@@ -48,6 +54,11 @@ void FReceivedOpEventHandler::ProcessOpLists(const OpList& Ops)
 			//EventTracer->AddComponent(Op.op.add_component, FSpatialGDKSpanId(Op.span_id));
 			break;
 		case WORKER_OP_TYPE_REMOVE_COMPONENT:
+			{
+				UE_LOG(LogReceivedOpEvent, Log, TEXT("work_system_id %lld,%s,RemoveComponent EntityId %lld cid %d" ),
+						   work_system_id, GWorld->GetWorld()->IsServer()?TEXT("Server"):TEXT("Client"),
+						   Op.op.remove_component.entity_id,Op.op.remove_component.component_id);
+			}
 			//EventTracer->RemoveComponent(Op.op.remove_component, FSpatialGDKSpanId(Op.span_id));
 			break;
 		case WORKER_OP_TYPE_COMPONENT_SET_AUTHORITY_CHANGE:
@@ -82,10 +93,10 @@ void FReceivedOpEventHandler::ProcessOpLists(const OpList& Ops)
 			{
 				auto cid = Op.op.component_update.update.component_id;
 				//if(Op.op.component_update.entity_id >= 18 && Op.op.component_update.entity_id <= 18)
+				if(cid!=9977 && cid!=9978 && cid<10000)
 				{
 					//if(Op.op.component_update.update.component_id == 9977 || Op.op.component_update.update.component_id == 9978)
-					if(Op.op.component_update.update.component_id == 25314 || Op.op.component_update.update.component_id == 25315)
-					UE_LOG(LogReceivedOpEvent, Log, TEXT("%s,component_update EntityId %lld, component: %d"),GWorld->GetWorld()->IsServer()?TEXT("Server"):TEXT("Client"),
+					UE_LOG(LogReceivedOpEvent, Log, TEXT("work_system_id %lld,%s,component_update EntityId %lld, component: %d"),work_system_id,GWorld->GetWorld()->IsServer()?TEXT("Server"):TEXT("Client"),
 					  Op.op.component_update.entity_id, Op.op.component_update.update.component_id);
 
 				}

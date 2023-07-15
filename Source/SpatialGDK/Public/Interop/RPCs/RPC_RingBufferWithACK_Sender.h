@@ -4,7 +4,8 @@
 
 #include "EngineClasses/SpatialNetDriverRPC.h"
 #include "Interop/RPCs/RPCTypes.h"
-
+#include "EngineClasses/SpatialNetDriver.h"
+#include "Interop/Connection/SpatialWorkerConnection.h"
 namespace SpatialGDK
 {
 template <typename Payload, typename SerializerType>
@@ -33,7 +34,14 @@ public:
 			TOptional<uint64> NewACKCount = Serializer.ReadACKCount(Ctx);
 			if (NewACKCount)
 			{
+				uint64 LastACK_old = State.LastACK;
 				State.LastACK = NewACKCount.GetValue();
+
+				Worker_EntityId work_system_id = 0;
+				USpatialNetDriver* SpatialNetDriver = Cast<USpatialNetDriver>(GWorld->GetWorld()->GetNetDriver());
+				if(SpatialNetDriver)
+					work_system_id = SpatialNetDriver->Connection->GetWorkerSystemEntityId();
+				//UE_LOG(LogTemp,Warning,TEXT("%s,work_system_id=%lld,MonotonicRingBufferWithACKSender OnUpdate cid=%d,EntityId=%lld, ACKCount=%lld,LastACK_old=%lld"), GWorld->GetWorld()->IsServer()?TEXT("Server"):TEXT("Client"),work_system_id,Serializer.GetACKComponentId(),Ctx.EntityId, State.LastACK,LastACK_old);
 			}
 		}
 	}
@@ -55,6 +63,13 @@ public:
 		BufferStateData& State = BufferState.FindOrAdd(Ctx.EntityId);
 		TOptional<uint64> RPCCount = Serializer.ReadRPCCount(Ctx);
 		State.CountWritten = RPCCount.Get(/*DefaultValue*/ 0);
+		/*
+		Worker_EntityId work_system_id = 0;
+		USpatialNetDriver* SpatialNetDriver = Cast<USpatialNetDriver>(GWorld->GetWorld()->GetNetDriver());
+		if(SpatialNetDriver)
+			work_system_id = SpatialNetDriver->Connection->GetWorkerSystemEntityId();
+
+		UE_LOG(LogTemp,Warning,TEXT("%s,work_system_id=%lld, MonotonicRingBufferWithACKSender OnAuthGained_ReadACKComponent cid=%d, EntityId=%lld, CountWritten=%lld"), GWorld->GetWorld()->IsServer()?TEXT("Server"):TEXT("Client"),work_system_id,Serializer.GetComponentId(),Ctx.EntityId, State.CountWritten);*/
 	}
 
 	void OnAuthGained_ReadACKComponent(const RPCReadingContext& Ctx)
@@ -62,6 +77,11 @@ public:
 		BufferStateData& State = BufferState.FindOrAdd(Ctx.EntityId);
 		TOptional<uint64> ACKCount = Serializer.ReadACKCount(Ctx);
 		State.LastACK = ACKCount.Get(/*DefaultValue*/ 0);
+		/*Worker_EntityId work_system_id = 0;
+		USpatialNetDriver* SpatialNetDriver = Cast<USpatialNetDriver>(GWorld->GetWorld()->GetNetDriver());
+		if(SpatialNetDriver)
+			work_system_id = SpatialNetDriver->Connection->GetWorkerSystemEntityId();
+		UE_LOG(LogTemp,Warning,TEXT("%s,work_system_id=%lld,MonotonicRingBufferWithACKSender OnAuthGained_ReadACKComponent cid=%d,EntityId=%lld, ACKCount=%lld"), GWorld->GetWorld()->IsServer()?TEXT("Server"):TEXT("Client"),work_system_id,Serializer.GetComponentId(),Ctx.EntityId, State.LastACK);*/
 	}
 
 	virtual void OnAuthLost(Worker_EntityId Entity) override { BufferState.Remove(Entity); }
@@ -72,7 +92,14 @@ public:
 
 		BufferStateData& NextSlot = BufferState.FindOrAdd(EntityId);
 		int32 AvailableSlots = FMath::Max(0, int32(NumberOfSlots) - int32(NextSlot.CountWritten - NextSlot.LastACK));
-
+		if(AvailableSlots == 0)
+		{
+			Worker_EntityId work_system_id = 0;
+			USpatialNetDriver* SpatialNetDriver = Cast<USpatialNetDriver>(GWorld->GetWorld()->GetNetDriver());
+			if(SpatialNetDriver)
+				work_system_id = SpatialNetDriver->Connection->GetWorkerSystemEntityId();
+			UE_LOG(LogTemp, Warning, TEXT("%s,work_system_id=%lld,MonotonicRingBufferWithACKSender cid=%d,EntityId=%lld, AvailableSlots=%d, CountWritten=%lld, LastACK=%lld"),GWorld->GetWorld()->IsServer()?TEXT("Server"):TEXT("Client"),work_system_id, Serializer.GetComponentId(),EntityId, AvailableSlots, NextSlot.CountWritten, NextSlot.LastACK);
+		}
 		int32 RPCsToWrite = FMath::Min(RPCs.Num(), AvailableSlots);
 		if (RPCsToWrite > 0)
 		{
@@ -84,9 +111,19 @@ public:
 				uint64 Slot = (RPCId - 1) % NumberOfSlots;
 				Serializer.WriteRPC(EntityWrite, Slot, RPCs[i]);
 				WrittenCallback(Serializer.GetComponentId(), RPCId);
+
+
+				{
+					Worker_EntityId work_system_id = 0;
+					USpatialNetDriver* SpatialNetDriver = Cast<USpatialNetDriver>(GWorld->GetWorld()->GetNetDriver());
+					if(SpatialNetDriver)
+						work_system_id = SpatialNetDriver->Connection->GetWorkerSystemEntityId();
+					//UE_LOG(LogTemp, Warning, TEXT("%s,work_system_id=%lld,MonotonicRingBufferWithACKSender cid=%d,EntityId=%lld, AvailableSlots=%d, CountWritten=%lld, LastACK=%lld"),GWorld->GetWorld()->IsServer()?TEXT("Server"):TEXT("Client"),work_system_id,Serializer.GetComponentId(), EntityId, AvailableSlots, NextSlot.CountWritten, NextSlot.LastACK);
+				}
 			}
 			Serializer.WriteRPCCount(EntityWrite, NextSlot.CountWritten);
 		}
+
 
 		return RPCsToWrite;
 	}

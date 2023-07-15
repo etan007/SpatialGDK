@@ -60,6 +60,7 @@ void USpatialReceiver::OnDisconnect(uint8 StatusCode, const FString& Reason)
 {
 	if (GEngine != nullptr)
 	{
-		GEngine->BroadcastNetworkFailure(NetDriver->GetWorld(), NetDriver, ENetworkFailure::FromDisconnectOpStatusCode(StatusCode), Reason);
+		// sky temp comment
+		//GEngine->BroadcastNetworkFailure(NetDriver->GetWorld(), NetDriver, ENetworkFailure::FromDisconnectOpStatusCode(StatusCode), Reason);
 	}
 }

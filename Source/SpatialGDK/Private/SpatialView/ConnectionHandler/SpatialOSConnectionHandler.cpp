@@ -154,7 +154,7 @@ void SpatialOSConnectionHandler::SendMessages(TUniquePtr<MessagesToSend> Message
 		Worker_EntityQuery Query = Request.Query.GetWorkerQuery();
 		const Worker_RequestId Id = Worker_Connection_SendEntityQueryRequest(Connection.Get(), &Query, Timeout);
 		InternalToUserRequestId.Emplace(Id, Request.RequestId);
-		
+
 		UE_LOG(LogSpatialOSConnectionHandler, Log, TEXT("aaa Worker_Connection_SendEntityQueryRequest work_id=%s,WorkerSystemEntityId=%lld,Id=%lld,RequestId=%lld "),
 				*GetWorkerId(), GetWorkerSystemEntityId(), Id, Request.RequestId);
 	}
@@ -167,8 +167,8 @@ void SpatialOSConnectionHandler::SendMessages(TUniquePtr<MessagesToSend> Message
 									MoveTemp(Request.Request).Release(), nullptr };
 		const Worker_RequestId Id = Worker_Connection_SendCommandRequest(Connection.Get(), Request.EntityId, &r, Timeout, &CommandParams);
 		InternalToUserRequestId.Emplace(Id, Request.RequestId);
-		UE_LOG(LogSpatialOSConnectionHandler, Log, TEXT("aaa Worker_Connection_SendCommandRequest work_id=%s,WorkerSystemEntityId=%lld,Id=%lld,RequestId=%lld "),
-				*GetWorkerId(), GetWorkerSystemEntityId(), Id, Request.RequestId);
+		UE_LOG(LogSpatialOSConnectionHandler, Log, TEXT("aaa Worker_Connection_SendCommandRequest work_id=%s,WorkerSystemEntityId=%lld,Id=%lld,RequestId=%lld,ComponentId=%d,CommandIndex=%d "),
+				*GetWorkerId(), GetWorkerSystemEntityId(), Id, Request.RequestId, Request.Request.GetComponentId(), Request.Request.GetCommandIndex());
 	}
 
 	for (auto& Response : Messages->EntityCommandResponses)
@@ -177,10 +177,10 @@ void SpatialOSConnectionHandler::SendMessages(TUniquePtr<MessagesToSend> Message
 		Worker_CommandResponse r = { nullptr, Response.Response.GetComponentId(), Response.Response.GetCommandIndex(),
 									 MoveTemp(Response.Response).Release(), nullptr };
 		Worker_Connection_SendCommandResponse(Connection.Get(), Response.RequestId, &r);
-		
-		UE_LOG(LogSpatialOSConnectionHandler, Log, TEXT("Worker_Connection_SendCommandResponse work_id=%s,WorkerSystemEntityId=%lld,RequestId=%lld "),
-				*GetWorkerId(), GetWorkerSystemEntityId(), Response.RequestId);
-		
+
+		UE_LOG(LogSpatialOSConnectionHandler, Log, TEXT("Worker_Connection_SendCommandResponse work_id=%s,WorkerSystemEntityId=%lld,RequestId=%lld,ComponentId=%d,CommandIndex=%d "),
+				*GetWorkerId(), GetWorkerSystemEntityId(), Response.RequestId,Response.Response.GetComponentId(), Response.Response.GetCommandIndex());
+
 	}
 
 	for (auto& Failure : Messages->EntityCommandFailures)

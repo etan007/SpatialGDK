@@ -180,7 +180,6 @@ void USpatialNetDriverGameplayDebuggerContext::AdvanceView()
 void USpatialNetDriverGameplayDebuggerContext::TickServer()
 {
 	// TODO:SKYCELL
-	/*
 	check(NetDriver && NetDriver->Connection && NetDriver->Sender && NetDriver->PackageMap);
 
 	for (const auto& EntityAdded : ComponentsAdded)
@@ -261,7 +260,7 @@ void USpatialNetDriverGameplayDebuggerContext::TickServer()
 			}
 		}
 	}
-	ComponentsUpdated.Reset();*/
+	ComponentsUpdated.Reset();
 }
 
 void USpatialNetDriverGameplayDebuggerContext::TrackEntity(Worker_EntityId InEntityId)
@@ -372,7 +371,6 @@ void USpatialNetDriverGameplayDebuggerContext::RegisterServerRequestCallback(AGa
 																			 FEntityData& InEntityData)
 {
 	// TODO:SKYCELL
-	/*
 	if (!InEntityData.ServerTrackingRequestHandle.IsValid())
 	{
 		InEntityData.ServerTrackingRequestHandle =
@@ -381,19 +379,18 @@ void USpatialNetDriverGameplayDebuggerContext::RegisterServerRequestCallback(AGa
 	else
 	{
 		UE_LOG(LogSpatialNetDriverGameplayDebuggerContext, Error, TEXT("Trying to bind change notification more than once"));
-	}*/
+	}
 }
 
 void USpatialNetDriverGameplayDebuggerContext::UnregisterServerRequestCallback(AGameplayDebuggerCategoryReplicator& InReplicator,
 																			   FEntityData& InEntityData)
 {
 	// TODO:SKYCELL
-	/*
 	if (InEntityData.ServerTrackingRequestHandle.IsValid())
 	{
 		InReplicator.OnServerTrackingRequest().Remove(InEntityData.ServerTrackingRequestHandle);
 		InEntityData.ServerTrackingRequestHandle.Reset();
-	}*/
+	}
 }
 
 void USpatialNetDriverGameplayDebuggerContext::OnServerTrackingRequest(AGameplayDebuggerCategoryReplicator* InCategoryReplicator,
@@ -401,7 +398,6 @@ void USpatialNetDriverGameplayDebuggerContext::OnServerTrackingRequest(AGameplay
 																	   FString InOptionalServerWorkerId)
 {
 	// TODO:SKYCELL
-	/*
 	check(NetDriver && NetDriver->PackageMap);
 
 	if (InCategoryReplicator == nullptr)
@@ -481,14 +477,13 @@ void USpatialNetDriverGameplayDebuggerContext::OnServerTrackingRequest(AGameplay
 	if (bShouldUpdateComponent)
 	{
 		ComponentsUpdated.Add(EntityId);
-	}*/
+	}
 }
 
 void USpatialNetDriverGameplayDebuggerContext::RegisterDebugActorChangedCallback(AGameplayDebuggerCategoryReplicator& InReplicator,
 																				 FEntityData& InEntityData)
 {
 	// TODO:SKYCELL
-	/*
 	if (!InEntityData.DebugActorChangedHandle.IsValid())
 	{
 		InEntityData.DebugActorChangedHandle =
@@ -497,19 +492,19 @@ void USpatialNetDriverGameplayDebuggerContext::RegisterDebugActorChangedCallback
 	else
 	{
 		UE_LOG(LogSpatialNetDriverGameplayDebuggerContext, Error, TEXT("Trying to bind change notification more than once"));
-	}*/
+	}
 }
 
 void USpatialNetDriverGameplayDebuggerContext::UnregisterDebugActorChangedCallback(AGameplayDebuggerCategoryReplicator& InReplicator,
 																				   FEntityData& InEntityData)
 {
 	// TODO:SKYCELL
-	/*
+
 	if (InEntityData.DebugActorChangedHandle.IsValid())
 	{
 		InReplicator.OnDebugActorChanged().Remove(InEntityData.DebugActorChangedHandle);
 		InEntityData.DebugActorChangedHandle.Reset();
-	}*/
+	}
 }
 
 VirtualWorkerId USpatialNetDriverGameplayDebuggerContext::GetActorVirtualWorkerId(const AActor& InActor) const
@@ -547,7 +542,6 @@ void USpatialNetDriverGameplayDebuggerContext::RegisterPlayerControllerAuthority
 	AGameplayDebuggerCategoryReplicator& InReplicator, FEntityData& InEntityData)
 {
 	// TODO:SKYCELL
-	/*
 	if (!InEntityData.PlayerControllerAuthorityChangeHandle.IsValid())
 	{
 		if (APlayerController* PlayerControllerActor = Cast<APlayerController>(InReplicator.GetReplicationOwner()))
@@ -559,14 +553,14 @@ void USpatialNetDriverGameplayDebuggerContext::RegisterPlayerControllerAuthority
 	else
 	{
 		UE_LOG(LogSpatialNetDriverGameplayDebuggerContext, Error, TEXT("Trying to bind change notification more than once"));
-	}*/
+	}
 }
 
 void USpatialNetDriverGameplayDebuggerContext::UnregisterPlayerControllerAuthorityLostCallback(
 	AGameplayDebuggerCategoryReplicator& InReplicator, FEntityData& InEntityData)
 {
 	// TODO:SKYCELL
-	/*
+
 	check(NetDriver && NetDriver->PackageMap);
 
 	if (InEntityData.PlayerControllerAuthorityChangeHandle.IsValid())
@@ -576,7 +570,7 @@ void USpatialNetDriverGameplayDebuggerContext::UnregisterPlayerControllerAuthori
 			PlayerController->OnAuthorityLostDelegate().Remove(InEntityData.PlayerControllerAuthorityChangeHandle);
 			InEntityData.PlayerControllerAuthorityChangeHandle.Reset();
 		}
-	}*/
+	}
 }
 
 void USpatialNetDriverGameplayDebuggerContext::OnDebugActorChanged(AGameplayDebuggerCategoryReplicator* InCategoryReplicator,
@@ -603,7 +597,7 @@ void USpatialNetDriverGameplayDebuggerContext::OnDebugActorChanged(AGameplayDebu
 void USpatialNetDriverGameplayDebuggerContext::OnPlayerControllerAuthorityLost(const APlayerController& InPlayerController)
 {
 	// TODO:SKYCELL
-	/*
+
 	check(NetDriver && NetDriver->PackageMap);
 
 	Worker_EntityId_Key* EntityId = nullptr;
@@ -654,7 +648,7 @@ void USpatialNetDriverGameplayDebuggerContext::OnPlayerControllerAuthorityLost(c
 		EntityData->CurrentWorkerId = *PhysicalAuthorativeWorkerName;
 		EntityData->ReplicatorWeakObjectPtr->SetCurrentServer(*PhysicalAuthorativeWorkerName);
 		ComponentsUpdated.Add(*EntityId);
-	}*/
+	}
 }
 
 #endif // WITH_GAMEPLAY_DEBUGGER

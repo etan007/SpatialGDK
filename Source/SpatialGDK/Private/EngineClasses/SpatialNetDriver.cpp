@@ -2072,10 +2072,9 @@ void USpatialNetDriver::ProcessRPC(AActor* Actor, UObject* SubObject, UFunction*
 // In our implementation, connections on the server do not represent clients. They represent direct connections to SpatialOS.
 // For this reason, things like ready checks, acks, throttling based on number of updated connections, interest management are irrelevant at
 // this level.
-// SpatialGDK：这是UNetDriver：：ServerReplicateActors的修改和简化版本。
-// 在我们的实现中，服务器上的连接并不代表客户端。它们表示与SpatialOS的直接连接。
-// 出于这个原因，诸如就绪检查、ACK、基于更新连接数的限制、兴趣管理等都在
-// 此级别。
+// SpatialGDK：这是UNetDriver::ServerReplicateActors的修改和简化版本。
+// 在我们的实现中，服务器上的连接不代表客户端。它们代表与SpatialOS的直接连接。
+// 因此，在这个级别上，像准备检查、确认、基于更新连接数的限速、兴趣管理等等都是不相关的
 int32 USpatialNetDriver::ServerReplicateActors(float DeltaSeconds)
 {
 	SCOPE_CYCLE_COUNTER(STAT_SpatialServerReplicateActors);
@@ -2085,8 +2084,8 @@ int32 USpatialNetDriver::ServerReplicateActors(float DeltaSeconds)
 #if WITH_SERVER_CODE
 	// Only process the stand-in client connection, which is the connection to the runtime itself.
 	// It will be responsible for replicating all actors, regardless of whether they're owned by a client.
-	// 仅处理代理客户端连接，即与运行时本身的连接。
-	// 它将负责复制所有参与者，无论他们是否属于客户端。
+	// 仅处理代表运行时本身的代理客户端连接。
+	// 它将负责复制所有角色，无论这些角色是否由客户端拥有。
 	USpatialNetConnection* SpatialConnection = GetSpatialOSNetConnection();
 	if (SpatialConnection == nullptr)
 	{

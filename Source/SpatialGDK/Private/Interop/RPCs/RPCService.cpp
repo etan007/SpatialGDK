@@ -1,7 +1,8 @@
 // Copyright (c) Improbable Worlds Ltd, All Rights Reserved
 
 #include "Interop/RPCs/RPCService.h"
-
+#include "EngineClasses/SpatialNetDriver.h"
+#include "Interop/Connection/SpatialWorkerConnection.h"
 namespace SpatialGDK
 {
 RPCService::RPCService(const FSubView& InRemoteSubView, const FSubView& InLocalAuthSubView)
@@ -88,6 +89,14 @@ void RPCService::AdvanceSenderQueues()
 			{
 				QueueEntry.Value.Queue->OnAuthLost(Delta.EntityId);
 				QueueEntry.Value.Sender->OnAuthLost(Delta.EntityId);
+				Worker_EntityId work_system_id = 0;
+				USpatialNetDriver* SpatialNetDriver = Cast<USpatialNetDriver>(GWorld->GetWorld()->GetNetDriver());
+				if(SpatialNetDriver)
+					work_system_id = SpatialNetDriver->Connection->GetWorkerSystemEntityId();
+
+				UE_LOG(LogTemp,Warning,TEXT("%s,work_system_id=%lld, AdvanceSenderQueues EntityDelta::REMOVE  EntityId=%lld"), GWorld->GetWorld()->IsServer()?TEXT("Server"):TEXT("Client"),work_system_id,Delta.EntityId);
+
+
 			}
 			break;
 		case EntityDelta::TEMPORARILY_REMOVED:
@@ -95,6 +104,13 @@ void RPCService::AdvanceSenderQueues()
 			const EntityViewElement& ViewElement = LocalAuthSubView->GetView().FindChecked(Delta.EntityId);
 			for (auto& QueueEntry : Queues)
 			{
+				Worker_EntityId work_system_id = 0;
+				USpatialNetDriver* SpatialNetDriver = Cast<USpatialNetDriver>(GWorld->GetWorld()->GetNetDriver());
+				if(SpatialNetDriver)
+					work_system_id = SpatialNetDriver->Connection->GetWorkerSystemEntityId();
+
+				UE_LOG(LogTemp,Warning,TEXT("%s,work_system_id=%lld, AdvanceSenderQueues EntityDelta::TEMPORARILY_REMOVED  EntityId=%lld"), GWorld->GetWorld()->IsServer()?TEXT("Server"):TEXT("Client"),work_system_id,Delta.EntityId);
+
 				QueueEntry.Value.Queue->OnAuthLost(Delta.EntityId);
 				QueueEntry.Value.Sender->OnAuthLost(Delta.EntityId);
 				if (ensure(ViewElement.Authority.Contains(QueueEntry.Value.Authority)))
