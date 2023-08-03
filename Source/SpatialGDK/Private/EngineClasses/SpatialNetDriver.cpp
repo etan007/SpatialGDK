@@ -312,7 +312,7 @@ void USpatialNetDriver::InitiateConnectionToSpatialOS(const FURL& URL)
 	// If arguments can not be found we will use the regular flow of loading from the input URL.
 	// 如果这是第一次连接，请尝试使用命令行参数设置配置对象。
 	// 如果找不到参数，我们将使用从输入URL加载的常规流程。
-	
+
 	FString SpatialWorkerType = GameInstance->GetSpatialWorkerType().ToString();
 
 	// Ensures that any connections attempting to using command line arguments have a valid locater host in the command line.
@@ -772,7 +772,7 @@ void USpatialNetDriver::RetryQueryGSM()
 
 	// In PIE we want to retry the entity query as soon as possible.
 #if WITH_EDITOR
-	RetryTimerDelay = 0.1f;
+	RetryTimerDelay = 0.5f;
 #endif
 
 	UE_LOG(LogSpatialOSNetDriver, Verbose, TEXT("Retrying query for GSM in %f seconds"), RetryTimerDelay);

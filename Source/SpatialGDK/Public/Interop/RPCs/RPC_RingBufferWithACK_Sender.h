@@ -29,8 +29,8 @@ public:
 	{
 		if (Ctx.ComponentId == Serializer.GetACKComponentId())
 		{
-			BufferStateData& State = BufferState.FindChecked(Ctx.EntityId);
-
+			//BufferStateData& State = BufferState.FindChecked(Ctx.EntityId);
+			BufferStateData& State = BufferState.FindOrAdd(Ctx.EntityId);
 			TOptional<uint64> NewACKCount = Serializer.ReadACKCount(Ctx);
 			if (NewACKCount)
 			{
@@ -92,7 +92,7 @@ public:
 
 		BufferStateData& NextSlot = BufferState.FindOrAdd(EntityId);
 		int32 AvailableSlots = FMath::Max(0, int32(NumberOfSlots) - int32(NextSlot.CountWritten - NextSlot.LastACK));
-		if(AvailableSlots == 0)
+		if(AvailableSlots < 20)
 		{
 			Worker_EntityId work_system_id = 0;
 			USpatialNetDriver* SpatialNetDriver = Cast<USpatialNetDriver>(GWorld->GetWorld()->GetNetDriver());

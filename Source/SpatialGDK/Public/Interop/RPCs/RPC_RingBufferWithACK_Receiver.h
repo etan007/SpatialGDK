@@ -65,11 +65,11 @@ public:
 		State.LastExecuted = ACKCount ? ACKCount.GetValue() : 0;
 		State.LastRead = State.LastExecuted;
 		State.LastWrittenACK = State.LastExecuted;
-		/*Worker_EntityId work_system_id = 0;
+		Worker_EntityId work_system_id = 0;
 		USpatialNetDriver* SpatialNetDriver = Cast<USpatialNetDriver>(GWorld->GetWorld()->GetNetDriver());
 		if(SpatialNetDriver)
 			work_system_id = SpatialNetDriver->Connection->GetWorkerSystemEntityId();
-		UE_LOG(LogTemp,Warning,TEXT("%s,work_system_id=%lld,MonotonicRingBufferWithACKSender OnAdded_ReadACKComponent EntityId=%lld, LastExecuted=%lld"), GWorld->GetWorld()->IsServer()?TEXT("Server"):TEXT("Client"),work_system_id,Ctx.EntityId, State.LastExecuted);*/
+		UE_LOG(LogTemp,Warning,TEXT("%s,work_system_id=%lld,MonotonicRingBufferWithACKSender OnAdded_ReadACKComponent EntityId=%lld, LastExecuted=%lld"), GWorld->GetWorld()->IsServer()?TEXT("Server"):TEXT("Client"),work_system_id,Ctx.EntityId, State.LastExecuted);
 	}
 
 	virtual void OnRemoved(Worker_EntityId EntityId) override
@@ -82,7 +82,8 @@ public:
 	{
 		if (ComponentsToRead.Contains(Ctx.ComponentId))
 		{
-			ReceiverState& State = ReceiverStates.FindChecked(Ctx.EntityId);
+			//ReceiverState& State = ReceiverStates.FindChecked(Ctx.EntityId);
+			ReceiverState& State = ReceiverStates.FindOrAdd(Ctx.EntityId);
 			ReadRPCs(Ctx, State);
 		}
 	}
@@ -109,6 +110,11 @@ public:
 			Worker_EntityId EntityId = Iterator->Key;
 			if (!CanExtract(EntityId))
 			{
+				Worker_EntityId work_system_id = 0;
+				USpatialNetDriver* SpatialNetDriver = Cast<USpatialNetDriver>(GWorld->GetWorld()->GetNetDriver());
+				if(SpatialNetDriver)
+					work_system_id = SpatialNetDriver->Connection->GetWorkerSystemEntityId();
+				UE_LOG(LogTemp,Warning,TEXT("%s,work_system_id=%lld,ExtractReceivedRPCs !CanExtrac EntityId=%lld"), GWorld->GetWorld()->IsServer()?TEXT("Server"):TEXT("Client"),work_system_id,EntityId);
 				continue;
 			}
 			ReceiverState& State = ReceiverStates.FindChecked(EntityId);
