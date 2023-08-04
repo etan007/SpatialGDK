@@ -89,12 +89,12 @@ void RPCService::AdvanceSenderQueues()
 			{
 				QueueEntry.Value.Queue->OnAuthLost(Delta.EntityId);
 				QueueEntry.Value.Sender->OnAuthLost(Delta.EntityId);
-				Worker_EntityId work_system_id = 0;
+				/*Worker_EntityId work_system_id = 0;
 				USpatialNetDriver* SpatialNetDriver = Cast<USpatialNetDriver>(GWorld->GetWorld()->GetNetDriver());
 				if(SpatialNetDriver)
 					work_system_id = SpatialNetDriver->Connection->GetWorkerSystemEntityId();
 
-				UE_LOG(LogTemp,Warning,TEXT("%s,work_system_id=%lld, AdvanceSenderQueues EntityDelta::REMOVE  EntityId=%lld"), GWorld->GetWorld()->IsServer()?TEXT("Server"):TEXT("Client"),work_system_id,Delta.EntityId);
+				UE_LOG(LogTemp,Warning,TEXT("%s,work_system_id=%lld, AdvanceSenderQueues EntityDelta::REMOVE  EntityId=%lld"), GWorld->GetWorld()->IsServer()?TEXT("Server"):TEXT("Client"),work_system_id,Delta.EntityId);*/
 
 
 			}

@@ -92,14 +92,14 @@ public:
 
 		BufferStateData& NextSlot = BufferState.FindOrAdd(EntityId);
 		int32 AvailableSlots = FMath::Max(0, int32(NumberOfSlots) - int32(NextSlot.CountWritten - NextSlot.LastACK));
-		if(AvailableSlots < 20)
+		/*if(AvailableSlots < 20)
 		{
 			Worker_EntityId work_system_id = 0;
 			USpatialNetDriver* SpatialNetDriver = Cast<USpatialNetDriver>(GWorld->GetWorld()->GetNetDriver());
 			if(SpatialNetDriver)
 				work_system_id = SpatialNetDriver->Connection->GetWorkerSystemEntityId();
 			UE_LOG(LogTemp, Warning, TEXT("%s,work_system_id=%lld,MonotonicRingBufferWithACKSender cid=%d,EntityId=%lld, AvailableSlots=%d, CountWritten=%lld, LastACK=%lld"),GWorld->GetWorld()->IsServer()?TEXT("Server"):TEXT("Client"),work_system_id, Serializer.GetComponentId(),EntityId, AvailableSlots, NextSlot.CountWritten, NextSlot.LastACK);
-		}
+		}*/
 		int32 RPCsToWrite = FMath::Min(RPCs.Num(), AvailableSlots);
 		if (RPCsToWrite > 0)
 		{
@@ -111,15 +111,13 @@ public:
 				uint64 Slot = (RPCId - 1) % NumberOfSlots;
 				Serializer.WriteRPC(EntityWrite, Slot, RPCs[i]);
 				WrittenCallback(Serializer.GetComponentId(), RPCId);
-
-
-				{
+				/*{
 					Worker_EntityId work_system_id = 0;
 					USpatialNetDriver* SpatialNetDriver = Cast<USpatialNetDriver>(GWorld->GetWorld()->GetNetDriver());
 					if(SpatialNetDriver)
 						work_system_id = SpatialNetDriver->Connection->GetWorkerSystemEntityId();
 					//UE_LOG(LogTemp, Warning, TEXT("%s,work_system_id=%lld,MonotonicRingBufferWithACKSender cid=%d,EntityId=%lld, AvailableSlots=%d, CountWritten=%lld, LastACK=%lld"),GWorld->GetWorld()->IsServer()?TEXT("Server"):TEXT("Client"),work_system_id,Serializer.GetComponentId(), EntityId, AvailableSlots, NextSlot.CountWritten, NextSlot.LastACK);
-				}
+				}*/
 			}
 			Serializer.WriteRPCCount(EntityWrite, NextSlot.CountWritten);
 		}
