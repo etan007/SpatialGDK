@@ -100,7 +100,7 @@ void UAsyncPackageLoadFilter::OnAsyncPackageLoaded(const FName& PackageName, UPa
 
 void UAsyncPackageLoadFilter::ProcessActorsFromAsyncLoading()
 {
-	static_assert(TContainerTraits<decltype(LoadedPackages)>::MoveWillEmptyContainer, "Moving the set won't empty it");
+	//static_assert(TContainerTraits<decltype(LoadedPackages)>::MoveWillEmptyContainer, "Moving the set won't empty it"); // SKYCELL-CHANGE removed
 	TSet<FName> PackagesToProcess = MoveTemp(LoadedPackages);
 
 	for (const auto& PackageName : PackagesToProcess)

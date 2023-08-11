@@ -11,7 +11,7 @@ public class SpatialGDKFunctionalTests : ModuleRules
         bUseUnity = false;
 
         PrivateIncludePaths.Add(ModuleDirectory);
-        
+
         PrivateDependencyModuleNames.AddRange(
             new string[] {
                 "SpatialGDK",
@@ -19,6 +19,7 @@ public class SpatialGDKFunctionalTests : ModuleRules
                 "SpatialGDKServices",
                 "Core",
                 "CoreUObject",
+                "NetCore",
                 "Engine",
                 "FunctionalTesting",
                 "HTTP",
